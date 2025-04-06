@@ -18,14 +18,15 @@ class $modify(MyMenuLayer, MenuLayer) {
 				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
 			}
-			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonID, false);
+			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonsVersion, false);
 			if (!colonLevelLayer || !colonLevelLayer->m_songWidget || !colonLevelLayer->m_songWidget->m_downloadBtn) {
 				Utils::logErrorCustomFormat("LevelInfoLayer (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
 			}
 			colonLevelLayer->m_songWidget->m_downloadBtn->activate();
-			log::info("releasing dummy LevelInfoLayer for colonLevelLayer ID {}", colonID);
+			log::info("releasing dummy LevelInfoLayer and GJGameLevel for colonLevelLayer ID {}", colonID);
 			colonLevelLayer->release();
+			colonsVersion->release();
 			log::info("release successful");
 		}
 		return true;
