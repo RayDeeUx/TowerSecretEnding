@@ -99,9 +99,9 @@ class $modify(MyGameManager, GameManager) {
 
 class $modify(MyPlayLayer, PlayLayer) {
 	void setupHasCompleted() {
-		if (pl->m_level->m_levelID.value() != 116926138 || !pl->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
+		if (this->m_level->m_levelID.value() != 116926138 || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
 		this->m_spawnGroup = 81;
-		pl->m_level->setUserObject("sewer-canonical-start"_spr, CCBool::create(true));
+		this->m_level->setUserObject("sewer-canonical-start"_spr, CCBool::create(true));
 		PlayLayer::setupHasCompleted();
 	}
 };
