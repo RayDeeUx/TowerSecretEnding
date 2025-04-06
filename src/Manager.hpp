@@ -20,6 +20,8 @@ public:
 		{5004, 116926955},
 	};
 
+	bool useCanonSpawn = false;
+
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

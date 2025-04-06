@@ -2,6 +2,8 @@
 
 using namespace geode::prelude;
 
+#define THE_DEEP_SEWERS 116926138
+
 namespace Utils {
 	template<class T> T getSetting(const std::string_view setting);
 	bool getBool(const std::string_view setting);
