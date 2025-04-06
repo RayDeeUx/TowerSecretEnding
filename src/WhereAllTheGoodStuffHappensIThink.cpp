@@ -8,21 +8,16 @@
 
 using namespace geode::prelude;
 
-class $modify(MyMenuLayer, MenuLayer) {
-	bool init() {
-		if (!MenuLayer::init()) return false;
-		GameLevelManager* glm = GameLevelManager::get();
-		if (!glm) return true;
-		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
-		return true;
-	}
-};
-
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	bool init(bool returning) {
 		if (!LevelAreaInnerLayer::init(returning)) return false;
 		if (returning) log::info("returning from a tower level");
-		else log::info("entering the tower from elsewhere");
+		else {
+			log::info("entering the tower from elsewhere");
+			GameLevelManager* glm = GameLevelManager::get();
+			if (!glm) return true;
+			for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
+		}
 		return true;
 	}
 	void onDoor(CCObject* sender) {
