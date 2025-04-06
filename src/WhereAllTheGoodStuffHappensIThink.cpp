@@ -13,12 +13,12 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (!glm) return true;
 		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) {
 			glm->downloadLevel(colonID, false);
-			GJGameLevel* colonsVersion = glm->getSavedLevel(colonsID);
+			GJGameLevel* colonsVersion = glm->getSavedLevel(colonID);
 			if (!colonsVersion) {
 				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
 			}
-			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonsID, false);
+			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonID, false);
 			if (!colonLevelLayer || !colonLevelLayer->m_songWidget || !colonLevelLayer->m_songWidget->m_downloadBtn) {
 				Utils::logErrorCustomFormat("LevelInfoLayer (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
