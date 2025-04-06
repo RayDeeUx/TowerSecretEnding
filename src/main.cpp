@@ -43,7 +43,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		robtopsIDAsCCObject->setTag(robtopsID);
 		colonsVersion->setUserObject("original-robtop-ID"_spr, robtopsIDAsCCObject);
 
-		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, give user the illusion that the
+		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, mimic vanilla behavior with SFX
 		CCScene* playScene = PlayLayer::scene(colonsVersion, false, false);
 		if (!playScene) {
 			Utils::logErrorCustomFormat("CCScene from calling PlayLayer::scene", robtopsID, colonsID);
@@ -72,8 +72,8 @@ class $modify(MyGameManager, GameManager) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
 			return GameManager::returnToLastScene(level);
 		}
-		CCDirector::sharedDirector()->replaceScene(transition);
+		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("pushing scene to LevelAreaInnerLayer");
-		GameManager::fadeInMenuMusic();
+		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
 	}
 };
