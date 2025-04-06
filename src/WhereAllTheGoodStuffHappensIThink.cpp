@@ -28,7 +28,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
-			for (const auto&[robtopID, colonID] : manager->robtopToColon) glm->downloadLevel(colonID, false);
+			for (const auto&[robtopID, colonID] : manager->robtopToColon) if (!glm->hasDownloadedLevel(levelID)) glm->downloadLevel(colonID, false);
 		}
 
 		CCNode* backMenu = this->getChildByID("back-menu");
@@ -126,24 +126,30 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
 		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
+
 		Manager* manager = Manager::getSharedInstance();
 		const bool completedBefore = IS_LEVEL_COMPLETE(this->m_level->m_levelID.value());
+
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
 		this->getParent()->addChild(wicklineLabel);
 		wicklineLabel->limitLabelWidth(400.f, 2.f, 0.001f);
 		wicklineLabel->setPosition(this->getParent()->getContentSize() / 2.f);
+
 		PlayLayer::startGame();
 	}
 	void levelComplete() {
 		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::levelComplete();
+
 		Manager* manager = Manager::getSharedInstance();
 		const int levelID = this->m_level->m_levelID.value();
 		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
 		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
+
 		if (!Utils::getBool("debugMode") || !wicklineLabel) return PlayLayer::levelComplete();
 		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
+
 		PlayLayer::levelComplete();
 	}
 };
