@@ -22,6 +22,8 @@ public:
 
 	bool useCanonSpawn = false;
 
+	bool colonModeEnabled = false;
+
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

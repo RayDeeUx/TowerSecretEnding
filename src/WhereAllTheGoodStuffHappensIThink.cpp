@@ -11,8 +11,13 @@
 using namespace geode::prelude;
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
+	void onColonToggle(CCObject* sender) {
+		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
+		Manager::getSharedInstance()->colonModeEnabled = !Manager::getSharedInstance()->colonModeEnabled;
+	}
 	bool init(bool returning) {
 		if (!LevelAreaInnerLayer::init(returning)) return false;
+
 		if (returning) log::info("returning from a tower level");
 		else {
 			log::info("entering the tower from elsewhere");
@@ -20,11 +25,28 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			if (!glm) return true;
 			for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
 		}
-		if (!this->getChildByID(""))
+
+		CCNode* backMenu = this->getChildByID("back-menu");
+		if (!backMenu) return true;
+
+		CCNode* backButton = backMenu->getChildByID("back-button");
+		CCNode* vaultButton = backMenu->getChildByID("vault-button");
+		if (!backButton || !vaultButton) return true;
+
+		CCMenuItemToggler* colonToggle = CCMenuItemToggler::create(
+			CCSprite::createFromFrameName("GJ_checkOff_001.png"),
+			CCSprite::createFromFrameName("GJ_checkOn_001.png"),
+			menu_selector(MyLevelAreaInnerLayer::onColonToggle)
+		);
+		colonToggle->setID("secret-ending-toggle"_spr);
+
+		backMenu->addChild(colonToggle);
+		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
+		
 		return true;
 	}
 	void onDoor(CCObject* sender) {
-		if (!sender) return LevelAreaInnerLayer::onDoor(sender);
+		if (!sender || !Manager::getSharedInstance()->colonModeEnabled) return LevelAreaInnerLayer::onDoor(sender);
 		const int robtopsID = sender->getTag();
 		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender);
 
