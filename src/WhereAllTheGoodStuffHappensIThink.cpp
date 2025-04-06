@@ -20,7 +20,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
 			}
-			for (const std::string& songID : utils::string::split(colonsVersion->m_songs, ",")) {
+			for (const std::string& songID : utils::string::split(colonsVersion->m_songIDs, ",")) {
 				const int songToDownload = utils::numFromString<int>(songID).unwrapOr(-1);
 				if (songToDownload != -1) MusicDownloadManager::sharedState()->downloadCustomSong(songToDownload);
 			}
