@@ -24,6 +24,8 @@ public:
 
 	bool colonModeEnabled = false;
 
+	std::vector<int> completedLevels = {};
+
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

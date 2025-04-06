@@ -10,6 +10,8 @@
 
 using namespace geode::prelude;
 
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {})", manager->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr), completedBefore)
+
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
 		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
@@ -18,12 +20,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	bool init(bool returning) {
 		if (!LevelAreaInnerLayer::init(returning)) return false;
 
+		Manager* manager = Manager::getSharedInstance();
+
 		if (returning) log::info("returning from a tower level");
 		else {
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
-			for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
+			for (const auto&[robtopID, colonID] : manager->robtopToColon) glm->downloadLevel(colonID, false);
 		}
 
 		CCNode* backMenu = this->getChildByID("back-menu");
@@ -33,9 +37,12 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCNode* vaultButton = backMenu->getChildByID("vault-button");
 		if (!backButton || !vaultButton) return true;
 
+		const std::string& = !manager->colonModeEnabled ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
+		const std::string& = !manager->colonModeEnabled ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
+
 		CCMenuItemToggler* colonToggle = CCMenuItemToggler::create(
-			CCSprite::createWithSpriteFrameName("GJ_checkOff_001.png"),
-			CCSprite::createWithSpriteFrameName("GJ_checkOn_001.png"), this,
+			CCSprite::createWithSpriteFrameName(checkmarkOne.c_str()),
+			CCSprite::createWithSpriteFrameName(checkmarkTwo.c_str()), this,
 			menu_selector(MyLevelAreaInnerLayer::onColonToggle)
 		);
 		colonToggle->setID("secret-ending-toggle"_spr);
@@ -117,13 +124,26 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// this is really just for debug purposes.
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
-		if (!this->m_level || !CCScene::get() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
-		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(fmt::format("\"if any of you ever come for my man i'll break a ***** off like a kitkat bar\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {})", Manager::getSharedInstance()->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr)).c_str(), "bigFont.fnt");
+		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
+		Manager* manager = Manager::getSharedInstance();
+		const bool completedBefore = std::ranges::find(manager->completedLevels, this->m_level->m_levelID.value()) != manager->completedLevels.end();
+		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
-		CCScene::get()->addChild(wicklineLabel);
+		this->getParent()->addChild(wicklineLabel);
 		wicklineLabel->limitLabelWidth(400.f, 2.f, 0.001f);
-		wicklineLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
+		wicklineLabel->setPosition(this->getParent()->getContentSize() / 2.f);
 		PlayLayer::startGame();
+	}
+	void levelComplete() {
+		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::levelComplete();
+		Manager* manager = Manager::getSharedInstance();
+		const int levelID = this->m_level->m_levelID.value();
+		const bool completedBefore = std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end();
+		if (!completedBefore) manager->completedLevels.push_back(levelID);
+		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
+		if (!Utils::getBool("debugMode") || !wicklineLabel) return PlayLayer::levelComplete();
+		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
+		PlayLayer::levelComplete();
 	}
 };
 
