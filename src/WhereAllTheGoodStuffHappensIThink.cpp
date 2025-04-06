@@ -10,7 +10,8 @@
 
 using namespace geode::prelude;
 
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {})", manager->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr), completedBefore)
+#define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {})", manager->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(this->m_level->m_levelID.value()))
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
@@ -126,7 +127,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// --raydeeux
 		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
 		Manager* manager = Manager::getSharedInstance();
-		const bool completedBefore = std::ranges::find(manager->completedLevels, this->m_level->m_levelID.value()) != manager->completedLevels.end();
+		const bool completedBefore = IS_LEVEL_COMPLETE(this->m_level->m_levelID.value());
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
 		this->getParent()->addChild(wicklineLabel);
@@ -138,7 +139,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::levelComplete();
 		Manager* manager = Manager::getSharedInstance();
 		const int levelID = this->m_level->m_levelID.value();
-		const bool completedBefore = std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end();
+		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
 		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
 		if (!Utils::getBool("debugMode") || !wicklineLabel) return PlayLayer::levelComplete();
