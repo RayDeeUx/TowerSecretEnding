@@ -27,8 +27,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 			}
 			colonLevelLayer->m_songWidget->m_downloadBtn->activate();
 			log::info("releasing dummy LevelInfoLayer and GJGameLevel for colonLevelLayer ID {}", colonID);
-			colonLevelLayer->release();
-			colonsVersion->release();
+			colonLevelLayer->onBack(nullptr);
 			log::info("release successful");
 		}
 		return true;
