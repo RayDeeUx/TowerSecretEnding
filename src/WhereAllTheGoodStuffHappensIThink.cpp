@@ -24,6 +24,9 @@ class $modify(MyMenuLayer, MenuLayer) {
 				const int songToDownload = utils::string::numFromString<int>(songID).unwrapOr(-1);
 				if (songToDownload != -1) MusicDownloadManager::sharedState()->downloadCustomSong(songToDownload);
 			}
+			log::info("releasing colonsVersion {} of robtop {}", colonID, robtopID);
+			colonsVersion->release();
+			log::info("release successful");
 		}
 		return true;
 	}
