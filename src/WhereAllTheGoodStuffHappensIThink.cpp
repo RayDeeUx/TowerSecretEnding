@@ -1,5 +1,7 @@
+#include <Geode/modify/SpawnTriggerGameObject.hpp>
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include "Manager.hpp"
 #include "Utils.hpp"
@@ -92,5 +94,23 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("pushing scene to LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
+	}
+};
+
+class $modify(MyPlayLayer, PlayLayer) {
+	void setupHasCompleted() {
+		if (pl->m_level->m_levelID.value() != 116926138 || !pl->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
+		this->m_spawnGroup = 81;
+		pl->m_level->setUserObject("sewer-canonical-start"_spr, CCBool::create(true));
+		PlayLayer::setupHasCompleted();
+	}
+};
+
+class $modify(MySpawnTriggerGameObject, SpawnTriggerGameObject) {
+	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2){
+		PlayLayer* pl = PlayLayer::get();
+		if (!pl || gjbgl != pl || !pl->m_level || pl->m_level->m_levelID.value() != 116926138 || !pl->m_level->getUserObject("colon-variant"_spr) || !pl->m_level->getUserObject("sewer-canonical-start"_spr)) return SpawnTriggerGameObject::triggerObject(gjbgl, p1, p2);
+		if (this->m_targetGroupID == 900) return log::info("should've sent player to canonical start position, skipping trigger");
+		SpawnTriggerGameObject::triggerObject(gjbgl, p1, p2);
 	}
 };
