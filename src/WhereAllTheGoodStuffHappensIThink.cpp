@@ -37,8 +37,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCNode* vaultButton = backMenu->getChildByID("vault-button");
 		if (!backButton || !vaultButton) return true;
 
-		const std::string& = !manager->colonModeEnabled ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
-		const std::string& = !manager->colonModeEnabled ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
+		const std::string& checkmarkOne = !manager->colonModeEnabled ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
+		const std::string& checkmarkTwo = !manager->colonModeEnabled ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
 
 		CCMenuItemToggler* colonToggle = CCMenuItemToggler::create(
 			CCSprite::createWithSpriteFrameName(checkmarkOne.c_str()),
