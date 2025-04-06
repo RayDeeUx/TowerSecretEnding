@@ -11,7 +11,23 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (!MenuLayer::init()) return false;
 		GameLevelManager* glm = GameLevelManager::get();
 		if (!glm) return true;
-		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
+		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) {
+			glm->downloadLevel(colonID, false);
+			GJGameLevel* colonsVersion = glm->getSavedLevel(colonsID);
+			if (!colonsVersion) {
+				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
+				continue;
+			}
+			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonsID, false);
+			if (!colonLevelLayer || !colonLevelLayer->m_songWidget || !colonLevelLayer->m_songWidget->m_downloadBtn) {
+				Utils::logErrorCustomFormat("LevelInfoLayer (from forloop in MenuLayer init)", robtopID, colonID);
+				continue;
+			}
+			colonLevelLayer->m_songWidget->m_downloadBtn->activate();
+			log::info("releasing dummy LevelInfoLayer for colonLevelLayer ID {}", colonID);
+			colonLevelLayer->release();
+			log::info("release successful");
+		}
 		return true;
 	}
 };
