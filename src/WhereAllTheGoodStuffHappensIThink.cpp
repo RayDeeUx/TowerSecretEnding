@@ -20,15 +20,10 @@ class $modify(MyMenuLayer, MenuLayer) {
 				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
 				continue;
 			}
-			LevelInfoLayer* colonLevelLayer = LevelInfoLayer::create(colonsVersion, false);
-			if (!colonLevelLayer || !colonLevelLayer->m_songWidget || !colonLevelLayer->m_songWidget->m_downloadBtn) {
-				Utils::logErrorCustomFormat("LevelInfoLayer (from forloop in MenuLayer init)", robtopID, colonID);
-				continue;
+			for (const std::string& songID : utils::string::split(colonsVersion->m_songs, ",")) {
+				const int songToDownload = utils::string::numFromString<int>(songID).unwrapOr(-1);
+				if (songToDownload != -1) MusicDownloadManager::sharedState()->downloadCustomSong(songToDownload);
 			}
-			colonLevelLayer->m_songWidget->m_downloadBtn->activate();
-			log::info("releasing dummy LevelInfoLayer and GJGameLevel for colonLevelLayer ID {}", colonID);
-			colonLevelLayer->onBack(nullptr);
-			log::info("release successful");
 		}
 		return true;
 	}
