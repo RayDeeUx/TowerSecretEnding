@@ -56,7 +56,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		CCDirector::sharedDirector()->pushScene(transition);
+		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
 	}
 };
@@ -72,7 +72,7 @@ class $modify(MyGameManager, GameManager) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
 			return GameManager::returnToLastScene(level);
 		}
-		CCDirector::sharedDirector()->pushScene(transition);
+		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic();
 	}
