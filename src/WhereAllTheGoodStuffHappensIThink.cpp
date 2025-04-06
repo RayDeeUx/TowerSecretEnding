@@ -13,21 +13,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (!MenuLayer::init()) return false;
 		GameLevelManager* glm = GameLevelManager::get();
 		if (!glm) return true;
-		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) {
-			glm->downloadLevel(colonID, false);
-			GJGameLevel* colonsVersion = glm->getSavedLevel(colonID);
-			if (!colonsVersion) {
-				Utils::logErrorCustomFormat("GJGameLevel (from forloop in MenuLayer init)", robtopID, colonID);
-				continue;
-			}
-			for (const std::string& songID : utils::string::split(colonsVersion->m_songIDs, ",")) {
-				const int songToDownload = utils::numFromString<int>(songID).unwrapOr(-1);
-				if (songToDownload != -1) MusicDownloadManager::sharedState()->downloadCustomSong(songToDownload);
-			}
-			log::info("releasing colonsVersion {} of robtop {}", colonID, robtopID);
-			colonsVersion->release();
-			log::info("release successful");
-		}
+		for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
 		return true;
 	}
 };
