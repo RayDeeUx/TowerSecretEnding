@@ -35,7 +35,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		CCMenuItemToggler* colonToggle = CCMenuItemToggler::create(
 			CCSprite::createWithSpriteFrameName("GJ_checkOff_001.png"),
-			CCSprite::createWithSpriteFrameName("GJ_checkOn_001.png"),
+			CCSprite::createWithSpriteFrameName("GJ_checkOn_001.png"), this,
 			menu_selector(MyLevelAreaInnerLayer::onColonToggle)
 		);
 		colonToggle->setID("secret-ending-toggle"_spr);
