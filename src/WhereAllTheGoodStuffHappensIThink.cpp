@@ -1,3 +1,4 @@
+// this file would've been named main.cpp but colon wanted me to include his source files too --raydeeux
 #include <Geode/modify/CameraTriggerGameObject.hpp>
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/EffectGameObject.hpp>
@@ -19,6 +20,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			if (!glm) return true;
 			for (const auto&[robtopID, colonID] : Manager::getSharedInstance()->robtopToColon) glm->downloadLevel(colonID, false);
 		}
+		if (!this->getChildByID(""))
 		return true;
 	}
 	void onDoor(CCObject* sender) {
@@ -93,7 +95,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// this is really just for debug purposes.
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
-		if (!this->m_level || !CCScene::get()) return PlayLayer::startGame();
+		if (!this->m_level || !CCScene::get() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(fmt::format("\"if any of you ever come for my man i'll break a ***** off like a kitkat bar\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {})", Manager::getSharedInstance()->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr)).c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
 		CCScene::get()->addChild(wicklineLabel);

@@ -9,4 +9,4 @@ Brings Colon's Secret Ending of The Tower as a Geode mod!
 ### "But why so many requirements?"
 Read more [here](https://blank.org).
 
-This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
+This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely.

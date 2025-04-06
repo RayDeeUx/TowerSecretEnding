@@ -10,12 +10,12 @@
 	"name": "TowerSecretEnding",
 	"version": "v0.0.0-alpha.1",
 	"developers": ["Colon", "RayDeeUx", "Alphalaneous"],
-	"description": "",
+	"description": "The Secret Ending to Floor 1 of The Tower!",
 	"repository": "https://github.com/RayDeeUx/TowerSecretEnding",
 	"settings": {
-		"enabled": {
-			"name": "Enabled",
-			"description": "Toggles the mod.",
+		"debugMode": {
+			"name": "Debug Mode",
+			"description": "Adds additional debug information to your screen when playing The Deep Sewers.",
 			"type": "bool",
 			"default": true
 		}
@@ -24,6 +24,9 @@
 		"sprites": [
 			"resources/*.png"
 		]
+	},
+	"dependencies": {
+		"geode.node-ids": ">=1.21.0"
 	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
