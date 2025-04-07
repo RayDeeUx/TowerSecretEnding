@@ -72,7 +72,7 @@ public:
 	// determine if toggle should be added
 	bool addColonToggle = false;
 	// controls when this mod's behavior kicks in
-	bool colonModeEnabled = false;
+	bool colonMode = false;
 
 	// track completed levels during runtime to know when to activate colon's dialouge layer
 	// also speaking of the dialouge layer i think i might just manually translate it

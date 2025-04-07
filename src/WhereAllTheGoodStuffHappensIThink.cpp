@@ -23,7 +23,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
 		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
 		// just toggles the control. nothing crazy
-		Manager::getSharedInstance()->colonModeEnabled = !Manager::getSharedInstance()->colonModeEnabled;
+		Manager::getSharedInstance()->colonMode = !Manager::getSharedInstance()->colonMode;
 	}
 	bool init(bool returning) {
 		if (!LevelAreaInnerLayer::init(returning)) return false;
@@ -52,8 +52,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCNode* vaultButton = backMenu->getChildByID("vault-button");
 		if (!backButton || !vaultButton) return true;
 
-		const std::string& checkmarkOne = !manager->colonModeEnabled ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
-		const std::string& checkmarkTwo = !manager->colonModeEnabled ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
+		const std::string& checkmarkOne = !manager->colonMode ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
+		const std::string& checkmarkTwo = !manager->colonMode ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
 
 		CCSprite* checkmarkOneSprite = CCSprite::createWithSpriteFrameName(checkmarkOne.c_str());
 		CCSprite* checkmarkTwoSprite = CCSprite::createWithSpriteFrameName(checkmarkTwo.c_str());
@@ -86,7 +86,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		colonToggle->runAction(CCFadeIn::create(.5f));
 	}
 	void onDoor(CCObject* sender) {
-		if (!sender || !Manager::getSharedInstance()->colonModeEnabled) return LevelAreaInnerLayer::onDoor(sender);
+		if (!sender || !Manager::getSharedInstance()->colonMode) return LevelAreaInnerLayer::onDoor(sender);
 		const int robtopsID = sender->getTag();
 		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender);
 
@@ -212,7 +212,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
 		manager->addColonToggle = secondsPassed < 2;
-		if (manager->addColonToggle) manager->colonModeEnabled = true;
+		if (manager->addColonToggle) manager->colonMode = true;
 
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
@@ -220,7 +220,10 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void onResume(CCObject* sender) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		if (manager->trackTime && manager->addColonToggle) manager->addColonToggle = false;
+		if (manager->trackTime && manager->addColonToggle) {
+			manager->addColonToggle = false;
+			manager->colonMode = false;
+		}
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::onResume(sender))
 		PauseLayer::onResume(sender);
 	}

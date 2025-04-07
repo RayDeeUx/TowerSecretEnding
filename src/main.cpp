@@ -32,7 +32,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 	}
 
 	void onInfo(cocos2d::CCObject* sender) {
-		if (!Manager::getSharedInstance()->colonModeEnabled) return LevelAreaInnerLayer::onInfo(sender);
+		if (!Manager::getSharedInstance()->colonMode) return LevelAreaInnerLayer::onInfo(sender);
 		CreditsLayer::create()->showLayer(false);
 	}
 };
