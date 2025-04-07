@@ -12,8 +12,9 @@
 
 using namespace geode::prelude;
 
+#define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->m_level->m_levelID.value(), difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->m_level->m_levelID.value()), manager->trackTime, manager->addColonToggle)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->addColonToggle)
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
 	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
@@ -149,7 +150,7 @@ class $modify(MyGameManager, GameManager) {
 
 class $modify(MyPlayLayer, PlayLayer) {
 	void setupHasCompleted() {
-		if (this->m_level->m_levelID.value() != THE_DEEP_SEWERS || !this->m_levelSettings || this->m_levelSettings->m_spawnGroup != 79 || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
+		if (this->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS || !this->m_levelSettings || this->m_levelSettings->m_spawnGroup != 79 || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
 		this->m_levelSettings->m_spawnGroup = 81;
 		PlayLayer::setupHasCompleted();
 	}
@@ -160,7 +161,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
 
 		Manager* manager = Manager::getSharedInstance();
-		const bool completedBefore = IS_LEVEL_COMPLETE(this->m_level->m_levelID.value());
+		const bool completedBefore = IS_LEVEL_COMPLETE(this->PLAYLAYER_LEVEL_ID);
 
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
@@ -174,7 +175,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::levelComplete();
 
 		Manager* manager = Manager::getSharedInstance();
-		const int levelID = this->m_level->m_levelID.value();
+		const int levelID = this->PLAYLAYER_LEVEL_ID;
 		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
 
@@ -192,10 +193,9 @@ class $modify(MyPlayLayer, PlayLayer) {
 };
 
 class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
-	virtual void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
-		GJBaseGameLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
-		if (!PlayLayer::get()) return;
-		if (p0 == 105 && this->m_level && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
+	virtual void spawnGroup(int groupBeingSpawned, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
+		GJBaseGameLayer::spawnGroup(groupBeingSpawned, p1, p2, p3, p4, p5);
+		if (PlayLayer::get() && groupBeingSpawned == 105 && this->m_level && this->PLAYLAYER_LEVEL_ID == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
 			Manager* manager = Manager::getSharedInstance();
 			manager->bombPickupTimestamp = std::time(nullptr);
 			manager->trackTime = true;
@@ -231,7 +231,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 
 class $modify(MyEffectGameObject, EffectGameObject) {
 	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2) {
-		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->m_level->m_levelID.value() != THE_DEEP_SEWERS) return EffectGameObject::triggerObject(gjbgl, p1, p2);
+		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return EffectGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
 			return log::info("[EFFECT] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
@@ -242,7 +242,7 @@ class $modify(MyEffectGameObject, EffectGameObject) {
 
 class $modify(MyCameraTriggerGameObject, CameraTriggerGameObject) {
 	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2) {
-		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->m_level->m_levelID.value() != THE_DEEP_SEWERS) return CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
+		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
 			return log::info("[CAMERA] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
@@ -267,7 +267,7 @@ might as well leave this code here for posterity in case things change again.
 class $modify(MySpawnTriggerGameObject, SpawnTriggerGameObject) {
 	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2){
 		PlayLayer* pl = PlayLayer::get();
-		if (!pl || gjbgl != pl || !pl->m_level || pl->m_level->m_levelID.value() != THE_DEEP_SEWERS || pl->m_levelSettings->m_spawnGroup != 81) return SpawnTriggerGameObject::triggerObject(gjbgl, p1, p2);
+		if (!pl || gjbgl != pl || !pl->m_level || pl->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS || pl->m_levelSettings->m_spawnGroup != 81) return SpawnTriggerGameObject::triggerObject(gjbgl, p1, p2);
 		log::info("this->m_objectID: {}", this->m_objectID);
 		log::info("this->m_targetGroupID: {}", this->m_targetGroupID);
 		if (this->m_targetGroupID == 900) return log::info("should've sent player to canonical start position, skipping trigger");
