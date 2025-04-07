@@ -214,14 +214,14 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->addColonToggle = secondsPassed < 2;
 		if (manager->addColonToggle) manager->colonModeEnabled = true;
 
-		UPDATE_DEBUG_LABEL(this->getParent(), PauseLayer::customSetup())
+		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
 	}
 	void onResume(CCObject* sender) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
 		if (manager->trackTime && manager->addColonToggle) manager->addColonToggle = false;
-		UPDATE_DEBUG_LABEL(this->getParent(), PauseLayer::onResume(sender))
+		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::onResume(sender))
 		PauseLayer::onResume(sender);
 	}
 };
