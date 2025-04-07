@@ -1,4 +1,3 @@
-#ifdef GEODE_IS_MACOS
 // original file by @acaruso-xx (github)
 // adapted for the tower by raydeeux with permission
 
@@ -159,4 +158,3 @@ void AssetDownloader::downloadSFX(const int id) {
 
 	m_mgr->downloadSFX(id);
 }
-#endif

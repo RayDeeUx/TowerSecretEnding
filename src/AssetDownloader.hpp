@@ -1,4 +1,3 @@
-#ifdef GEODE_IS_MACOS
 // original file by @acaruso-xx (github)
 // adapted for the tower by raydeeux with permission
 
@@ -97,4 +96,3 @@ private:
 	std::queue<Asset> m_assets;
 	bool m_failed; //!< True if one or more asset fails to download.
 };
-#endif
