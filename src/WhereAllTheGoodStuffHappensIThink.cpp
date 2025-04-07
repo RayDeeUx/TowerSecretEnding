@@ -30,9 +30,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			if (!glm) return true;
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
-				if (!colonsLevel || colonsLevel->m_levelString.length() < 2) glm->downloadLevel(colonID, false);
+				if (!colonsLevel || static_cast<std::string>(colonsLevel->m_levelString).length() < 2) glm->downloadLevel(colonID, false);
 				colonsLevel = glm->getSavedLevel(colonID);
-				if (colonsLevel && colonsLevel->m_levelString.length() > 2) log::info("colonsLevel {} with colonID {} was downloaded", colonsLevel, colonID);
+				if (colonsLevel && static_cast<std::string>(colonsLevel->m_levelString).length() > 2) log::info("colonsLevel {} with colonID {} was downloaded", colonsLevel, colonID);
 			}
 		}
 
