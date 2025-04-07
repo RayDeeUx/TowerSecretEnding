@@ -55,6 +55,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
+		colonToggle->setOpacity(0);
+		colonToggle->runAction(CCFadeIn::create(.5f));
 		
 		return true;
 	}
