@@ -211,8 +211,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
-		manager->addColonToggle = secondsPassed < 2;
-		if (manager->addColonToggle) manager->colonMode = true; // so the toggle doesn't get added when entering LevelAreaInnerLayer
+		manager->addColonToggle = secondsPassed < 3; // colon wants it to be lenient, i think 2 seconds is lenient enough tbh (original time window was 1 second) --raydeeux
+		if (manager->addColonToggle) manager->colonMode = true; // so the toggle is visually correct when entering LevelAreaInnerLayer
 
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
@@ -221,8 +221,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
 		if (manager->addColonToggle) {
-			manager->addColonToggle = false;
-			manager->colonMode = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
+			manager->addColonToggle = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
+			manager->colonMode = false; // so the player has to redo the secret ending
 		}
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::onResume(sender))
 		PauseLayer::onResume(sender);
