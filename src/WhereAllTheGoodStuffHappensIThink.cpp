@@ -81,13 +81,20 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		return true;
 	}
 	void onDoor(CCObject* sender) {
-		if (!sender || !Manager::getSharedInstance()->colonMode) return LevelAreaInnerLayer::onDoor(sender);
-		const int robtopsID = sender->getTag();
-		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender);
+		Manager* manager = Manager::getSharedInstance();
+		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
+		if (!sender || !manager->colonMode || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
+		log::info("ok so the sender is in fact a button after all. proceed.");
 
-		const std::unordered_map<int, int>& robToColon = Manager::getSharedInstance()->robtopToColon;
+		const int robtopsID = sender->getTag();
+		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender); // because rob is going to add more tower levels. using tags here is ideal since they're 1:1 to rob's level IDs
+
+		if (!senderIsButton->getUserObject("current-door"_spr)) return LevelAreaInnerLayer::onDoor(sender); // colon wants the levels to be played in order. do not report an error on this line; it is intended behavior
+
+		const std::unordered_map<int, int>& robToColon = manager->robtopToColon;
 		if (!robToColon.contains(robtopsID)) return LevelAreaInnerLayer::onDoor(sender);
 		const int colonsID = robToColon.find(robtopsID)->second;
+
 		GJGameLevel* colonsVersion = GameLevelManager::get()->getSavedLevel(colonsID);
 		if (!colonsVersion) {
 			Utils::logErrorCustomFormat("GJGameLevel", robtopsID, colonsID);
@@ -95,7 +102,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		}
 
 		colonsVersion->setUserObject("colon-variant"_spr, CCBool::create(true));
-		Manager::getSharedInstance()->useCanonSpawn = colonsID == THE_DEEP_SEWERS;
+		manager->useCanonSpawn = colonsID == THE_DEEP_SEWERS;
 
 		CCInteger* robtopsIDAsCCObject = CCInteger::create(robtopsID);
 		robtopsIDAsCCObject->setTag(robtopsID);
@@ -155,7 +162,6 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
 
 		Manager* manager = Manager::getSharedInstance();
-		const bool completedBefore = IS_LEVEL_COMPLETE(this->PLAYLAYER_LEVEL_ID);
 
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
@@ -174,6 +180,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
 
 		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
+
+		manager->doorToShow += 1;
 
 		PlayLayer::levelComplete();
 	}
@@ -206,7 +214,10 @@ class $modify(MyPauseLayer, PauseLayer) {
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
 		manager->addColonToggle = secondsPassed < 3; // colon wants it to be lenient, i think 2 seconds is lenient enough tbh (original time window was 1 second) --raydeeux
-		if (manager->addColonToggle) manager->colonMode = true; // so the toggle is visually correct when entering LevelAreaInnerLayer
+		if (manager->addColonToggle) {
+			manager->doorToShow = 1;
+			manager->colonMode = true; // so the toggle is visually correct when entering LevelAreaInnerLayer
+		}
 
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
@@ -217,6 +228,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		if (manager->addColonToggle) {
 			manager->addColonToggle = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
 			manager->colonMode = false; // so the player has to redo the secret ending
+			manager->doorToShow = -1;
 		}
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::onResume(sender))
 		PauseLayer::onResume(sender);

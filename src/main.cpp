@@ -23,6 +23,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 
 		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
 		door->setSprite(CCSprite::create("towerDoorSpecial.png"_spr));
+		door->setUserObject("current-door"_spr, CCBool::create(true));
 
 		CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
 		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
