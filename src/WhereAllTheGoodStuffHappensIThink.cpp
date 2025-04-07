@@ -194,8 +194,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 	virtual void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		GJBaseGameLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
-		if (!PlayLayer::get()) return log::info("not in playlayer :(");
-		if (p0 != 0) log::info("spawning {}", p0);
+		if (!PlayLayer::get()) return;
 		if (p0 == 105 && this->m_level && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
 			Manager* manager = Manager::getSharedInstance();
 			manager->bombPickupTimestamp = std::time(nullptr);
@@ -211,7 +210,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 		manager->addColonToggle = secondsPassed < 2;
-		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
+		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(CCScene::get()->getChildByID("jane-wickline-debug-label"_spr));
 		if (!Utils::getBool("debugMode") || !wicklineLabel) return PauseLayer::customSetup();
 		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
 		PauseLayer::customSetup();
