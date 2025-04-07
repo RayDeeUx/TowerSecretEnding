@@ -13,7 +13,7 @@
 using namespace geode::prelude;
 
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->m_level->m_levelID.value()), manager->trackTime, manager->addColonToggle)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->m_level->m_levelID.value(), difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->m_level->m_levelID.value()), manager->trackTime, manager->addColonToggle)
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
@@ -161,7 +161,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
 		this->getParent()->addChild(wicklineLabel);
-		wicklineLabel->limitLabelWidth(400.f, 2.f, 0.001f);
+		wicklineLabel->limitLabelWidth(420.f, 2.f, 0.001f);
 		wicklineLabel->setPosition(this->getParent()->getContentSize() / 2.f);
 
 		PlayLayer::startGame();
@@ -190,7 +190,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 	void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		PlayLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
-		if (p0 == 105 && this->m_level && !this->m_level->getUserObject("colon-variant"_spr) && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
+		if (p0 != 0) log::info("spawning {}", p0);
+		if (p0 == 105 && this->m_level && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
 			Manager* manager = Manager::getSharedInstance();
 			manager->bombPickupTimestamp = std::time(nullptr);
 			manager->trackTime = true;
