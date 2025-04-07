@@ -196,7 +196,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 };
 
-class $modify(MyPauseLayer, MyPauseLayer) {
+class $modify(MyPauseLayer, PauseLayer) {
 	void customSetup() {
 		Manager* manager = Manager::getSharedInstance();
 		if (!manager->trackTime) return PauseLayer::customSetup();
