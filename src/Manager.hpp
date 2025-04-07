@@ -14,6 +14,7 @@ public:
 
 	bool calledAlready = false;
 
+	// cmon guys do i really need to explain this to you
 	const std::unordered_map<int, int> robtopToColon = {
 		{5001, 116926133},
 		{5002, 116926138},
@@ -21,6 +22,9 @@ public:
 		{5004, 116926955},
 	};
 
+	// for "special thanks" screen
+	// easier to allocate memory for this info *once*
+	// as opposed to each time the "special thanks" screen is opened
 	const std::vector<UserData> users = {
 		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions
 		/*
@@ -52,20 +56,25 @@ public:
 		},
 		*/
 		{"acaruso", 12, 12, 17, 17, false, UserType::Modder,
-			{"Downloading audio assets in the background"}
+			{"Help with downloading audio assets in the background"}
 		},
 		{"CJLink", 2, 12, 2, 15, true, UserType::Modder,
-			{"Downloading levels in the background", "Opening online levels from outside of LevelInfoLayer"}
+			{"Help with downloading levels in the background", "Help with opening online levels from outside of LevelInfoLayer"}
 		},
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
-			{"This \"Special thanks!\" list you're reading right now"}
+			{"Designed this \"Special thanks!\" list you're reading right now"}
 		},
 	};
 
+	// for the deep sewers specifically
 	bool useCanonSpawn = false;
 
+	// controls when this mod's behavior kicks in
 	bool colonModeEnabled = false;
 
+	// track completed levels during runtime to know when to activate colon's dialouge layer
+	// also speaking of the dialouge layer i think i might just manually translate it
+	// using it in mod resource form opens backdoor for wronguns to replace it with swears much more easily
 	std::vector<int> completedLevels = {};
 
 	static Manager* getSharedInstance() {

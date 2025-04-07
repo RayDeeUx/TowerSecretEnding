@@ -16,15 +16,16 @@ using namespace geode::prelude;
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
 		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
+		// just toggles the control. nothing crazy
 		Manager::getSharedInstance()->colonModeEnabled = !Manager::getSharedInstance()->colonModeEnabled;
 	}
 	bool init(bool returning) {
 		if (!LevelAreaInnerLayer::init(returning)) return false;
-
 		Manager* manager = Manager::getSharedInstance();
 
 		if (returning) log::info("returning from a tower level");
 		else {
+			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
@@ -48,6 +49,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		CCSprite* checkmarkOneSprite = CCSprite::createWithSpriteFrameName(checkmarkOne.c_str());
 		CCSprite* checkmarkTwoSprite = CCSprite::createWithSpriteFrameName(checkmarkTwo.c_str());
+		// scale the sprites before making the toggler button
 		checkmarkOneSprite->setScale(.75f);
 		checkmarkTwoSprite->setScale(.75f);
 

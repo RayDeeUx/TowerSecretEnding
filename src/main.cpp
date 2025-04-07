@@ -1,3 +1,6 @@
+// original file by colon for his april fool's video
+// adapted by raydeeux further because haha yes
+
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 
@@ -12,6 +15,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 		if (!LevelAreaInnerLayer::init(p0)) return false;
 
 		const int doorIndex = Mod::get()->getSettingValue<int64_t>("doorToShowBETATESTINGLOL");
+		// probably use Manager variable instead
 		if (doorIndex < 1) return true;
 
 		CCNode* mainLayer = this->getChildByID("main-node");
