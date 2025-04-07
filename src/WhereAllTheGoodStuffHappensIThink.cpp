@@ -46,9 +46,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		const std::string& checkmarkOne = !manager->colonModeEnabled ? "GJ_checkOff_001.png" : "GJ_checkOn_001.png";
 		const std::string& checkmarkTwo = !manager->colonModeEnabled ? "GJ_checkOn_001.png" : "GJ_checkOff_001.png";
 
+		CCSprite* checkmarkOneSprite = CCSprite::createWithSpriteFrameName(checkmarkOne.c_str());
+		CCSprite* checkmarkTwoSprite = CCSprite::createWithSpriteFrameName(checkmarkTwo.c_str());
+		checkmarkOneSprite->setScale(.75f);
+		checkmarkTwoSprite->setScale(.75f);
+
 		CCMenuItemToggler* colonToggle = CCMenuItemToggler::create(
-			CCSprite::createWithSpriteFrameName(checkmarkOne.c_str()),
-			CCSprite::createWithSpriteFrameName(checkmarkTwo.c_str()), this,
+			checkmarkOneSprite, checkmarkTwoSprite, this,
 			menu_selector(MyLevelAreaInnerLayer::onColonToggle)
 		);
 		colonToggle->setID("secret-ending-toggle"_spr);
@@ -56,9 +60,20 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
 		colonToggle->setOpacity(0);
-		colonToggle->runAction(CCFadeIn::create(.5f));
 		
 		return true;
+	}
+	void onEnter() {
+		LevelAreaInnerLayer::onEnter();
+		log::info("entering LevelAreaInnerLayer for real this time");
+
+		CCNode* backMenu = this->getChildByID("back-menu");
+		if (!backMenu) return;
+
+		colonToggle = backMenu->getChildByID("secret-ending-toggle"_spr);
+		if (!colonToggle) return;
+
+		colonToggle->runAction(CCFadeIn::create(.5f));
 	}
 	void onDoor(CCObject* sender) {
 		if (!sender || !Manager::getSharedInstance()->colonModeEnabled) return LevelAreaInnerLayer::onDoor(sender);
