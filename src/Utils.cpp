@@ -47,7 +47,7 @@ namespace Utils {
 		#ifndef GEODE_IS_X64
 		dialougeLayer->addToMainScene();
 		#endif
-		dialougeLayer->animateIn(DialogAnimationType::FromRight);
+		dialougeLayer->animateInRandomSide();
 	}
 
 }
