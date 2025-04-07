@@ -72,7 +72,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCNode* backMenu = this->getChildByID("back-menu");
 		if (!backMenu) return;
 
-		colonToggle = backMenu->getChildByID("secret-ending-toggle"_spr);
+		CCNode* colonToggle = backMenu->getChildByID("secret-ending-toggle"_spr);
 		if (!colonToggle) return;
 
 		colonToggle->runAction(CCFadeIn::create(.5f));
