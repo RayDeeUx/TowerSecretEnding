@@ -78,6 +78,7 @@ public:
 	// also speaking of the dialouge layer i think i might just manually translate it
 	// using it in mod resource form opens backdoor for wronguns to replace it with swears much more easily
 	std::vector<int> completedLevels = {};
+	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955};
 
 	// store timestamps between level ID 5003 bomb pickup at group 105
 	// and pauselayer creation

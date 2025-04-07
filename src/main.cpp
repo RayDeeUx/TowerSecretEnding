@@ -22,6 +22,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 		CCNode* doorLayer = mainLayer->getChildByID("main-menu");
 
 		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
+		if (door->getTag() < 5001 || door->getTag() > 5004) return true; // dont touch nodes that arent doors
 		door->setSprite(CCSprite::create("towerDoorSpecial.png"_spr));
 		door->setUserObject("current-door"_spr, CCBool::create(true));
 
