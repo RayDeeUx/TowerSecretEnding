@@ -2,6 +2,7 @@
 #include <Geode/modify/CameraTriggerGameObject.hpp>
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/EffectGameObject.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
@@ -188,8 +189,12 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->trackTime = false;
 		PlayLayer::onQuit();
 	}
+};
+
+class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 	virtual void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
-		PlayLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
+		GJBaseGameLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
+		if (this != PlayLayer::get()) return log::info("not in playlayer :(");
 		if (p0 != 0) log::info("spawning {}", p0);
 		if (p0 == 105 && this->m_level && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
 			Manager* manager = Manager::getSharedInstance();
