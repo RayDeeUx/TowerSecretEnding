@@ -206,12 +206,17 @@ class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 class $modify(MyPauseLayer, PauseLayer) {
 	void customSetup() {
 		Manager* manager = Manager::getSharedInstance();
-		if (!manager->trackTime) return PauseLayer::customSetup();
+		if (!manager->trackTime || manager->addColonToggle) return PauseLayer::customSetup();
+
 		manager->pauseLayerTimestamp = std::time(nullptr);
-		long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
+		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
+
 		manager->addColonToggle = secondsPassed < 2;
+		if (manager->addColonToggle) manager->colonModeEnabled = true;
+
 		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(CCScene::get()->getChildByID("jane-wickline-debug-label"_spr));
 		if (!Utils::getBool("debugMode") || !wicklineLabel) return PauseLayer::customSetup();
+		
 		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
 		PauseLayer::customSetup();
 	}
