@@ -69,6 +69,8 @@ public:
 	// for the deep sewers specifically
 	bool useCanonSpawn = false;
 
+	// determine if toggle should be added
+	bool addColonToggle = false;
 	// controls when this mod's behavior kicks in
 	bool colonModeEnabled = false;
 
@@ -77,10 +79,14 @@ public:
 	// using it in mod resource form opens backdoor for wronguns to replace it with swears much more easily
 	std::vector<int> completedLevels = {};
 
+	// store timestamps between level ID 5003 bomb pickup at group 105
+	// and pauselayer creation
+	bool trackTime = false;
+	std::time_t bombPickupTimestamp;
+	std::time_t pauseLayerTimestamp;
+
 	static Manager* getSharedInstance() {
-		if (!instance) {
-			instance = new Manager();
-		}
+		if (!instance) instance = new Manager();
 		return instance;
 	}
 

@@ -3,15 +3,17 @@
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/EffectGameObject.hpp>
 #include <Geode/modify/GameManager.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include "Manager.hpp"
 #include "Utils.hpp"
+#include <ctime>
 
 using namespace geode::prelude;
 
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {})", manager->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(this->m_level->m_levelID.value()))
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", manager->useCanonSpawn, !this->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(this->m_level->m_levelID.value()), manager->trackTime, manager->addColonToggle)
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
@@ -36,6 +38,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				if (colonsLevel && static_cast<std::string>(colonsLevel->m_levelString).length() > 2) log::info("colonsLevel {} with colonID {} was downloaded", colonsLevel, colonID);
 			}
 		}
+
+		if (!manager->addColonToggle) return true;
 
 		CCNode* backMenu = this->getChildByID("back-menu");
 		if (!backMenu) return true;
@@ -175,6 +179,31 @@ class $modify(MyPlayLayer, PlayLayer) {
 		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
 
 		PlayLayer::levelComplete();
+	}
+	void onQuit() {
+		Manager* manager = Manager::getSharedInstance();
+		manager->bombPickupTimestamp = std::time(nullptr);
+		manager->pauseLayerTimestamp = std::time(nullptr);
+		manager->trackTime = false;
+	}
+	void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
+		PlayLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
+		if (p0 == 105 && this->m_level && !this->m_level->getUserObject("colon-variant"_spr) && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
+			Manager* manager = Manager::getSharedInstance();
+			manager->bombPickupTimestamp = std::time(nullptr);
+			manager->trackTime = true;
+		}
+	}
+};
+
+class $modify(MyPauseLayer, MyPauseLayer) {
+	void customSetup() {
+		Manager* manager = Manager::getSharedInstance();
+		if (!manager->trackTime) return PauseLayer::customSetup();
+		manager->pauseLayerTimestamp = std::time(nullptr);
+		long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
+		manager->addColonToggle = secondsPassed < 2;
+		PauseLayer::customSetup();
 	}
 };
 
