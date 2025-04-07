@@ -23,9 +23,11 @@ public:
 
 	const std::vector<UserData> users = {
 		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions
+		/*
 		{"Colon", 60, 18, 10, 10, true, UserType::Colon,
 			{"Gameplay for <cy>The Secret Ending</c>", "Door highlighting in The Tower"}
 		},
+		*/
 		{"16lord", 37, 12, 23, 12, true, UserType::Creator,
 			{"Decoration and effects in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Decoration in <co>The Sneaky Hollow</c>"}
 		},
@@ -44,9 +46,11 @@ public:
 		{"Mudstep", 30, 12, 3, 3, true, UserType::Musician,
 			{"Custom music in <co>The Sneaky Hollow</c>"}
 		},
+		/*
 		{"RayDeeUx", 104, 21, 3, 3, true, UserType::Modder,
 			{"Translating <cy>The Secret Ending</c> into the Geode mod format", "Bug squasher (within reason)"}
 		},
+		*/
 		{"acaruso", 12, 12, 17, 17, false, UserType::Modder,
 			{"Downloading audio assets in the background"}
 		},
