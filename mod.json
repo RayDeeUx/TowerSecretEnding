@@ -9,7 +9,7 @@
 	"id": "raydeeux_colon.towersecretending",
 	"name": "TowerSecretEnding",
 	"version": "v0.0.0-alpha.1",
-	"developers": ["Colon", "RayDeeUx", "Alphalaneous"],
+	"developers": ["Colon", "RayDeeUx"],
 	"description": "The Secret Ending to Floor 1 of The Tower!",
 	"repository": "https://github.com/RayDeeUx/TowerSecretEnding",
 	"settings": {
@@ -23,6 +23,9 @@
 	"resources": {
 		"sprites": [
 			"resources/*.png"
+		],
+		"files": [
+			"resources/dialog.json"
 		]
 	},
 	"dependencies": {
