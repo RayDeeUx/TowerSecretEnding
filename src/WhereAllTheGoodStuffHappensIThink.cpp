@@ -26,12 +26,11 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		// just toggles the control. nothing crazy
 		Manager::getSharedInstance()->colonMode = !Manager::getSharedInstance()->colonMode;
 	}
-	bool init(bool returning) {
-		if (!LevelAreaInnerLayer::init(returning)) return false;
-		Manager* manager = Manager::getSharedInstance();
+	bool init(bool returningFromTowerLevel) {
+		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
+		const Manager* manager = Manager::getSharedInstance();
 
-		if (returning) log::info("returning from a tower level");
-		else {
+		if (!returningFromTowerLevel) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
@@ -70,21 +69,16 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
-		colonToggle->setOpacity(0);
+		if (returningFromTowerLevel) return true;
+
+		// apparently i need to modify the *sprites* to mimic the "fade-in" effect most of the other robtop buttons have.
+		// pretty fuckin tedious but oh well --raydeeux
+		checkmarkOneSprite->setOpacity(0);
+		checkmarkTwoSprite->setOpacity(0);
+		checkmarkOneSprite->runAction(CCFadeIn::create(.5f));
+		checkmarkTwoSprite->runAction(CCFadeIn::create(.5f));
 		
 		return true;
-	}
-	void onEnter() {
-		LevelAreaInnerLayer::onEnter();
-		log::info("entering LevelAreaInnerLayer for real this time");
-
-		CCNode* backMenu = this->getChildByID("back-menu");
-		if (!backMenu) return;
-
-		CCNode* colonToggle = backMenu->getChildByID("secret-ending-toggle"_spr);
-		if (!colonToggle) return;
-
-		colonToggle->runAction(CCFadeIn::create(.5f));
 	}
 	void onDoor(CCObject* sender) {
 		if (!sender || !Manager::getSharedInstance()->colonMode) return LevelAreaInnerLayer::onDoor(sender);
