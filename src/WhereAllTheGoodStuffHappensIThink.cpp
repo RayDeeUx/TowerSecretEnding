@@ -14,7 +14,7 @@ using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->addColonToggle)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->addColonToggle)
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
 	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
@@ -190,6 +190,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->bombPickupTimestamp = std::time(nullptr);
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
+		if (manager->addColonToggle) manager->lockedIn = true;
 		PlayLayer::onQuit();
 	}
 };
@@ -225,7 +226,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void onResume(CCObject* sender) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		if (manager->addColonToggle) {
+		if (manager->addColonToggle && !manager->lockedIn) {
 			manager->addColonToggle = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
 			manager->colonMode = false; // so the player has to redo the secret ending
 			manager->doorToShow = -1;

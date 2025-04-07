@@ -82,6 +82,7 @@ public:
 	// store timestamps between level ID 5003 bomb pickup at group 105
 	// and pauselayer creation
 	bool trackTime = false;
+	bool lockedIn = false;
 	std::time_t bombPickupTimestamp;
 	std::time_t pauseLayerTimestamp;
 
