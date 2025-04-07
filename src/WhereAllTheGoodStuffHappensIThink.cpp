@@ -173,9 +173,10 @@ class $modify(MyPlayLayer, PlayLayer) {
 		const int levelID = this->m_level->m_levelID.value();
 		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
-		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
 
+		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
 		if (!Utils::getBool("debugMode") || !wicklineLabel) return PlayLayer::levelComplete();
+		
 		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
 
 		PlayLayer::levelComplete();
@@ -185,6 +186,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->bombPickupTimestamp = std::time(nullptr);
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
+		PlayLayer::onQuit();
 	}
 	void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		PlayLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
@@ -203,6 +205,9 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 		manager->addColonToggle = secondsPassed < 2;
+		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
+		if (!Utils::getBool("debugMode") || !wicklineLabel) return PauseLayer::customSetup();
+		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
 		PauseLayer::customSetup();
 	}
 };
