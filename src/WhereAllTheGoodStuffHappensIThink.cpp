@@ -188,7 +188,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->trackTime = false;
 		PlayLayer::onQuit();
 	}
-	void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
+	virtual void spawnGroup(int p0, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		PlayLayer::spawnGroup(p0, p1, p2, p3, p4, p5);
 		if (p0 != 0) log::info("spawning {}", p0);
 		if (p0 == 105 && this->m_level && this->m_level->m_levelID.value() == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
