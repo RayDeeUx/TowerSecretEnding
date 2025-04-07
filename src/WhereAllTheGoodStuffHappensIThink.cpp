@@ -212,7 +212,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
 		manager->addColonToggle = secondsPassed < 2;
-		if (manager->addColonToggle) manager->colonMode = true;
+		if (manager->addColonToggle) manager->colonMode = true; // so the toggle doesn't get added when entering LevelAreaInnerLayer
 
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
@@ -220,9 +220,9 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void onResume(CCObject* sender) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		if (manager->trackTime && manager->addColonToggle) {
+		if (manager->addColonToggle) {
 			manager->addColonToggle = false;
-			manager->colonMode = false;
+			manager->colonMode = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
 		}
 		UPDATE_DEBUG_LABEL(CCScene::get(), PauseLayer::onResume(sender))
 		PauseLayer::onResume(sender);
