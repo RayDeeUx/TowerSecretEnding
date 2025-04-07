@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 AssetDownloader::~AssetDownloader() {
-	// m_mgr->removeMusicDownloadDelegate(this);
+	m_mgr->removeMusicDownloadDelegate(this);
 }
 
 AssetDownloader* AssetDownloader::create(GJGameLevel* level) {
@@ -26,7 +26,7 @@ bool AssetDownloader::init(GJGameLevel* level) {
 	parse(level->m_songID, level->m_songIDs, level->m_sfxIDs);
 
 	m_mgr = MusicDownloadManager::sharedState();
-	// m_mgr->addMusicDownloadDelegate(this);
+	m_mgr->addMusicDownloadDelegate(this);
 
 	return true;
 }
