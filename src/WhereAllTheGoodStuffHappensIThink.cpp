@@ -28,7 +28,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
-			for (const auto&[robtopID, colonID] : manager->robtopToColon) if (!glm->hasDownloadedLevel(levelID)) glm->downloadLevel(colonID, false);
+			for (const auto&[robtopID, colonID] : manager->robtopToColon) if (!glm->hasDownloadedLevel(colonID)) glm->downloadLevel(colonID, false);
 		}
 
 		CCNode* backMenu = this->getChildByID("back-menu");
