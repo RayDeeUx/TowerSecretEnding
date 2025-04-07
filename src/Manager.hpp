@@ -85,6 +85,8 @@ public:
 	std::time_t bombPickupTimestamp;
 	std::time_t pauseLayerTimestamp;
 
+	int doorToShow = -1;
+
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;

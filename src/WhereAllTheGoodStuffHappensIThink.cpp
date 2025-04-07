@@ -6,7 +6,6 @@
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
-#include <Geode/modify/MenuLayer.hpp>
 #include "Manager.hpp"
 #include "Utils.hpp"
 #include <ctime>
@@ -15,6 +14,10 @@ using namespace geode::prelude;
 
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
 #define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->m_level->m_levelID.value(), difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->m_level->m_levelID.value()), manager->trackTime, manager->addColonToggle)
+#define UPDATE_DEBUG_LABEL(source, originalCallback)\
+	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
+	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
+	wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());\
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
@@ -175,10 +178,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
 		if (!completedBefore) manager->completedLevels.push_back(levelID);
 
-		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(this->getParent()->getChildByID("jane-wickline-debug-label"_spr));
-		if (!Utils::getBool("debugMode") || !wicklineLabel) return PlayLayer::levelComplete();
-		
-		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
+		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
 
 		PlayLayer::levelComplete();
 	}
@@ -214,11 +214,15 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->addColonToggle = secondsPassed < 2;
 		if (manager->addColonToggle) manager->colonModeEnabled = true;
 
-		CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(CCScene::get()->getChildByID("jane-wickline-debug-label"_spr));
-		if (!Utils::getBool("debugMode") || !wicklineLabel) return PauseLayer::customSetup();
-		
-		wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());
+		UPDATE_DEBUG_LABEL(this->getParent(), PauseLayer::customSetup())
 		PauseLayer::customSetup();
+	}
+	void onResume(CCObject* sender) {
+		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
+		Manager* manager = Manager::getSharedInstance();
+		if (manager->trackTime && manager->addColonToggle) manager->addColonToggle = false;
+		UPDATE_DEBUG_LABEL(this->getParent(), PauseLayer::onResume(sender))
+		PauseLayer::onResume(sender);
 	}
 };
 

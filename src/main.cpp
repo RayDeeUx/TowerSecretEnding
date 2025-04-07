@@ -5,7 +5,6 @@
 #include <Geode/modify/EndLevelLayer.hpp>
 
 #include "CreditsLayer.hpp"
-#include "UserCell.hpp"
 #include "Manager.hpp"
 
 using namespace geode::prelude;
@@ -14,7 +13,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 	bool init(bool p0) {
 		if (!LevelAreaInnerLayer::init(p0)) return false;
 
-		const int doorIndex = Mod::get()->getSettingValue<int64_t>("doorToShowBETATESTINGLOL");
+		const int doorIndex = Manager::getSharedInstance()->doorToShow;
 		// probably use Manager variable instead
 		if (doorIndex < 1) return true;
 

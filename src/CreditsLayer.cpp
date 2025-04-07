@@ -45,5 +45,5 @@ void CreditsLayer::showLayer(const bool instant) {
 	CCScene::get()->addChild(this);
 
 	this->setID("CreditsLayer"_spr);
-	m_listLayer->setID("list-layer");
+	m_listLayer->setID("list-of-users-layer"_spr);
 }
