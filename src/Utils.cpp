@@ -34,4 +34,20 @@ namespace Utils {
 		log::info("——— END ERROR REPORT ———");
 	}
 
+	void doDialouge() {
+		CCArray* dialougeObjects = CCArray::create();
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "<cr>Well,<d020> well,<d020> well<d020>...</c>", 1, 1.f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "I suppose you were <cl>stronger</c> than I thought.", 3, 1.f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "<cj>I guess I'm nothing more than a pile of bones after all...</c>", 6, .5f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "But you haven't seen the last of me.", 1, 1.f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "<cl>I WILL be back.</c>", 5, 1.f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "<cl>And the next time we cross paths...</c>", 5, 1.f, false, ccColor3B{255, 255, 255}));
+		dialougeObjects->addObject(DialogObject::create("Rattledash", "<s300><cr>I'LL KICK YOUR ASS</c></s>", 8, 1.25f, false, ccColor3B{255, 255, 255}));
+		DialogLayer* dialougeLayer = DialogLayer::createWithObjects(dialougeObjects, 4);
+		#ifndef GEODE_IS_X64
+		dialougeLayer->addToMainScene();
+		#endif
+		dialougeLayer->animateIn(DialogAnimationType::FromRight);
+	}
+
 }

@@ -69,7 +69,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
-		if (returningFromTowerLevel) return true;
+		if (returningFromTowerLevel && manager->completedLevels.size() == manager->correctCompletionOrder.size()) {
+			bool shouldShowDialog = true;
+			for (int i = 0; i < manager->completedLevels.size(); i++) {
+				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
+			}
+			if (shouldShowDialog) Utils::doDialouge();
+			return true;
+		}
 
 		// apparently i need to modify the *sprites* to mimic the "fade-in" effect most of the other robtop buttons have.
 		// pretty fuckin tedious but oh well --raydeeux
