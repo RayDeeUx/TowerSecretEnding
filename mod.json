@@ -25,7 +25,9 @@
 			"resources/*.png"
 		],
 		"files": [
-			"resources/dialog.json"
+			"resources/dialog.json",
+			"resources/icons/*.png",
+			"resources/icons/*.plist"
 		]
 	},
 	"dependencies": {

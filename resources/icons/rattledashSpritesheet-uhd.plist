@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>frames</key>
+	<dict>
+		<key>raydeeux_colon.towersecretending/rattledash_001.png</key>
+		<dict>
+			<key>spriteOffset</key>
+			<string>{0,0}</string>
+			<key>spriteSize</key>
+			<string>{125,123}</string>
+			<key>spriteSourceSize</key>
+			<string>{125,123}</string>
+			<key>textureRect</key>
+			<string>{{0,0},{125,123}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+		<key>raydeeux_colon.towersecretending/rattledash_2_001.png</key>
+		<dict>
+			<key>spriteOffset</key>
+			<string>{0,0}</string>
+			<key>spriteSize</key>
+			<string>{123,122}</string>
+			<key>spriteSourceSize</key>
+			<string>{123,122}</string>
+			<key>textureRect</key>
+			<string>{{0,125},{123,122}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+		<key>raydeeux_colon.towersecretending/rattledash_glow_001.png</key>
+		<dict>
+			<key>spriteOffset</key>
+			<string>{0,0}</string>
+			<key>spriteSize</key>
+			<string>{131,129}</string>
+			<key>spriteSourceSize</key>
+			<string>{131,129}</string>
+			<key>textureRect</key>
+			<string>{{0,249},{131,129}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>format</key>
+		<integer>3</integer>
+		<key>realTextureFileName</key>
+		<string>raydeeux_colon.towersecretending/rattledashSpritesheet-uhd.png</string>
+		<key>size</key>
+		<string>{131,378}</string>
+		<key>textureFileName</key>
+		<string>raydeeux_colon.towersecretending/rattledashSpritesheet-uhd.png</string>
+	</dict>
+</dict>
+</plist>
