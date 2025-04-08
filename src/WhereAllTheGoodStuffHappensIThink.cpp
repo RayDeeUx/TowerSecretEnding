@@ -185,7 +185,6 @@ class $modify(MyGameManager, GameManager) {
 		if (DialogLayer* rattledash = Utils::showRattledashsFinalWords(); shouldShowDialog && rattledash) {
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
-			rattledash->displayNextObject();
 		}
 	}
 };

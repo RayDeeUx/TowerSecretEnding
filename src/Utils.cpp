@@ -81,6 +81,7 @@ namespace Utils {
 		dialougeObjects->addObject(rattledashEight);
 
 		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
+		ret->displayNextObject();
 		ret->setUserObject("rattledash"_spr, CCBool::create(true));
 
 		return ret;
@@ -103,6 +104,7 @@ namespace Utils {
 		dialougeObjects->addObject(rattledashExtraThree);
 
 		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
+		ret->displayNextObject();
 		ret->setUserObject("rattledash"_spr, CCBool::create(true));
 
 		return ret;
