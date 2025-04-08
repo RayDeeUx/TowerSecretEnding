@@ -101,7 +101,6 @@ namespace Utils {
 	}
 
 	DialogLayer* showHeadsUp() {
-		// everyone loves an incredibly tangential ron swanson reference
 		CCArray* dialougeObjects = CCArray::create();
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
@@ -122,6 +121,30 @@ namespace Utils {
 		ret->setUserObject("rattledash"_spr, CCBool::create(true));
 
 		return ret;
+	}
+
+	DialogLayer* showFailedDownload() {
+		CCArray* dialougeObjects = CCArray::create();
+
+		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
+
+		DialogObject* rattledashExtraFour = DialogObject::create(HIS_NAME, "Ah! Welcome!", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraFour->setTag(13); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraFour);
+
+		DialogObject* rattledashExtraFive = DialogObject::create(HIS_NAME, "It looks like you're not ready for <cy>The Secret Ending</c> yet.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraFive->setTag(14); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraFive);
+
+		DialogObject* rattledashExtraSix = DialogObject::create(HIS_NAME, "Another time, then.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraSix->setTag(15); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraSix);
+
+		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
+		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+
+		return ret;
+
 	}
 
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode) {

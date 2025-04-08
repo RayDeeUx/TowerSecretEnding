@@ -1,6 +1,8 @@
 #pragma once
 #include "UserCell.hpp"
 
+#define DIALOUGE_SPRITE_ARRAY_SIZE 16
+
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
 
@@ -24,7 +26,7 @@ public:
 
 	// this is a surprise tool that will be helpful later
 	// sprite names for the DialogLayer::displayDialogObject hook
-	const std::array<std::string, 13> listOfDialogSprites = {
+	const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE> listOfDialogSprites = {
 		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE THIS.
 		"dialogIcon_001.png"_spr,
 		"dialogIcon_003.png"_spr,
@@ -38,6 +40,9 @@ public:
 		"dialogIcon_001.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_005.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_003.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
 	};
 
 	// for "special thanks" screen
@@ -126,6 +131,11 @@ public:
 
 	// because user objects are not 100% accurate
 	bool isFromColonsTower = false;
+
+	// check if downloads were correct
+	bool downloadsFailed = false;
+	// only show the dialog once
+	bool shownDownloadsFailed = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();

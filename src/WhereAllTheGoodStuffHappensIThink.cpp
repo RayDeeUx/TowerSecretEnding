@@ -45,17 +45,31 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return true;
 		}
 
-		if (!returningFromTowerLevel) {
+		if (!returningFromTowerLevel && !manager->downloadsFailed) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
 			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
-				if (!colonsLevel || static_cast<std::string>(colonsLevel->m_levelString).length() < 2) glm->downloadLevel(colonID, false);
+				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
+				if (!colonsLevel || originalStringSize < 100000 || (colonID == 116926955 && originalStringSize < 245000)) {
+					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
+					glm->downloadLevel(colonID, false);
+				}
 				colonsLevel = glm->getSavedLevel(colonID);
-				if (colonsLevel && static_cast<std::string>(colonsLevel->m_levelString).length() > 2) log::info("colonsLevel {} with colonID {} was downloaded", colonsLevel, colonID);
+				if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
+					log::info("colonsLevel {} with colonID {} was found", colonsLevel, colonID);
+				} else {
+					manager->downloadsFailed = true;
+					break;
+				}
 			}
+		}
+
+		if (manager->downloadsFailed) {
+
+			return true;
 		}
 
 		if (!manager->colonToggleUnlocked) return true;
@@ -311,8 +325,16 @@ class $modify(MyDialogLayer, DialogLayer) {
 		DialogLayer::displayDialogObject(dialogObject);
 		const int tag = dialogObject->getTag();
 		const bool isRattledash = this->getUserObject("rattledash"_spr);
-		if (const std::array<std::string, 13>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
+		if (const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
 			this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
+		}
+		if (tag == 14 && isRattledash) {
+			CCLabelBMFont* translationLabel = CCLabelBMFont::create("(Translation: Make sure you're connected to RobTop's servers.)", "bigFont.fnt");
+			translationLabel->setOpacity(0);
+			this->addChild(translationLabel);
+			translationLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
+			translationLabel->setPositionY(translationLabel->getPositionY() + 40.f);
+			translationLabel->runAction(CCFadeIn::create(.5f));
 		}
 	}
 };
