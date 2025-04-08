@@ -137,6 +137,9 @@ public:
 	// only show the dialog once
 	bool shownDownloadsFailed = false;
 
+	// track first time entering the tower
+	bool firstTimeEntering = true;
+
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;

@@ -44,27 +44,28 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return true;
 		}
 
-		if (!returningFromTowerLevel && !manager->downloadsFailed) {
+		if (!manager->downloadsFailed) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
-			log::info("entering the tower from elsewhere");
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
-				if (!colonsLevel || originalStringSize < 100000 || (colonID == 116926955 && originalStringSize < 245000)) {
+				if (!colonsLevel || originalStringSize < 100000 || (colonID == 116926955 && originalStringSize < 245000) || colonsLevel->m_accountID.value() != 106255) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
 				}
 				colonsLevel = glm->getSavedLevel(colonID);
 				if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
 					log::info("colonsLevel {} with colonID {} was found", colonsLevel, colonID);
-				} else {
+				} else if (!manager->firstTimeEntering) {
 					manager->downloadsFailed = true;
 					break;
 				}
 			}
 		}
+
+		if (manager->firstTimeEntering) manager->firstTimeEntering = false;
 
 		if (manager->downloadsFailed) {
 			if (manager->shownDownloadsFailed) return true;
@@ -335,11 +336,12 @@ class $modify(MyDialogLayer, DialogLayer) {
 		}
 		if (tag == 14 && isRattledash) {
 			CCLabelBMFont* translationLabel = CCLabelBMFont::create("(Translation: Make sure you're connected to RobTop's servers.)", "bigFont.fnt");
+			translationLabel->limitLabelWidth(300.f, 1.f, 0.001f);
 			translationLabel->setOpacity(0);
 			this->addChild(translationLabel);
 			translationLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
-			translationLabel->setPositionY(translationLabel->getPositionY() + 40.f);
-			translationLabel->runAction(CCFadeIn::create(.5f));
+			translationLabel->setPositionY(translationLabel->getPositionY() + 45.f);
+			translationLabel->runAction(CCFadeIn::create(1.f));
 		}
 	}
 };
