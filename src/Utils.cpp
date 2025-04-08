@@ -166,9 +166,9 @@ namespace Utils {
 		rewardLayer->show();
 		rewardLayer->showCollectReward(item);
 
-		rewardLayer->m_wrongLabel->setString("(this doesn't affect your stats lol)");
+		rewardLayer->m_wrongLabel->setString("(this doesn't affect your stats lol)\n(also you're stuck with the creeper cube sorry)");
 		rewardLayer->m_wrongLabel->setColor(ccColor3B{0, 255, 255});
-		rewardLayer->m_wrongLabel->setPositionY(285.f);
+		rewardLayer->m_wrongLabel->setPositionY(300.f);
 		rewardLayer->m_wrongLabel->setVisible(true);
 		rewardLayer->m_wrongLabel->setOpacity(0);
 
