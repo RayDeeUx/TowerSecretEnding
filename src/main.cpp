@@ -3,9 +3,10 @@
 
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
-
+#include <Geode/modify/MenuLayer.hpp>
 #include "CreditsLayer.hpp"
 #include "Manager.hpp"
+#include "Utils.hpp"
 
 using namespace geode::prelude;
 
@@ -13,23 +14,9 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 	bool init(bool returningFromTowerLevel) {
 		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
 		Manager* manager = Manager::getSharedInstance();
-		if (!manager->colonMode) return true;
+		if (!manager->colonMode || !manager->completedVanillaTowerFloorOne) return true;
 
-		const int doorIndex = manager->doorToShow;
-		if (doorIndex < 1) return true;
-
-		CCNode* mainLayer = this->getChildByID("main-node");
-		CCNode* doorLayer = mainLayer->getChildByID("main-menu");
-
-		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
-		if (door->getTag() < 5001 || door->getTag() > 5004) return true; // dont touch nodes that arent doors
-		door->setSprite(CCSprite::create("towerDoorSpecial.png"_spr));
-		door->setUserObject("current-door"_spr, CCBool::create(true));
-
-		CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
-		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
-		doorLayer->addChild(particles);
-		particles->setScale(0.5f);
+		Utils::highlightADoor(this, true);
 
 		return true;
 	}
@@ -45,5 +32,20 @@ class $modify(EndLevelLayer) {
 		EndLevelLayer::customSetup();
 		if (!m_playLayer || !m_playLayer->m_level || !m_playLayer->m_level->getUserObject("colon-variant"_spr)) return;
 		if (CCNode* lb = m_mainLayer->querySelector("button-menu > leaderboard-button")) lb->setVisible(false);
+	}
+};
+
+// alright mom said it's my turn to commit to main.cpp
+// --raydeeux
+
+class $modify(MenuLayer) {
+	bool init() {
+		if (!MenuLayer::init()) return false;
+		Manager* manager = Manager::getSharedInstance();
+		GameStatsManager* gsm = GameStatsManager::get();
+		if (manager->calledAlready || !gsm) return true;
+		manager->calledAlready = true;
+		manager->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5003) && gsm->hasCompletedMainLevel(5004);
+		return true;
 	}
 };

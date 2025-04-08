@@ -1,4 +1,5 @@
 #include "Utils.hpp"
+#include "Manager.hpp"
 
 using namespace geode::cocos;
 
@@ -34,7 +35,9 @@ namespace Utils {
 		log::info("——— END ERROR REPORT ———");
 	}
 
-	DialogLayer* showDialouge() {
+	DialogLayer* showRattledashsFinalWords() {
+		// also speaking of the dialouge layer i think i might just manually translate it into cocos code
+		// using it in JSON format opens backdoor for wronguns to replace it with swears much more easily
 		CCArray* dialougeObjects = CCArray::create();
 
 		DialogObject* rattledashDummy = DialogObject::create(HIS_NAME, "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
@@ -80,4 +83,27 @@ namespace Utils {
 		return DialogLayer::createWithObjects(dialougeObjects, 4);
 	}
 
+	DialogLayer* showHeadsUp() {
+		// everyone loves an incredibly tangential ron swanson reference
+		return DialogLayer::createWithObjects(CCArray::createWithObject(DialogObject::create(HIS_MAJESTY_THE_ROYAL_PAIN_IN_THE_BUTT, "<co>If you're going to poke around here AND keep me waiting, at least don't half-ass both...</c>", 12, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS)), 4);
+	}
+
+	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode) {
+		const int doorIndex = Manager::getSharedInstance()->doorToShow;
+		if (doorIndex < 1) return;
+
+		CCNode* mainLayer = scene->getChildByID("main-node");
+		CCNode* doorLayer = mainLayer->getChildByID("main-menu");
+
+		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
+		if (door->getTag() < 5001 || door->getTag() > 5004) return; // dont touch nodes that arent doors
+		door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
+		door->setUserObject("current-door"_spr, CCBool::create(isColonMode));
+
+		CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
+		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
+		doorLayer->addChild(particles);
+		particles->setScale(0.5f);
+		particles->setVisible(isColonMode);
+	}
 }

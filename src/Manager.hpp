@@ -22,6 +22,7 @@ public:
 		{5004, 116926955},
 	};
 
+	// this is a surprise tool that will be helpful later
 	const std::array<std::string, 10> listOfDialogSprites = {
 		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE THIS.
 		"dialogIcon_001.png"_spr,
@@ -42,7 +43,7 @@ public:
 		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions
 		/*
 		{"Colon", 60, 18, 10, 10, true, UserType::Colon,
-			{"Gameplay for <cy>The Secret Ending</c>", "Door highlighting in The Tower"}
+			{"Idea for <cy>The Secret Ending</c>"}
 		},
 		*/
 		{"16lord", 37, 12, 23, 12, true, UserType::Creator,
@@ -77,6 +78,12 @@ public:
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
 			{"Designed this \"Special thanks!\" list you're reading right now"}
 		},
+		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
+			{"Crossplatform Geode SDK bindings support"}
+		},
+		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
+			{"Crossplatform Geode SDK bindings support"}
+		},
 	};
 
 	// for the deep sewers specifically
@@ -87,9 +94,8 @@ public:
 	// controls when this mod's behavior kicks in
 	bool colonMode = false;
 
-	// track completed levels during runtime to know when to activate colon's dialouge layer
-	// also speaking of the dialouge layer i think i might just manually translate it
-	// using it in mod resource form opens backdoor for wronguns to replace it with swears much more easily
+	// track completed levels during runtime to know when to show rattledash's final words
+	// the correctCompletionOrder is to minimize cheating
 	std::vector<int> completedLevels = {};
 	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955}; // in case people want to cheat for some reason
 
@@ -100,9 +106,16 @@ public:
 	std::time_t bombPickupTimestamp;
 	std::time_t pauseLayerTimestamp;
 
+	// integer for colon to highlight the correct door i think
 	int doorToShow = -1;
 
+	// control when to show alpha's "special thanks!" layer (while colonToggleUnlocked is false)
 	bool completedAtLeastOnce = false;
+
+	// check if someone has unlocked + completed all tower levels
+	bool completedVanillaTowerFloorOne = false;
+	// control if someone has already seen the "you havent unlocked and completed all tower levels yet" dialog
+	bool shownHeadsUpDialog = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();

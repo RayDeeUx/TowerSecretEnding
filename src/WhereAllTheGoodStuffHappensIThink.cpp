@@ -23,14 +23,25 @@ using namespace geode::prelude;
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
-		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
 		Manager* manager = Manager::getSharedInstance();
+		if (!sender || !manager->completedVanillaTowerFloorOne) return; // click on it like a sane and sober human would, for chrissake!
 		// just toggles the control. nothing crazy
 		manager->colonMode = !manager->colonMode;
+		Utils::highlightADoor(this, manager->colonMode);
 	}
 	bool init(bool returningFromTowerLevel) {
 		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
 		const Manager* manager = Manager::getSharedInstance();
+		if (!manager->completedVanillaTowerFloorOne) {
+			if (!manager->shownHeadsUpDialog) {
+				DialogLayer* headsUp = Utils::showHeadsUp();
+				if (headsUp) {
+					this->addChild(headsUp);
+					headsUp->animateInRandomSide();
+				}
+			}
+			return true;
+		}
 
 		if (!returningFromTowerLevel) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
@@ -84,7 +95,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onDoor(CCObject* sender) {
 		Manager* manager = Manager::getSharedInstance();
 		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
-		if (!sender || !manager->colonMode || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
+		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
 		log::info("ok so the sender is in fact a button after all. proceed.");
 
 		const int robtopsID = sender->getTag();
@@ -171,7 +182,7 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
-		if (DialogLayer* rattledash = Utils::showDialouge(); shouldShowDialog && rattledash) {
+		if (DialogLayer* rattledash = Utils::showRattledashsFinalWords(); shouldShowDialog && rattledash) {
 			rattledash->setUserObject("rattledash-final-words"_spr, CCBool::create(true));
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
@@ -271,7 +282,8 @@ class $modify(MyEffectGameObject, EffectGameObject) {
 		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return EffectGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
-			return log::info("[EFFECT] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
+			// log::info("[EFFECT] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
+			return;
 		}
 		EffectGameObject::triggerObject(gjbgl, p1, p2);
 	}
@@ -282,7 +294,8 @@ class $modify(MyCameraTriggerGameObject, CameraTriggerGameObject) {
 		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
-			return log::info("[CAMERA] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
+			// log::info("[CAMERA] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
+			return;
 		}
 		CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
 	}
