@@ -34,14 +34,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
 		Manager* manager = Manager::getSharedInstance();
 		if (!manager->completedVanillaTowerFloorOne) {
-			if (!manager->shownHeadsUpDialog) {
-				if (DialogLayer* headsUp = Utils::showHeadsUp(); headsUp) {
-					this->addChild(headsUp);
-					headsUp->animateInRandomSide();
-					headsUp->displayNextObject();
-					manager->shownHeadsUpDialog = true;
-				}
-			}
+			if (manager->shownHeadsUpDialog) return true;
+			DialogLayer* headsUp = Utils::showHeadsUp();
+			if (!headsUp) return true;
+			this->addChild(headsUp);
+			headsUp->animateInRandomSide();
+			headsUp->displayNextObject();
+			manager->shownHeadsUpDialog = true;
 			return true;
 		}
 
@@ -68,7 +67,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		}
 
 		if (manager->downloadsFailed) {
-
+			if (manager->shownDownloadsFailed) return true;
+			DialogLayer* downloadFailed = Utils::showFailedDownload();
+			if (!downloadFailed) return true;
+			this->addChild(downloadFailed);
+			downloadFailed->animateInRandomSide();
+			downloadFailed->displayNextObject();
+			manager->shownDownloadsFailed = true;
 			return true;
 		}
 

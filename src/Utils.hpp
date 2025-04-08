@@ -28,6 +28,7 @@ namespace Utils {
 	void logErrorCustomFormat(const std::string_view reason, const int robsID, const int colonsID);
 	DialogLayer* showRattledashsFinalWords();
 	DialogLayer* showHeadsUp();
+	DialogLayer* showFailedDownload();
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode);
 	void showRattledashChest();
 }

@@ -90,7 +90,7 @@ namespace Utils {
 			Utils::showRattledashChest();
 		};
 
-		CustomDialogCallback* del = new CustomDialogCallback();
+		auto* del = new CustomDialogCallback();
 		textboxLayer->addChild(del);
 		del->autorelease();
 		del->m_callback = customCallback;
@@ -175,6 +175,7 @@ namespace Utils {
 	void showRattledashChest() {
 		if (!Utils::getSavedBool("rattledashChest")) return;
 		// adapted from colon's JSON file + his code snippets --raydeeux
+		#ifndef GEODE_IS_IOS
 		CCArray* chestRewards = CCArray::create();
 
 		chestRewards->addObject(GJRewardObject::createItemUnlock(UnlockType::Cube, 42)); // yeah sorry
@@ -196,6 +197,6 @@ namespace Utils {
 		rewardLayer->m_wrongLabel->setOpacity(0);
 
 		rewardLayer->m_wrongLabel->runAction(CCFadeIn::create(2.f));
-
+		#endif
 	}
 }
