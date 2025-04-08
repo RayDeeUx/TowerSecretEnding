@@ -144,11 +144,14 @@ class $modify(MyGameManager, GameManager) {
 		}
 		DialogLayer* rattledash = Utils::showDialouge();
 		const bool sameSize = manager->completedLevels.size() == manager->correctCompletionOrder.size();
-		bool shouldShowDialog = true; // this is NOT a definitive declaration. still need to loop through vectors
+		bool shouldShowDialog = sameSize; // this is NOT a definitive declaration. still need to loop through vectors
 		if (sameSize) {
-			for (int i = 0; i < manager->completedLevels.size() && shouldShowDialog; i++)
-				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i))
+			for (int i = 0; i < manager->completedLevels.size(); i++) {
+				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) {
 					shouldShowDialog = false;
+					break;
+				}
+			}
 			log::info("shouldShowDialog: {}", shouldShowDialog);
 		}
 		CCTransitionFade* transition = CCTransitionFade::create(0.5f, levelAreaInnerLayer);
