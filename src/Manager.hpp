@@ -70,7 +70,7 @@ public:
 	bool useCanonSpawn = false;
 
 	// determine if toggle should be added
-	bool addColonToggle = false;
+	bool colonToggleUnlocked = false;
 	// controls when this mod's behavior kicks in
 	bool colonMode = false;
 
@@ -88,6 +88,8 @@ public:
 	std::time_t pauseLayerTimestamp;
 
 	int doorToShow = -1;
+
+	bool completedAtLeastOnce = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();

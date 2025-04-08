@@ -7,7 +7,6 @@
 
 CreditsLayer* CreditsLayer::create() {
 	auto* ret = new CreditsLayer();
-
 	if (ret->init("Special thanks!")) {
 		ret->autorelease();
 		return ret;
@@ -22,8 +21,8 @@ void CreditsLayer::customSetup() {
 		ColumnLayout::create()
 			->setAxisReverse(true)
 			->setAxisAlignment(AxisAlignment::End)
-			->setAutoGrowAxis(220)
-			->setGap(0.0f)
+			->setAutoGrowAxis(220.f)
+			->setGap(.0f)
 	);
 
 	bool isEven = false;

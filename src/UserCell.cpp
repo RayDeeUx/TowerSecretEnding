@@ -21,25 +21,25 @@ bool UserCell::init(const UserData& userData, const bool isEven) {
 	this->setContentSize({356, 36});
 
 	CCLabelBMFont* usernameLabel = CCLabelBMFont::create(userData.username.c_str(), "bigFont.fnt");
-	usernameLabel->setAnchorPoint({0, 0.5});
-	usernameLabel->setPosition({60, getContentHeight()/2 + 1.f});
-	usernameLabel->setScale(0.70f);
+	usernameLabel->setAnchorPoint({.0f, .5f});
+	usernameLabel->setPosition({60, getContentHeight() / 2.f + 1.f});
+	usernameLabel->setScale(.7f);
 
 	GameManager* gameManager = GameManager::get();
 
 	SimplePlayer* player = SimplePlayer::create(userData.iconID);
 	player->m_firstLayer->ignoreAnchorPointForPosition(true);
-	player->setContentSize({30, 30});
+	player->setContentSize({30.5, 30.5});
 
 	player->setColors(gameManager->colorForIdx(userData.iconColor1), gameManager->colorForIdx(userData.iconColor2));
 	if (userData.showGlow) player->setGlowOutline(gameManager->colorForIdx(userData.glowColor));
 
-	player->setAnchorPoint({0, 0.5});
-	player->setPosition({20, this->getContentHeight() / 2.f});
+	player->setAnchorPoint({.5f, .5f});
+	player->setPosition({30, this->getContentHeight() / 2.f});
 	player->setScale(0.75f);
 
 	CCMenu* menu = CCMenu::create();
-	menu->setContentSize({30, 30});
+	menu->setContentSize({30.f, 30.f});
 	menu->setAnchorPoint({.5f, .5f});
 	menu->setPosition({330.f, this->getContentHeight() / 2.f});
 	menu->ignoreAnchorPointForPosition(false);
@@ -49,7 +49,7 @@ bool UserCell::init(const UserData& userData, const bool isEven) {
 	infoButton->setPosition(menu->getContentSize() / 2.f);
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
-	divider->setContentSize({356, 0.5f});
+	divider->setContentSize({356.f, 0.5f});
 	divider->setAnchorPoint({0, 0});
 
 	this->addChild(usernameLabel);

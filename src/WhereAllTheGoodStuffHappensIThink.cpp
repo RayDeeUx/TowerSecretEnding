@@ -14,7 +14,7 @@ using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}]\n(canonPosition: {}, !colonVariant: {}, completedBefore: {}, trackTime: {}, addColonToggle: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->addColonToggle)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
 	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
@@ -45,7 +45,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		Utils::showDialouge();
 
-		if (!manager->addColonToggle) return true;
+		if (!manager->colonToggleUnlocked) return true;
 
 		CCNode* backMenu = this->getChildByID("back-menu");
 		if (!backMenu) return true;
@@ -137,12 +137,6 @@ class $modify(MyGameManager, GameManager) {
 		if (colonsID == THE_DEEP_SEWERS && !manager->useCanonSpawn) return GameManager::returnToLastScene(level);
 		manager->useCanonSpawn = false;
 
-		CCScene* levelAreaInnerLayer = LevelAreaInnerLayer::scene(true);
-		if (!levelAreaInnerLayer) {
-			Utils::logErrorCustomFormat("LevelAreaInnerLayer", robtopsID, colonsID);
-			return GameManager::returnToLastScene(level);
-		}
-		DialogLayer* rattledash = Utils::showDialouge();
 		const bool sameSize = manager->completedLevels.size() == manager->correctCompletionOrder.size();
 		bool shouldShowDialog = sameSize; // this is NOT a definitive declaration. still need to loop through vectors
 		if (sameSize) {
@@ -152,8 +146,24 @@ class $modify(MyGameManager, GameManager) {
 					break;
 				}
 			}
-			log::info("shouldShowDialog: {}", shouldShowDialog);
+			if (shouldShowDialog) {
+				// reset everything
+				manager->doorToShow = -1;
+				manager->lockedIn = false;
+				manager->trackTime = false;
+				manager->colonMode = false;
+				manager->completedLevels.clear();
+				manager->colonToggleUnlocked = false;
+				manager->completedAtLeastOnce = true; // let's be honest, endcredits for this mod are more important
+			}
 		}
+
+		CCScene* levelAreaInnerLayer = LevelAreaInnerLayer::scene(true);
+		if (!levelAreaInnerLayer) {
+			Utils::logErrorCustomFormat("LevelAreaInnerLayer", robtopsID, colonsID);
+			return GameManager::returnToLastScene(level);
+		}
+		DialogLayer* rattledash = Utils::showDialouge();
 		CCTransitionFade* transition = CCTransitionFade::create(0.5f, levelAreaInnerLayer);
 		if (!transition) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
@@ -196,8 +206,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 
 		Manager* manager = Manager::getSharedInstance();
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
-		const bool completedBefore = IS_LEVEL_COMPLETE(levelID);
-		if (!completedBefore) manager->completedLevels.push_back(levelID);
+		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) manager->completedLevels.push_back(levelID);
 
 		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
 
@@ -210,7 +219,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->bombPickupTimestamp = std::time(nullptr);
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
-		if (manager->addColonToggle) manager->lockedIn = true;
+		if (manager->colonToggleUnlocked) manager->lockedIn = true;
 		PlayLayer::onQuit();
 	}
 };
@@ -229,13 +238,13 @@ class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 class $modify(MyPauseLayer, PauseLayer) {
 	void customSetup() {
 		Manager* manager = Manager::getSharedInstance();
-		if (!manager->trackTime || manager->addColonToggle) return PauseLayer::customSetup();
+		if (!manager->trackTime || manager->colonToggleUnlocked) return PauseLayer::customSetup();
 
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
-		manager->addColonToggle = secondsPassed < 3; // colon wants it to be lenient, i think 2 seconds is lenient enough tbh (original time window was 1 second) --raydeeux
-		if (manager->addColonToggle) {
+		manager->colonToggleUnlocked = secondsPassed < 3; // colon wants it to be lenient, i think 2 seconds is lenient enough tbh (original time window was 1 second) --raydeeux
+		if (manager->colonToggleUnlocked) {
 			manager->doorToShow = 1;
 			manager->colonMode = true; // so the toggle is visually correct when entering LevelAreaInnerLayer
 		}
@@ -246,8 +255,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void onResume(CCObject* sender) {
 		// if you unpause, you lose the colon toggle! yayyyyyy -raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		if (manager->addColonToggle && !manager->lockedIn) {
-			manager->addColonToggle = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
+		if (manager->colonToggleUnlocked && !manager->lockedIn) {
+			manager->colonToggleUnlocked = false; // so the toggle doesn't get added when entering LevelAreaInnerLayer
 			manager->colonMode = false; // so the player has to redo the secret ending
 			manager->doorToShow = -1;
 		}
