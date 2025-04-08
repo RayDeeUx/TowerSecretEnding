@@ -4,6 +4,7 @@
 #include <Geode/modify/EffectGameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
+#include <Geode/modify/DialogLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include "Manager.hpp"
@@ -42,8 +43,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				if (colonsLevel && static_cast<std::string>(colonsLevel->m_levelString).length() > 2) log::info("colonsLevel {} with colonID {} was downloaded", colonsLevel, colonID);
 			}
 		}
-
-		Utils::showDialouge();
 
 		if (!manager->colonToggleUnlocked) return true;
 
@@ -163,7 +162,6 @@ class $modify(MyGameManager, GameManager) {
 			Utils::logErrorCustomFormat("LevelAreaInnerLayer", robtopsID, colonsID);
 			return GameManager::returnToLastScene(level);
 		}
-		DialogLayer* rattledash = Utils::showDialouge();
 		CCTransitionFade* transition = CCTransitionFade::create(0.5f, levelAreaInnerLayer);
 		if (!transition) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
@@ -172,7 +170,8 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
-		if (shouldShowDialog) {
+		if (DialogLayer* rattledash = Utils::showDialouge(); shouldShowDialog && rattledash) {
+			rattledash->setUserObject("rattledash-final-words"_spr, CCBool::create(true));
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
 		}
@@ -284,6 +283,16 @@ class $modify(MyCameraTriggerGameObject, CameraTriggerGameObject) {
 			return log::info("[CAMERA] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
 		}
 		CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
+	}
+};
+
+class $modify(MyDialogLayer, DialogLayer) {
+	void displayDialogObject(DialogObject* dialogObject) {
+		DialogLayer::displayDialogObject(dialogObject);
+		const int tag = dialogObject->getTag();
+		const std::array<std::string, 10>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites;
+		if (!this->getUserObject("rattledash-final-words"_spr) || tag > dialogSprites.size() - 1) return;
+		this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
 	}
 };
 

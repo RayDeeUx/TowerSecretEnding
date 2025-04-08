@@ -22,7 +22,8 @@ public:
 		{5004, 116926955},
 	};
 
-	const std::array<std::string, 9> listOfDialogSprites = {
+	const std::array<std::string, 10> listOfDialogSprites = {
+		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE THIS.
 		"dialogIcon_001.png"_spr,
 		"dialogIcon_003.png"_spr,
 		"dialogIcon_006.png"_spr,
