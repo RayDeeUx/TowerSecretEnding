@@ -23,7 +23,8 @@ public:
 	};
 
 	// this is a surprise tool that will be helpful later
-	const std::array<std::string, 10> listOfDialogSprites = {
+	// sprite names for the DialogLayer::displayDialogObject hook
+	const std::array<std::string, 13> listOfDialogSprites = {
 		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE THIS.
 		"dialogIcon_001.png"_spr,
 		"dialogIcon_003.png"_spr,
@@ -34,6 +35,9 @@ public:
 		"dialogIcon_008.png"_spr,
 		"dialogIcon_003.png"_spr,
 		"dialogIcon_001.png"_spr,
+		"dialogIcon_001.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
+		"dialogIcon_003.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 	};
 
 	// for "special thanks" screen

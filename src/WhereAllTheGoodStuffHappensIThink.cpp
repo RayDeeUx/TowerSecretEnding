@@ -31,13 +31,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	}
 	bool init(bool returningFromTowerLevel) {
 		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
-		const Manager* manager = Manager::getSharedInstance();
+		Manager* manager = Manager::getSharedInstance();
 		if (!manager->completedVanillaTowerFloorOne) {
 			if (!manager->shownHeadsUpDialog) {
-				DialogLayer* headsUp = Utils::showHeadsUp();
-				if (headsUp) {
+				if (DialogLayer* headsUp = Utils::showHeadsUp(); headsUp) {
 					this->addChild(headsUp);
 					headsUp->animateInRandomSide();
+					manager->shownHeadsUpDialog = true;
 				}
 			}
 			return true;
@@ -183,7 +183,6 @@ class $modify(MyGameManager, GameManager) {
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
 		if (DialogLayer* rattledash = Utils::showRattledashsFinalWords(); shouldShowDialog && rattledash) {
-			rattledash->setUserObject("rattledash-final-words"_spr, CCBool::create(true));
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
 			rattledash->displayNextObject();
@@ -305,8 +304,10 @@ class $modify(MyDialogLayer, DialogLayer) {
 	void displayDialogObject(DialogObject* dialogObject) {
 		DialogLayer::displayDialogObject(dialogObject);
 		const int tag = dialogObject->getTag();
-		const bool isRattleDashFinalWords = this->getUserObject("rattledash-final-words"_spr);
-		if (const std::array<std::string, 10>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattleDashFinalWords && tag < dialogSprites.size()) this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
+		const bool isRattledash = this->getUserObject("rattledash"_spr);
+		if (const std::array<std::string, 13>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
+			this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
+		}
 	}
 };
 

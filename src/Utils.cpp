@@ -40,52 +40,72 @@ namespace Utils {
 		// using it in JSON format opens backdoor for wronguns to replace it with swears much more easily
 		CCArray* dialougeObjects = CCArray::create();
 
-		DialogObject* rattledashDummy = DialogObject::create(HIS_NAME, "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashDummy = DialogObject::create("FOOBARBAZ", "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashDummy->setTag(768); // thank you km7/qm7
 		dialougeObjects->addObject(rattledashDummy);
 
 		DialogObject* rattledashZero = DialogObject::create(HIS_NAME, "<cr>Well,<d020> well,<d020> well<d020>...</c>", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashZero->setTag(1);
+		rattledashZero->setTag(1); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashZero);
 
 		DialogObject* rattledashOne = DialogObject::create(HIS_NAME, "I suppose you were <cl>stronger</c> than I thought.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashOne->setTag(2);
+		rattledashOne->setTag(2); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashOne);
 
 		DialogObject* rattledashTwo = DialogObject::create(HIS_NAME, "<cj>I guess I'm nothing more than a pile of bones after all...</c>", 6, .5f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashTwo->setTag(3);
+		rattledashTwo->setTag(3); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashTwo);
 
 		DialogObject* rattledashThree = DialogObject::create(HIS_NAME, "But you haven't seen the last of me.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashThree->setTag(4);
+		rattledashThree->setTag(4); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashThree);
 
 		DialogObject* rattledashFour = DialogObject::create(HIS_NAME, "<cl>I WILL be back.</c>", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashFour->setTag(5);
+		rattledashFour->setTag(5); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashFour);
 
 		DialogObject* rattledashFive = DialogObject::create(HIS_NAME, "<cl>And the next time we cross paths...</c>", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashFive->setTag(6);
+		rattledashFive->setTag(6); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashFive);
 
 		DialogObject* rattledashSix = DialogObject::create(HIS_NAME, "<s300><cr>I'LL KICK YOUR ASS</c></s>", 8, 1.25f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashSix->setTag(7);
+		rattledashSix->setTag(7); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashSix);
 
 		DialogObject* rattledashSeven = DialogObject::create(HIS_NAME, ".<d025>.<d025>.<d025>", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashSeven->setTag(8);
+		rattledashSeven->setTag(8); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashSeven);
 
 		DialogObject* rattledashEight = DialogObject::create(HIS_NAME, "Perhaps another time.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashEight->setTag(9);
+		rattledashEight->setTag(9); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashEight);
 
-		return DialogLayer::createWithObjects(dialougeObjects, 4);
+		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
+		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+
+		return ret;
 	}
 
 	DialogLayer* showHeadsUp() {
 		// everyone loves an incredibly tangential ron swanson reference
-		return DialogLayer::createWithObjects(CCArray::createWithObject(DialogObject::create(HIS_MAJESTY_THE_ROYAL_PAIN_IN_THE_BUTT, "<co>If you're going to poke around here AND keep me waiting, at least don't half-ass both...</c>", 12, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS)), 4);
+		CCArray* dialougeObjects = CCArray::create();
+
+		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .5f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraOne->setTag(10); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraOne);
+
+		DialogObject* rattledashExtraTwo = DialogObject::create(HIS_NAME, "Oh! You've quite startled me there.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraTwo->setTag(11); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraTwo);
+
+		DialogObject* rattledashExtraThree = DialogObject::create(HIS_NAME, "Well, I'll be out of your way. Have fun exploring.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraThree->setTag(12); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraThree);
+
+		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
+		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+
+		return ret;
 	}
 
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode) {
