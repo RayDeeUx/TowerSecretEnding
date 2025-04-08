@@ -78,7 +78,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			for (int i = 0; i < manager->completedLevels.size(); i++) {
 				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
 			}
-			log::info("shouldShowDialog: {}");
+			log::info("shouldShowDialog: {}", shouldShowDialog);
 			if (shouldShowDialog) Utils::doDialouge();
 			return true;
 		}
