@@ -24,8 +24,9 @@ using namespace geode::prelude;
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	void onColonToggle(CCObject* sender) {
 		if (!sender) return; // click on it like a sane and sober human would, for chrissake!
+		Manager* manager = Manager::getSharedInstance();
 		// just toggles the control. nothing crazy
-		Manager::getSharedInstance()->colonMode = !Manager::getSharedInstance()->colonMode;
+		manager->colonMode = !manager->colonMode;
 	}
 	bool init(bool returningFromTowerLevel) {
 		if (!LevelAreaInnerLayer::init(returningFromTowerLevel)) return false;
@@ -77,7 +78,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		checkmarkTwoSprite->setOpacity(0);
 		checkmarkOneSprite->runAction(CCFadeIn::create(.5f));
 		checkmarkTwoSprite->runAction(CCFadeIn::create(.5f));
-		
+
 		return true;
 	}
 	void onDoor(CCObject* sender) {
@@ -174,6 +175,7 @@ class $modify(MyGameManager, GameManager) {
 			rattledash->setUserObject("rattledash-final-words"_spr, CCBool::create(true));
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
+			rattledash->displayNextObject();
 		}
 	}
 };
@@ -290,9 +292,8 @@ class $modify(MyDialogLayer, DialogLayer) {
 	void displayDialogObject(DialogObject* dialogObject) {
 		DialogLayer::displayDialogObject(dialogObject);
 		const int tag = dialogObject->getTag();
-		const std::array<std::string, 10>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites;
-		if (!this->getUserObject("rattledash-final-words"_spr) || tag > dialogSprites.size() - 1) return;
-		this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
+		const bool isRattleDashFinalWords = this->getUserObject("rattledash-final-words"_spr);
+		if (const std::array<std::string, 10>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattleDashFinalWords && tag < dialogSprites.size()) this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
 	}
 };
 

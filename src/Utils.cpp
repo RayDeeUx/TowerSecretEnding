@@ -37,6 +37,10 @@ namespace Utils {
 	DialogLayer* showDialouge() {
 		CCArray* dialougeObjects = CCArray::create();
 
+		DialogObject* rattledashDummy = DialogObject::create(HIS_NAME, "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashDummy->setTag(768); // thank you km7/qm7
+		dialougeObjects->addObject(rattledashDummy);
+
 		DialogObject* rattledashZero = DialogObject::create(HIS_NAME, "<cr>Well,<d020> well,<d020> well<d020>...</c>", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashZero->setTag(1);
 		dialougeObjects->addObject(rattledashZero);
