@@ -37,6 +37,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				if (DialogLayer* headsUp = Utils::showHeadsUp(); headsUp) {
 					this->addChild(headsUp);
 					headsUp->animateInRandomSide();
+					headsUp->displayNextObject();
 					manager->shownHeadsUpDialog = true;
 				}
 			}
@@ -150,6 +151,7 @@ class $modify(MyGameManager, GameManager) {
 
 		const bool sameSize = manager->completedLevels.size() == manager->correctCompletionOrder.size();
 		bool shouldShowDialog = sameSize; // this is NOT a definitive declaration. still need to loop through vectors
+		DialogLayer* rattledash = Utils::showRattledashsFinalWords();
 		if (sameSize) {
 			for (int i = 0; i < manager->completedLevels.size(); i++) {
 				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) {
@@ -157,8 +159,8 @@ class $modify(MyGameManager, GameManager) {
 					break;
 				}
 			}
-			if (shouldShowDialog) {
-				// reset everything
+			if (shouldShowDialog && rattledash) {
+				// reset everything *before* creating LevelAreaInnerLayer scene
 				manager->doorToShow = -1;
 				manager->lockedIn = false;
 				manager->trackTime = false;
@@ -182,9 +184,10 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
-		if (DialogLayer* rattledash = Utils::showRattledashsFinalWords(); shouldShowDialog && rattledash) {
+		if (shouldShowDialog && rattledash) {
 			levelAreaInnerLayer->addChild(rattledash);
 			rattledash->animateInRandomSide();
+			rattledash->displayNextObject();
 		}
 	}
 };

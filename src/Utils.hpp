@@ -5,7 +5,10 @@ using namespace geode::prelude;
 #define THE_DEEP_SEWERS 116926138
 #define DEFAULT_DIALOUGE_OBJECT_SETTINGS false, ccColor3B{255, 255, 255}
 #define HIS_NAME "Rattledash"
-#define HIS_MAJESTY_THE_ROYAL_PAIN_IN_THE_BUTT "Scratch"
+#define ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES\
+	DialogObject* rattledashDummy = DialogObject::create("FOOBARBAZ", "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);\
+	rattledashDummy->setTag(768);\
+	dialougeObjects->addObject(rattledashDummy);\
 
 namespace Utils {
 	template<class T> T getSetting(const std::string_view setting);

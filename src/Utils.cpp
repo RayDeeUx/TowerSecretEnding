@@ -40,9 +40,7 @@ namespace Utils {
 		// using it in JSON format opens backdoor for wronguns to replace it with swears much more easily
 		CCArray* dialougeObjects = CCArray::create();
 
-		DialogObject* rattledashDummy = DialogObject::create("FOOBARBAZ", "THIS IS A DUMMY LINE TO FORCE GD TO SKIP TO THE NEXT DIALOUGE OBJECT. YOU SHOULDN'T BE ABLE TO SEE THIS.", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
-		rattledashDummy->setTag(768); // thank you km7/qm7
-		dialougeObjects->addObject(rattledashDummy);
+		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
 		DialogObject* rattledashZero = DialogObject::create(HIS_NAME, "<cr>Well,<d020> well,<d020> well<d020>...</c>", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashZero->setTag(1); // see manager->listOfDialogSprites for more info
@@ -81,7 +79,6 @@ namespace Utils {
 		dialougeObjects->addObject(rattledashEight);
 
 		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
-		ret->displayNextObject();
 		ret->setUserObject("rattledash"_spr, CCBool::create(true));
 
 		return ret;
@@ -90,6 +87,8 @@ namespace Utils {
 	DialogLayer* showHeadsUp() {
 		// everyone loves an incredibly tangential ron swanson reference
 		CCArray* dialougeObjects = CCArray::create();
+
+		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
 		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .5f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraOne->setTag(10); // see manager->listOfDialogSprites for more info
@@ -104,7 +103,6 @@ namespace Utils {
 		dialougeObjects->addObject(rattledashExtraThree);
 
 		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
-		ret->displayNextObject();
 		ret->setUserObject("rattledash"_spr, CCBool::create(true));
 
 		return ret;
