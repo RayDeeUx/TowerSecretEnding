@@ -121,6 +121,9 @@ public:
 	// control if someone has already seen the "you havent unlocked and completed all tower levels yet" dialog
 	bool shownHeadsUpDialog = false;
 
+	// because user objects are not 100% accurate
+	bool isFromColonsTower = false;
+
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;

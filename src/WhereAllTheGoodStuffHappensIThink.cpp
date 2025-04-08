@@ -15,7 +15,8 @@ using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
+#define PLAYING_DEEP_SEWERS_FROM_NOT_TOWER !Manager::getSharedInstance()->useCanonSpawn || !Manager::getSharedInstance()->isFromColonsTower || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
 	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
@@ -122,6 +123,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		colonsVersion->setUserObject("original-robtop-ID"_spr, robtopsIDAsCCObject);
 
 		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, mimic vanilla behavior with SFX
+		manager->isFromColonsTower = true; // set to true before creating playlayer
 		CCScene* playScene = PlayLayer::scene(colonsVersion, false, false);
 		if (!playScene) {
 			Utils::logErrorCustomFormat("CCScene from calling PlayLayer::scene", robtopsID, colonsID);
@@ -134,6 +136,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
+		this->runAction(CCFadeOut::create(.5f));
 		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
 	}
@@ -141,13 +144,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 class $modify(MyGameManager, GameManager) {
 	void returnToLastScene(GJGameLevel* level) {
-		if (!level || !level->getUserObject("colon-variant"_spr)) return GameManager::returnToLastScene(level);
+		Manager* manager = Manager::getSharedInstance();
+		if (!level || !level->getUserObject("colon-variant"_spr) || !manager->isFromColonsTower) return GameManager::returnToLastScene(level);
 		const int colonsID = level->m_levelID.value();
 		const int robtopsID = level->getUserObject("original-robtop-ID"_spr)->getTag();
 
-		Manager* manager = Manager::getSharedInstance();
 		if (colonsID == THE_DEEP_SEWERS && !manager->useCanonSpawn) return GameManager::returnToLastScene(level);
 		manager->useCanonSpawn = false;
+		manager->isFromColonsTower = false;
 
 		const bool sameSize = manager->completedLevels.size() == manager->correctCompletionOrder.size();
 		bool shouldShowDialog = sameSize; // this is NOT a definitive declaration. still need to loop through vectors
@@ -194,7 +198,7 @@ class $modify(MyGameManager, GameManager) {
 
 class $modify(MyPlayLayer, PlayLayer) {
 	void setupHasCompleted() {
-		if (this->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS || !this->m_levelSettings || this->m_levelSettings->m_spawnGroup != 79 || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::setupHasCompleted();
+		if (PLAYING_DEEP_SEWERS_FROM_NOT_TOWER) return PlayLayer::setupHasCompleted();
 		this->m_levelSettings->m_spawnGroup = 81;
 		PlayLayer::setupHasCompleted();
 	}
@@ -215,9 +219,9 @@ class $modify(MyPlayLayer, PlayLayer) {
 		PlayLayer::startGame();
 	}
 	void levelComplete() {
-		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr)) return PlayLayer::levelComplete();
-
 		Manager* manager = Manager::getSharedInstance();
+		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr) || !manager->isFromColonsTower) return PlayLayer::levelComplete();
+
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
 		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) manager->completedLevels.push_back(levelID);
 
@@ -280,7 +284,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 
 class $modify(MyEffectGameObject, EffectGameObject) {
 	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2) {
-		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return EffectGameObject::triggerObject(gjbgl, p1, p2);
+		if (PLAYING_DEEP_SEWERS_FROM_NOT_TOWER) return EffectGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
 			// log::info("[EFFECT] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
@@ -292,7 +296,7 @@ class $modify(MyEffectGameObject, EffectGameObject) {
 
 class $modify(MyCameraTriggerGameObject, CameraTriggerGameObject) {
 	void triggerObject(GJBaseGameLayer* gjbgl, int p1, gd::vector<int> const* p2) {
-		if (!Manager::getSharedInstance()->useCanonSpawn || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS) return CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
+		if (PLAYING_DEEP_SEWERS_FROM_NOT_TOWER) return CameraTriggerGameObject::triggerObject(gjbgl, p1, p2);
 		for (int i = 0; i < this->m_groupCount; i++) {
 			if (this->m_groups->at(i) != 900) continue;
 			// log::info("[CAMERA] since we're using the canonical spawn location instead of the one on boomlings, disable trigger of ID {} targeting group {}", this->m_objectID, this->m_targetGroupID);
