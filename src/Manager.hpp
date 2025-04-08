@@ -33,22 +33,22 @@ public:
 		},
 		*/
 		{"16lord", 37, 12, 23, 12, true, UserType::Creator,
-			{"Decoration and effects in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Decoration in <co>The Sneaky Hollow</c>"}
+			{"Decoration and power room VFX in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Pre-boss cutscene in <co>The Sneaky Hollow</c>"}
 		},
 		{"galofuf", 110, 21, 11, 40, true, UserType::Creator,
-			{"Cutscenes in <cg>The Deep Sewers</c>", "Decoration in <co>The Sneaky Hollow</c>"}
+			{"Cutscenes and pipe VFX in <cg>The Deep Sewers</c>", "Decoration and boss design in <co>The Sneaky Hollow</c>"}
 		},
 		{"tricipital", 389, 10, 3, 42, true, UserType::Creator,
-			{"Decoration in <cg>The Deep Sewers</c>"}
+			{"Decoration and polish in <cg>The Deep Sewers</c>"}
 		},
 		{"connot", 39, 41, 42, 3, true, UserType::Creator,
-			{"Decoration in <co>The Sneaky Hollow</c>"}
+			{"Decoration and pre-chase cutscene in <co>The Sneaky Hollow</c>"}
 		},
 		{"Subwoofer", 394, 16, 83, 48, true, UserType::Creator,
-			{"Decoration in <co>The Sneaky Hollow</c>"}
+			{"Decoration and monster chase sequence in <co>The Sneaky Hollow</c>"}
 		},
 		{"Mudstep", 30, 12, 3, 3, true, UserType::Musician,
-			{"Custom music in <co>The Sneaky Hollow</c>"}
+			{"Custom boss theme in <co>The Sneaky Hollow</c> (ft. guitar by Elixterr)"}
 		},
 		/*
 		{"RayDeeUx", 104, 21, 3, 3, true, UserType::Modder,
@@ -78,7 +78,7 @@ public:
 	// also speaking of the dialouge layer i think i might just manually translate it
 	// using it in mod resource form opens backdoor for wronguns to replace it with swears much more easily
 	std::vector<int> completedLevels = {};
-	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955};
+	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955}; // in case people want to cheat for some reason
 
 	// store timestamps between level ID 5003 bomb pickup at group 105
 	// and pauselayer creation

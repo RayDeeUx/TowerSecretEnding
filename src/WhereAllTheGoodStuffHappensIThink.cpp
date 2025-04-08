@@ -143,14 +143,14 @@ class $modify(MyGameManager, GameManager) {
 			return GameManager::returnToLastScene(level);
 		}
 		DialogLayer* rattledash = Utils::showDialouge();
-		bool shouldShowDialog = true;
-		log::info("manager->completedLevels.size() == manager->correctCompletionOrder.size(): {}", manager->completedLevels.size() == manager->correctCompletionOrder.size());
-		if (manager->completedLevels.size() == manager->correctCompletionOrder.size()) {
+		const bool sameSize = manager->completedLevels.size() == manager->correctCompletionOrder.size();
+		bool shouldShowDialog = true; // this is NOT a definitive declaration. still need to loop through vectors
+		if (sameSize) {
 			for (int i = 0; i < manager->completedLevels.size() && shouldShowDialog; i++)
-				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
+				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i))
+					shouldShowDialog = false;
 			log::info("shouldShowDialog: {}", shouldShowDialog);
 		}
-		if (shouldShowDialog) levelAreaInnerLayer->addChild(rattledash);
 		CCTransitionFade* transition = CCTransitionFade::create(0.5f, levelAreaInnerLayer);
 		if (!transition) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
@@ -159,7 +159,10 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
-		rattledash->animateInRandomSide();
+		if (shouldShowDialog) {
+			levelAreaInnerLayer->addChild(rattledash);
+			rattledash->animateInRandomSide();
+		}
 	}
 };
 
