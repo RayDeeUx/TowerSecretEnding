@@ -120,10 +120,16 @@ namespace Utils {
 		door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
 		door->setUserObject("current-door"_spr, CCBool::create(isColonMode));
 
+		if (!isColonMode) {
+			if (CCNode* particle = doorLayer->getChildByID("current-door-particles"_spr)) particle->removeMeAndCleanup();
+			return;
+		}
+		// if colon mode disabled don't add the particle
+
 		CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
 		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
 		doorLayer->addChild(particles);
 		particles->setScale(0.5f);
-		particles->setVisible(isColonMode);
+		particles->setID("current-door-particles"_spr);
 	}
 }
