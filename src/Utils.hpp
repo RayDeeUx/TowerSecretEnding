@@ -3,6 +3,8 @@
 using namespace geode::prelude;
 
 #define THE_DEEP_SEWERS 116926138
+#define DEFAULT_DIALOUGE_OBJECT_SETTINGS false, ccColor3B{255, 255, 255}
+#define HIS_NAME "Rattledash"
 
 namespace Utils {
 	template<class T> T getSetting(const std::string_view setting);

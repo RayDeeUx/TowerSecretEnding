@@ -22,6 +22,18 @@ public:
 		{5004, 116926955},
 	};
 
+	const std::array<std::string, 9> listOfDialogSprites = {
+		"dialogIcon_001.png"_spr,
+		"dialogIcon_003.png"_spr,
+		"dialogIcon_006.png"_spr,
+		"dialogIcon_001.png"_spr,
+		"dialogIcon_005.png"_spr,
+		"dialogIcon_005.png"_spr,
+		"dialogIcon_008.png"_spr,
+		"dialogIcon_003.png"_spr,
+		"dialogIcon_001.png"_spr,
+	};
+
 	// for "special thanks" screen
 	// easier to allocate memory for this info *once*
 	// as opposed to each time the "special thanks" screen is opened
