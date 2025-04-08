@@ -19,7 +19,7 @@ using namespace geode::prelude;
 #define PLAYING_DEEP_SEWERS_FROM_NOT_TOWER !Manager::getSharedInstance()->useCanonSpawn || !Manager::getSharedInstance()->isFromColonsTower || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
-	if (!Utils::getBool("debugMode") || !wicklineLabel) return originalCallback;\
+	if (!Utils::getSavedBool("debugMode") || !wicklineLabel) return originalCallback;\
 	wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());\
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
@@ -206,7 +206,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// this is really just for debug purposes.
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
-		if (!this->m_level || !this->getParent() || !Utils::getBool("debugMode")) return PlayLayer::startGame();
+		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode")) return PlayLayer::startGame();
 
 		Manager* manager = Manager::getSharedInstance();
 

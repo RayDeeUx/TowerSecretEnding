@@ -24,8 +24,10 @@ namespace Utils {
 	Mod* getMod(const std::string& modID);
 	std::string getModVersion(const Mod* mod);
 
+	bool getSavedBool(const std::string_view savedValue);
 	void logErrorCustomFormat(const std::string_view reason, const int robsID, const int colonsID);
 	DialogLayer* showRattledashsFinalWords();
 	DialogLayer* showHeadsUp();
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode);
+	void showRattledashChest();
 }

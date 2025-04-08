@@ -12,14 +12,6 @@
 	"developers": ["Colon", "RayDeeUx"],
 	"description": "The Secret Ending to Floor 1 of The Tower!",
 	"repository": "https://github.com/RayDeeUx/TowerSecretEnding",
-	"settings": {
-		"debugMode": {
-			"name": "Debug Mode",
-			"description": "Adds additional debug information to your screen when playing The Deep Sewers.",
-			"type": "bool",
-			"default": false
-		}
-	},
 	"resources": {
 		"sprites": [
 			"resources/*.png"

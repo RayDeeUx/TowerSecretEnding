@@ -1,5 +1,6 @@
-#include "Utils.hpp"
+#include "CustomDialogCallback.hpp"
 #include "Manager.hpp"
+#include "Utils.hpp"
 
 using namespace geode::cocos;
 
@@ -25,6 +26,8 @@ namespace Utils {
 	Mod* getMod(const std::string& modID) { return Loader::get()->getLoadedMod(modID); }
 
 	std::string getModVersion(const Mod* mod) { return mod->getVersion().toNonVString(); }
+
+	bool getSavedBool(const std::string_view savedValue) { return Mod::get()->getSavedValue<bool>(savedValue); }
 
 	void logErrorCustomFormat(const std::string_view reason, const int robsID, const int colonsID) {
 		log::info("———— ERROR HAPPENED ————");
@@ -78,10 +81,23 @@ namespace Utils {
 		rattledashEight->setTag(9); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashEight);
 
-		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
-		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+		DialogLayer* textboxLayer = DialogLayer::createWithObjects(dialougeObjects, 4);
+		textboxLayer->setUserObject("rattledashs-final-words"_spr, CCBool::create(true));
+		textboxLayer->setUserObject("rattledash"_spr, CCBool::create(true));
 
-		return ret;
+		// ok everything from this point on until the next inline comment is colon's code --raydeeux
+		std::function<void()> customCallback = [=]() {
+			Utils::showRattledashChest();
+		};
+
+		CustomDialogCallback* del = new CustomDialogCallback();
+		textboxLayer->addChild(del);
+		del->autorelease();
+		del->m_callback = customCallback;
+		textboxLayer->m_delegate = del;
+		// ok colon's code segment ends here
+
+		return textboxLayer;
 	}
 
 	DialogLayer* showHeadsUp() {
@@ -131,5 +147,32 @@ namespace Utils {
 		doorLayer->addChild(particles);
 		particles->setScale(0.5f);
 		particles->setID("current-door-particles"_spr);
+	}
+
+	void showRattledashChest() {
+		if (!Utils::getSavedBool("rattledashChest")) return;
+		// adapted from colon's JSON file + his code snippets --raydeeux
+		CCArray* chestRewards = CCArray::create();
+
+		chestRewards->addObject(GJRewardObject::createItemUnlock(UnlockType::Cube, 42)); // yeah sorry
+		chestRewards->addObject(GJRewardObject::create(SpecialRewardItem::Orbs, 3000, 1));
+		chestRewards->addObject(GJRewardObject::create(SpecialRewardItem::Diamonds, 200, 1));
+		chestRewards->addObject(GJRewardObject::create(SpecialRewardItem::BonusKey, 3, 1));
+
+		RewardUnlockLayer* rewardLayer = RewardUnlockLayer::create(static_cast<int>(GJRewardType::Key100Treasure), nullptr); // 8 == 100 key chest
+		GJRewardItem* item = GJRewardItem::createWithObjects(GJRewardType::Key100Treasure, chestRewards);
+
+		rewardLayer->setUserObject("rattledash-chest"_spr, CCBool::create(true));
+		rewardLayer->show();
+		rewardLayer->showCollectReward(item);
+
+		rewardLayer->m_wrongLabel->setPositionY(rewardLayer->m_wrongLabel->getPositionY() - 30.f);
+		rewardLayer->m_wrongLabel->setString("(this doesn't affect your stats lol)");
+		rewardLayer->m_wrongLabel->setColor(ccColor3B{0, 255, 255});
+		rewardLayer->m_wrongLabel->setVisible(true);
+		rewardLayer->m_wrongLabel->setOpacity(0);
+
+		rewardLayer->m_wrongLabel->runAction(CCFadeIn::create(2.f));
+
 	}
 }
