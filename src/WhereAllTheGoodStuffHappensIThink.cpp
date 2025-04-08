@@ -43,6 +43,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			}
 		}
 
+		Utils::doDialouge();
+
 		if (!manager->addColonToggle) return true;
 
 		CCNode* backMenu = this->getChildByID("back-menu");
@@ -69,11 +71,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
+		log::info("returningFromTowerLevel: {}", returningFromTowerLevel);
+		log::info("manager->completedLevels.size() == manager->correctCompletionOrder.size(): {}", manager->completedLevels.size() == manager->correctCompletionOrder.size());
 		if (returningFromTowerLevel && manager->completedLevels.size() == manager->correctCompletionOrder.size()) {
 			bool shouldShowDialog = true;
 			for (int i = 0; i < manager->completedLevels.size(); i++) {
 				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
 			}
+			log::info("shouldShowDialog: {}");
 			if (shouldShowDialog) Utils::doDialouge();
 			return true;
 		}
