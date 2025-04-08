@@ -88,6 +88,9 @@ public:
 		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
 			{"Crossplatform Geode SDK bindings support"}
 		},
+		{"OmgRod", 165, 104, 100, 100, false, UserType::Modder,
+			{"For their (albeit late) efforts <ca>o7</c>"}
+		},
 	};
 
 	// for the deep sewers specifically
