@@ -43,7 +43,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			}
 		}
 
-		Utils::doDialouge();
+		Utils::showDialouge();
 
 		if (!manager->addColonToggle) return true;
 
@@ -71,17 +71,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		backMenu->addChild(colonToggle);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
-		log::info("returningFromTowerLevel: {}", returningFromTowerLevel);
-		log::info("manager->completedLevels.size() == manager->correctCompletionOrder.size(): {}", manager->completedLevels.size() == manager->correctCompletionOrder.size());
-		if (returningFromTowerLevel && manager->completedLevels.size() == manager->correctCompletionOrder.size()) {
-			bool shouldShowDialog = true;
-			for (int i = 0; i < manager->completedLevels.size(); i++) {
-				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
-			}
-			log::info("shouldShowDialog: {}", shouldShowDialog);
-			if (shouldShowDialog) Utils::doDialouge();
-			return true;
-		}
 
 		// apparently i need to modify the *sprites* to mimic the "fade-in" effect most of the other robtop buttons have.
 		// pretty fuckin tedious but oh well --raydeeux
@@ -143,13 +132,25 @@ class $modify(MyGameManager, GameManager) {
 		if (!level || !level->getUserObject("colon-variant"_spr)) return GameManager::returnToLastScene(level);
 		const int colonsID = level->m_levelID.value();
 		const int robtopsID = level->getUserObject("original-robtop-ID"_spr)->getTag();
-		if (colonsID == THE_DEEP_SEWERS && !Manager::getSharedInstance()->useCanonSpawn) return GameManager::returnToLastScene(level);
-		Manager::getSharedInstance()->useCanonSpawn = false;
+
+		Manager* manager = Manager::getSharedInstance();
+		if (colonsID == THE_DEEP_SEWERS && !manager->useCanonSpawn) return GameManager::returnToLastScene(level);
+		manager->useCanonSpawn = false;
+
 		CCScene* levelAreaInnerLayer = LevelAreaInnerLayer::scene(true);
 		if (!levelAreaInnerLayer) {
 			Utils::logErrorCustomFormat("LevelAreaInnerLayer", robtopsID, colonsID);
 			return GameManager::returnToLastScene(level);
 		}
+		DialogLayer* rattledash = Utils::showDialouge();
+		bool shouldShowDialog = true;
+		log::info("manager->completedLevels.size() == manager->correctCompletionOrder.size(): {}", manager->completedLevels.size() == manager->correctCompletionOrder.size());
+		if (manager->completedLevels.size() == manager->correctCompletionOrder.size()) {
+			for (int i = 0; i < manager->completedLevels.size() && shouldShowDialog; i++)
+				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) shouldShowDialog = false;
+			log::info("shouldShowDialog: {}", shouldShowDialog);
+		}
+		if (shouldShowDialog) levelAreaInnerLayer->addChild(rattledash);
 		CCTransitionFade* transition = CCTransitionFade::create(0.5f, levelAreaInnerLayer);
 		if (!transition) {
 			Utils::logErrorCustomFormat("CCTransitionFade", robtopsID, colonsID);
@@ -158,6 +159,7 @@ class $modify(MyGameManager, GameManager) {
 		CCDirector::sharedDirector()->replaceScene(transition); // safely free PlayLayer to avoid bugs
 		log::info("replacing scene with LevelAreaInnerLayer");
 		GameManager::fadeInMenuMusic(); // mimic vanilla behavior
+		rattledash->animateInRandomSide();
 	}
 };
 
