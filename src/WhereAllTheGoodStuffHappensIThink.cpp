@@ -244,12 +244,16 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode") || ISNT_COLON_LEVEL) return PlayLayer::startGame();
+		// || ISNT_COLON_LEVEL
+		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode")) return PlayLayer::startGame();
 
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
 		this->getParent()->addChild(wicklineLabel);
 		wicklineLabel->limitLabelWidth(420.f, 2.f, 0.001f);
+		#ifdef GEODE_IS_IOS
+		wicklineLabel->setPositionY(wicklineLabel->getPositionY() + 75.f);
+		#endif
 		wicklineLabel->setPosition(this->getParent()->getContentSize() / 2.f);
 
 		PlayLayer::startGame();
