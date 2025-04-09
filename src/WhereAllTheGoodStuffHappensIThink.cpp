@@ -79,6 +79,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			downloadFailed->animateInRandomSide();
 			downloadFailed->displayNextObject();
 			manager->shownDownloadsFailed = true;
+			Utils::highlightADoor(this, false);
 			return true;
 		}
 

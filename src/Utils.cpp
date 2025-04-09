@@ -149,11 +149,7 @@ namespace Utils {
 
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode) {
 		if (!scene) return;
-
-		Manager* manager = Manager::getSharedInstance();
-		if (manager->downloadsFailed || !manager->completedVanillaTowerFloorOne) return; // dont highlight doors
-
-		const int doorIndex = manager->doorToShow;
+		const int doorIndex = Manager::getSharedInstance()->doorToShow;
 		if (doorIndex < 1) return;
 
 		CCNode* mainLayer = scene->getChildByID("main-node");
@@ -162,7 +158,7 @@ namespace Utils {
 		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
 		if (door->getTag() < 5001 || door->getTag() > 5004) return; // dont touch nodes that arent doors
 		door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
-		door->setUserObject("current-door"_spr, CCBool::create(isColonMode));
+		if (isColonMode) door->setUserObject("current-door"_spr, CCBool::create(true));
 
 		if (!isColonMode) {
 			if (CCNode* particle = doorLayer->getChildByID("current-door-particles"_spr)) particle->removeMeAndCleanup();
