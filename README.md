@@ -6,7 +6,7 @@ The Secret Ending of The Tower as a Geode mod!
 <cy>- A working Internet (preferably Wi-Fi) connection</c>\
 <cy>- RobTop's official servers being alive</c>\
 <cy>- You being connected to RobTop's official servers, and not being blacklisted from said servers</c>\
-<cy>- Colon's Secret Ending levels being available on RobTop's official servers</c>
+<cy>- The Secret Ending levels being available on RobTop's official servers</c>
 ### "But why so many requirements?"
 Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise.
 ## Special Thanks
