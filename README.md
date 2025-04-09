@@ -2,6 +2,7 @@
 The Secret Ending of The Tower as a Geode mod!
 ## Usage
 <cy>The following are required to use this mod:</c>\
+<cy>- Having completed Floor 1 of The Tower beforehand</c>\
 <cy>- A working Internet (preferably Wi-Fi) connection</c>\
 <cy>- RobTop's official servers being alive</c>\
 <cy>- You being connected to RobTop's official servers, and not being blacklisted from said servers</c>\
@@ -23,5 +24,9 @@ Each copy of The Tower's Secret Ending is personalized to reflect the latest fee
 - [\[:)\]](https://gdbrowser.com/u/7466002) <c-fcb5ff>hiim</c><c-00c8ff>jasmine</c><c-fcb5ff>00</c>: Level string size detection + cross-platform Geode bindings support
 - [\[:)\]](https://gdbrowser.com/u/7696536) <c-7d7dff>Prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
 - [\[:)\]](https://gdbrowser.com/u/18226543) Capeling: Putting up with an "RTFM"-worthy question
+## Notes
+- Since this mod relies on RobTop's official servers, you should not be using this on a private Geometry Dash server.
+- While this mod *can* be interpreted as a fangame mod, this mod intentionally relies on your save data from vanilla GD and RobTop's servers. Any moons/orbs/coins you earn from completing <cy>The Secret Ending</c> are completely intentional, since this mod uses levels uploaded to RobTop's servers.
+- If you see "Load Failed!" when entering a level, that means you'll need to restart the game (hopefully with a stable Internet connection by then).
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances.
