@@ -49,7 +49,7 @@ public:
 	// easier to allocate memory for this info *once*
 	// as opposed to each time the "special thanks" screen is opened
 	const std::vector<UserData> users = {
-		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions
+		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions, yt/github link
 		{"16lord", 37, 12, 23, 12, true, UserType::Creator,
 			{"Decoration and power room VFX in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Pre-boss cutscene in <co>The Sneaky Hollow</c>"},
 			"https://www.youtube.com/channel/UCNH3adnb8KAFM7W3tYqIwCA"
