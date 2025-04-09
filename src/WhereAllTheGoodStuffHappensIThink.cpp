@@ -25,13 +25,38 @@ using namespace geode::prelude;
 	wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());\
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
-	struct Fields : AssetDownloaderDelegate {
+	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate {
 		LevelAreaInnerLayer* self;
 		void assetDownloadFailed() {
 			log::info("some assets may have failed downloading.");
 		}
 		void assetDownloadFinished() {
 			log::info("assets finished downloading.");
+		}
+		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
+			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
+			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
+				log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonID);
+				if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) {
+					CC_SAFE_RETAIN(ad);
+					ad->setDelegate(m_fields.self());
+					ad->download();
+				} else log::info("asset downloader initalization may have failed at some point.");
+			}
+		}
+		virtual void levelDownloadFailed(int p0) {
+			log::info("p0: {} (some download failed)", p0);
+			Manager* manager = Manager::getSharedInstance();
+			manager->downloadFailed = true;
+			if (manager->shownDownloadsFailed) return true;
+			DialogLayer* downloadFailedPopup = Utils::showFailedDownload();
+			if (!downloadFailedPopup) return true;
+			this->addChild(downloadFailedPopup);
+			downloadFailedPopup->animateInRandomSide();
+			downloadFailedPopup->displayNextObject();
+			manager->shownDownloadsFailed = true;
+			Utils::highlightADoor(this, false);
+			return true;
 		}
 	};
 	void onColonToggle(CCObject* sender) {
@@ -66,34 +91,10 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
 				}
-				colonsLevel = glm->getSavedLevel(colonID);
-				if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
-					log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonID);
-					if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) {
-						CC_SAFE_RETAIN(ad);
-						ad->setDelegate(m_fields.self());
-						ad->download();
-					} else log::info("asset downloader initalization may have failed at some point.");
-				} else if (!manager->firstTimeEntering) {
-					manager->downloadsFailed = true;
-					break;
-				}
 			}
 		}
 
 		if (manager->firstTimeEntering) manager->firstTimeEntering = false;
-
-		if (manager->downloadsFailed) {
-			if (manager->shownDownloadsFailed) return true;
-			DialogLayer* downloadFailed = Utils::showFailedDownload();
-			if (!downloadFailed) return true;
-			this->addChild(downloadFailed);
-			downloadFailed->animateInRandomSide();
-			downloadFailed->displayNextObject();
-			manager->shownDownloadsFailed = true;
-			Utils::highlightADoor(this, false);
-			return true;
-		}
 
 		if (!manager->colonToggleUnlocked) return true;
 
