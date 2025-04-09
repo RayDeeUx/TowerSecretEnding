@@ -50,57 +50,61 @@ public:
 	// as opposed to each time the "special thanks" screen is opened
 	const std::vector<UserData> users = {
 		// username, iconID, color1, color2, glow, glowEnabled, userType, contributions
-		/*
-		{"Colon", 60, 18, 10, 10, true, UserType::Colon,
-			{"Idea for <cy>The Secret Ending</c>"}
-		},
-		*/
 		{"16lord", 37, 12, 23, 12, true, UserType::Creator,
-			{"Decoration and power room VFX in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Pre-boss cutscene in <co>The Sneaky Hollow</c>"}
+			{"Decoration and power room VFX in <ca>The Foolish Tower</c>", "Intro cutscene in <cf>The Lost Cellar</c>", "Pre-boss cutscene in <co>The Sneaky Hollow</c>"},
+			"https://www.youtube.com/channel/UCNH3adnb8KAFM7W3tYqIwCA"
 		},
 		{"galofuf", 110, 21, 11, 40, true, UserType::Creator,
-			{"Cutscenes and pipe VFX in <cg>The Deep Sewers</c>", "Decoration and boss design in <co>The Sneaky Hollow</c>"}
+			{"Cutscenes and pipe VFX in <cg>The Deep Sewers</c>", "Decoration and boss design in <co>The Sneaky Hollow</c>"},
+			"https://www.youtube.com/channel/UCJlphLDVsGgOXL04NBF6tDQ"
 		},
 		{"tricipital", 389, 10, 3, 42, true, UserType::Creator,
-			{"Decoration and polish in <cg>The Deep Sewers</c>"}
+			{"Decoration and polish in <cg>The Deep Sewers</c>"},
+			"https://www.youtube.com/channel/UCwnW5a5qbHmYkQsgtgE4u8w"
 		},
 		{"connot", 39, 41, 42, 3, true, UserType::Creator,
-			{"Decoration and pre-chase cutscene in <co>The Sneaky Hollow</c>"}
+			{"Decoration and pre-chase cutscene in <co>The Sneaky Hollow</c>"},
+			"https://www.youtube.com/channel/UC4J2Bvq7C2YU6LqpeyF2exA"
 		},
 		{"Subwoofer", 394, 16, 83, 48, true, UserType::Creator,
-			{"Decoration and monster chase sequence in <co>The Sneaky Hollow</c>"}
+			{"Decoration and monster chase sequence in <co>The Sneaky Hollow</c>"},
+			"https://www.youtube.com/@svbwoofer"
 		},
 		{"Mudstep", 30, 12, 3, 3, true, UserType::Musician,
-			{"Custom boss theme in <co>The Sneaky Hollow</c> (ft. guitar by Elixterr)"}
+			{"Custom boss theme in <co>The Sneaky Hollow</c> (ft. guitar by Elixterr)"},
+			"https://www.youtube.com/@Mudstep"
 		},
-		/*
-		{"RayDeeUx", 104, 21, 3, 3, true, UserType::Modder,
-			{"Translating <cy>The Secret Ending</c> into the Geode mod format", "Bug squasher (within reason)"}
-		},
-		*/
 		{"acaruso", 12, 12, 17, 17, false, UserType::Modder,
-			{"Help with downloading audio assets in the background"}
+			{"Help with downloading audio assets in the background"},
+			"https://github.com/acaruso-xx"
 		},
 		{"dankmeme01", 1, 41, 16, 16, false, UserType::Modder,
-			{"Help with safely downloading levels in the background"}
+			{"Help with safely downloading levels in the background"},
+			"https://github.com/dankmeme01"
 		},
 		{"CJLink", 2, 12, 2, 15, true, UserType::Modder,
-			{"Help with opening online levels from outside of LevelInfoLayer"}
+			{"Help with opening online levels from outside of LevelInfoLayer"},
+			"https://github.com/CJL1nk"
 		},
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
-			{"Designed this \"Special thanks!\" list you're reading right now", "Putting up with an \"RTFM\"-worthy question"}
+			{"Designed this \"Special thanks!\" list you're reading right now", "Putting up with an \"RTFM\"-worthy question"},
+			"https://github.com/Alphalaneous"
 		},
 		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
-			{"Level string size detection", "Crossplatform Geode SDK bindings support"}
+			{"Level string size detection", "Crossplatform Geode SDK bindings support"},
+			"https://github.com/hiimjasmine00"
 		},
 		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
-			{"Crossplatform Geode SDK bindings support"}
+			{"Crossplatform Geode SDK bindings support"},
+			"https://github.com/Prevter"
 		},
 		{"Capeling", 1, 0, 3, 3, false, UserType::Modder,
-			{"Putting up with an \"RTFM\"-worthy question"}
+			{"Putting up with an \"RTFM\"-worthy question"},
+			"https://github.com/Capeling"
 		},
 		{"OmgRod", 165, 104, 100, 100, false, UserType::Modder,
-			{"For their (albeit late) efforts <ca>o7</c>"}
+			{"For their (albeit late) efforts <ca>o7</c>"},
+			"https://github.com/OmgRod"
 		},
 	};
 

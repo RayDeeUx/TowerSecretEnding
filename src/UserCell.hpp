@@ -6,7 +6,6 @@
 using namespace geode::prelude;
 
 enum class UserType {
-	Colon,
 	Creator,
 	Musician,
 	Modder
@@ -21,6 +20,7 @@ struct UserData {
 	bool showGlow;
 	UserType type;
 	std::vector<std::string> contributions;
+	std::string socialURL = "";
 };
 
 class UserCell : public CCLayerColor {
@@ -28,5 +28,6 @@ public:
 	static UserCell* create(const UserData& userData, const bool isEven);
 	bool init(const UserData& userData, const bool isEven);
 	void onUserCellInfo(CCObject* sender);
+	void onSocial(CCObject* sender);
 	UserData m_userData;
 };
