@@ -17,7 +17,7 @@ public:
 	bool calledAlready = false;
 
 	// cmon guys do i really need to explain this to you
-	const std::unordered_map<int, int> robtopToColon = {
+	const std::map<int, int> robtopToColon = {
 		{5001, 116926133},
 		{5002, 116926138},
 		{5003, 116926140},
@@ -81,8 +81,11 @@ public:
 		{"acaruso", 12, 12, 17, 17, false, UserType::Modder,
 			{"Help with downloading audio assets in the background"}
 		},
+		{"dankmeme01", 1, 41, 16, 16, false, UserType::Modder,
+			{"Additional help with SAFELY downloading levels in the background"}
+		},
 		{"CJLink", 2, 12, 2, 15, true, UserType::Modder,
-			{"Help with downloading levels in the background", "Help with opening online levels from outside of LevelInfoLayer"}
+			{"Help with opening online levels from outside of LevelInfoLayer"}
 		},
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
 			{"Designed this \"Special thanks!\" list you're reading right now", "Putting up with an \"RTFM\"-worthy question"}

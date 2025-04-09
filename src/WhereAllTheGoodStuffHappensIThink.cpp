@@ -43,6 +43,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 					ad->download();
 				} else log::info("asset downloader initalization may have failed at some point.");
 			}
+			if (colonsLevel->m_levelID.value() == 116926955) GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
 		}
 		virtual void levelDownloadFailed(int p0) {
 			log::info("p0: {} (some download failed)", p0);
@@ -56,7 +57,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			downloadFailedPopup->displayNextObject();
 			manager->shownDownloadsFailed = true;
 			Utils::highlightADoor(static_cast<LevelAreaInnerLayer*>(this), false);
-			return true;
+			GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
 		}
 	};
 	void onColonToggle(CCObject* sender) {
@@ -84,6 +85,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
+			glm->m_levelDownloadDelegate = this;
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
