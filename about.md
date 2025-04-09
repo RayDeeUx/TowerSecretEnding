@@ -19,8 +19,9 @@ Each copy of The Tower's Secret Ending is personalized to reflect the latest fee
 ### Programming
 - [\[:)\]](user:25012294) <c-afafaf>acaruso</c>: Help with downloading audio assets in the background
 - [\[:)\]](user:5367051) <c-00ff7d>CJ_Link</c>: Help with downloading levels in the background
-- [\[:)\]](user:1139015) <c-4c6e5d>Alp</c><c-73ab90>ha</c><c-bc419c>la</c><c-ce6087>n</c><c-ec9667>e</c><c-fcfc78>o</c><c-83da96>u</c><c-80d5dc>s</c>: Designing the "Special thanks" list
+- [\[:)\]](user:1139015) <c-4c6e5d>Alp</c><c-73ab90>ha</c><c-bc419c>la</c><c-ce6087>n</c><c-ec9667>e</c><c-fcfc78>o</c><c-83da96>u</c><c-80d5dc>s</c>: Designing the "Special thanks" list + putting up with an "RTFM"-worthy question
 - [\[:)\]](user:7466002) <c-fcb5ff>hiim</c><c-00c8ff>jasmine</c><c-fcb5ff>00</c>: Level string size detection + cross-platform Geode bindings support
-- [\[:)\]](user:7696536) <c-7d7dff>prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
+- [\[:)\]](user:7696536) <c-7d7dff>Prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
+- [\[:)\]](user:18226543) Capeling: Putting up with an "RTFM"-worthy question
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances. To report bugs or get help with using my mods, press the Discord button in the lower left corner.

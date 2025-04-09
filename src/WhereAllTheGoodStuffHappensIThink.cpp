@@ -7,11 +7,10 @@
 #include <Geode/modify/DialogLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include "AssetDownloader.hpp"
 #include "Manager.hpp"
 #include "Utils.hpp"
 #include <ctime>
-
-#include "AssetDownloader.hpp"
 
 using namespace geode::prelude;
 
@@ -26,6 +25,15 @@ using namespace geode::prelude;
 	wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());\
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
+	struct Fields : AssetDownloaderDelegate {
+		LevelAreaInnerLayer* self;
+		void assetDownloadFailed() {
+			log::info("some assets may have failed downloading.");
+		}
+		void assetDownloadFinished() {
+			log::info("assets finished downloading.");
+		}
+	};
 	void onColonToggle(CCObject* sender) {
 		Manager* manager = Manager::getSharedInstance();
 		if (!sender || !manager->completedVanillaTowerFloorOne) return; // click on it like a sane and sober human would, for chrissake!
@@ -61,8 +69,11 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				colonsLevel = glm->getSavedLevel(colonID);
 				if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
 					log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonID);
-					if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) ad->download();
-					else log::info("asset downloading may have failed at some point.");
+					if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) {
+						CC_SAFE_RETAIN(ad);
+						ad->setDelegate(m_fields.self());
+						ad->download();
+					} else log::info("asset downloader initalization may have failed at some point.");
 				} else if (!manager->firstTimeEntering) {
 					manager->downloadsFailed = true;
 					break;

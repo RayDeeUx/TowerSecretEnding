@@ -85,13 +85,16 @@ public:
 			{"Help with downloading levels in the background", "Help with opening online levels from outside of LevelInfoLayer"}
 		},
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
-			{"Designed this \"Special thanks!\" list you're reading right now"}
+			{"Designed this \"Special thanks!\" list you're reading right now", "Putting up with an \"RTFM\"-worthy question"}
 		},
 		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
 			{"Level string size detection", "Crossplatform Geode SDK bindings support"}
 		},
 		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
 			{"Crossplatform Geode SDK bindings support"}
+		},
+		{"Capeling", 1, 0, 3, 3, false, UserType::Modder,
+			{"Putting up with an \"RTFM\"-worthy question"}
 		},
 		{"OmgRod", 165, 104, 100, 100, false, UserType::Modder,
 			{"For their (albeit late) efforts <ca>o7</c>"}
