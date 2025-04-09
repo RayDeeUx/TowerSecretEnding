@@ -48,14 +48,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			log::info("p0: {} (some download failed)", p0);
 			Manager* manager = Manager::getSharedInstance();
 			manager->downloadFailed = true;
-			if (manager->shownDownloadsFailed) return true;
+			if (manager->shownDownloadsFailed) return;
 			DialogLayer* downloadFailedPopup = Utils::showFailedDownload();
-			if (!downloadFailedPopup) return true;
-			this->addChild(downloadFailedPopup);
+			if (!downloadFailedPopup) return;
+			static_cast<LevelAreaInnerLayer*>(this)->addChild(downloadFailedPopup);
 			downloadFailedPopup->animateInRandomSide();
 			downloadFailedPopup->displayNextObject();
 			manager->shownDownloadsFailed = true;
-			Utils::highlightADoor(this, false);
+			Utils::highlightADoor(static_cast<LevelAreaInnerLayer*>(this), false);
 			return true;
 		}
 	};
