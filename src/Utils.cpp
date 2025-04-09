@@ -148,7 +148,12 @@ namespace Utils {
 	}
 
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode) {
-		const int doorIndex = Manager::getSharedInstance()->doorToShow;
+		if (!scene) return;
+
+		Manager* manager = Manager::getSharedInstance();
+		if (manager->downloadsFailed || !manager->completedVanillaTowerFloorOne) return; // dont highlight doors
+
+		const int doorIndex = manager->doorToShow;
 		if (doorIndex < 1) return;
 
 		CCNode* mainLayer = scene->getChildByID("main-node");

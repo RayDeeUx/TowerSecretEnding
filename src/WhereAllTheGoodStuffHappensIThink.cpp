@@ -11,6 +11,8 @@
 #include "Utils.hpp"
 #include <ctime>
 
+#include "AssetDownloader.hpp"
+
 using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
@@ -57,7 +59,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				}
 				colonsLevel = glm->getSavedLevel(colonID);
 				if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
-					log::info("colonsLevel {} with colonID {} was found", colonsLevel, colonID);
+					log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonID);
+					if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) ad->download();
+					else log::info("asset downloading may have failed at some point.");
 				} else if (!manager->firstTimeEntering) {
 					manager->downloadsFailed = true;
 					break;
