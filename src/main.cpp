@@ -17,7 +17,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 		Manager* manager = Manager::getSharedInstance();
 		if (!manager->colonMode || !manager->completedVanillaTowerFloorOne || manager->downloadsFailed) return true;
 
-		Utils::highlightADoor(this, true);
+		Utils::highlightADoor(this, true); // yeah i moved the function over to Utils namespace lol --raydeeux
 
 		return true;
 	}
