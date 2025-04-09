@@ -143,6 +143,9 @@ public:
 	// track first time entering the tower
 	bool firstTimeEntering = true;
 
+	// only show Cut for Time popup once
+	bool shownCutForTime = false;
+
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;

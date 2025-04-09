@@ -174,7 +174,14 @@ namespace Utils {
 	}
 
 	void showRattledashChest() {
-		if (!Utils::getSavedBool("rattledashChest")) return;
+		if (!Utils::getSavedBool("rattledashChest")) {
+			Manager* manager = Manager::getSharedInstance();
+			if (!manager->shownCutForTime) {
+				manager->shownCutForTime = true;
+				return FLAlertLayer::create("Aww man...", "Unfortunately, Rattledash's chest was cut for time.\n<cy>Sorry about that!</c>", "OK")->show();
+			}
+			return;
+		}
 		// adapted from colon's JSON file + his code snippets --raydeeux
 		#ifndef GEODE_IS_IOS
 		CCArray* chestRewards = CCArray::create();
