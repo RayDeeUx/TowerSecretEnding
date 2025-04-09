@@ -36,10 +36,10 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
 			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
-				log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonID);
+				log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonsLevel->m_levelID.value());
 				if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) {
 					CC_SAFE_RETAIN(ad);
-					ad->setDelegate(m_fields.self());
+					ad->setDelegate(this);
 					ad->download();
 				} else log::info("asset downloader initalization may have failed at some point.");
 			}
@@ -86,7 +86,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			// download the levels! checking for nullptr from GLM *AND* level string length are most consistent solutions
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
-			glm->m_levelDownloadDelegate = this;
+			glm->m_levelDownloadDelegate = m_fields.self();
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
@@ -146,7 +146,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		if (!senderIsButton->getUserObject("current-door"_spr)) return LevelAreaInnerLayer::onDoor(sender); // colon wants the levels to be played in order. do not report an error on this line; it is intended behavior
 
-		const std::unordered_map<int, int>& robToColon = manager->robtopToColon;
+		const std::map<int, int>& robToColon = manager->robtopToColon;
 		if (!robToColon.contains(robtopsID)) return LevelAreaInnerLayer::onDoor(sender);
 		const int colonsID = robToColon.find(robtopsID)->second;
 
