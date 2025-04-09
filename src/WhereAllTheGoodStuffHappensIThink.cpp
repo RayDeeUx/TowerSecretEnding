@@ -43,7 +43,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 					ad->download();
 				} else log::info("asset downloader initalization may have failed at some point.");
 			}
-			if (colonsLevel->m_levelID.value() == 116926955) GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
 		}
 		virtual void levelDownloadFailed(int p0) {
 			log::info("p0: {} (some download failed)", p0);
@@ -58,6 +57,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			downloadFailedPopup->displayNextObject();
 			manager->shownDownloadsFailed = true;
 			Utils::highlightADoor(lail, false);
+			if (CCNode* toggler = lail->getChildByIDRecursive("secret-ending-toggle"_spr)) toggler->removeMeAndCleanup();
+			if (CCNode* label = lail->getChildByIDRecursive("secret-ending-toggle-label"_spr)) label->removeMeAndCleanup();
 			GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
 		}
 	};
@@ -97,8 +98,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			}
 		}
 
-		if (manager->firstTimeEntering) manager->firstTimeEntering = false;
-
 		if (!manager->colonToggleUnlocked) return true;
 
 		CCNode* backMenu = this->getChildByID("back-menu");
@@ -123,15 +122,25 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		);
 		colonToggle->setID("secret-ending-toggle"_spr);
 
+		CCLabelBMFont* colonToggleLabel = CCLabelBMFont::create("Secret Ending", "bigFont.fnt");
+		colonToggleLabel->limitLabelWidth(60.f, 1.f, .0001f);
+		colonToggleLabel->setAnchorPoint({0.f, .5f});
+		colonToggleLabel->setID("secret-ending-toggle-label"_spr);
+
 		backMenu->addChild(colonToggle);
+		backMenu->addChild(colonToggleLabel);
 		colonToggle->setPosition({backButton->getPositionX(), vaultButton->getPositionY()});
+		colonToggleLabel->setPosition(colonToggle->getPosition());
+		colonToggleLabel->setPositionX(colonToggleLabel->getPositionX() + colonToggle->getContentWidth() - 6.f);
 
 		// apparently i need to modify the *sprites* to mimic the "fade-in" effect most of the other robtop buttons have.
 		// pretty fuckin tedious but oh well --raydeeux
 		checkmarkOneSprite->setOpacity(0);
 		checkmarkTwoSprite->setOpacity(0);
-		checkmarkOneSprite->runAction(CCFadeIn::create(.5f));
-		checkmarkTwoSprite->runAction(CCFadeIn::create(.5f));
+		colonToggleLabel->setOpacity(0);
+		checkmarkOneSprite->runAction(CCFadeIn::create(returningFromTowerLevel ? .75f : .5f));
+		checkmarkTwoSprite->runAction(CCFadeIn::create(returningFromTowerLevel ? .75f : .5f));
+		colonToggleLabel->runAction(CCFadeIn::create(returningFromTowerLevel ? .75f : .5f));
 
 		return true;
 	}

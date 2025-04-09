@@ -82,7 +82,7 @@ public:
 			{"Help with downloading audio assets in the background"}
 		},
 		{"dankmeme01", 1, 41, 16, 16, false, UserType::Modder,
-			{"Additional help with SAFELY downloading levels in the background"}
+			{"Help with safely downloading levels in the background"}
 		},
 		{"CJLink", 2, 12, 2, 15, true, UserType::Modder,
 			{"Help with opening online levels from outside of LevelInfoLayer"}
@@ -142,9 +142,6 @@ public:
 	bool downloadsFailed = false;
 	// only show the dialog once
 	bool shownDownloadsFailed = false;
-
-	// track first time entering the tower
-	bool firstTimeEntering = true;
 
 	// only show Cut for Time popup once
 	bool shownCutForTime = false;
