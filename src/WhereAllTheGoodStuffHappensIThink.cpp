@@ -351,12 +351,12 @@ class $modify(MyDialogLayer, DialogLayer) {
 			this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
 		}
 		if (tag == 14 && isRattledash) {
-			CCLabelBMFont* translationLabel = CCLabelBMFont::create("(Translation: Make sure you're connected to RobTop's servers.)", "bigFont.fnt");
-			translationLabel->limitLabelWidth(300.f, 1.f, 0.001f);
+			CCLabelBMFont* translationLabel = CCLabelBMFont::create("(Translation: Make sure you're connected to RobTop's servers, then RESTART THE GAME.)", "bigFont.fnt");
+			translationLabel->limitLabelWidth(420.f, 1.f, 0.001f);
 			translationLabel->setOpacity(0);
 			this->addChild(translationLabel);
 			translationLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
-			translationLabel->setPositionY(translationLabel->getPositionY() + 45.f);
+			translationLabel->setPositionY(translationLabel->getPositionY() + 55.f);
 			translationLabel->runAction(CCFadeIn::create(1.f));
 		}
 	}
