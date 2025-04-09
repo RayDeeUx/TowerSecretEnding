@@ -175,11 +175,14 @@ namespace Utils {
 
 	void showRattledashChest() {
 		if (!Utils::getSavedBool("rattledashChest")) {
+			// its fine if it just isnt there -- colon
+			/*
 			Manager* manager = Manager::getSharedInstance();
 			if (!manager->shownCutForTime) {
 				manager->shownCutForTime = true;
 				return FLAlertLayer::create("Aww man...", "Unfortunately, Rattledash's chest was cut for time.\n<cy>Sorry about that!</c>", "OK")->show();
 			}
+			*/
 			return;
 		}
 		// adapted from colon's JSON file + his code snippets --raydeeux

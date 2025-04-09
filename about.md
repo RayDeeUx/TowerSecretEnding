@@ -26,7 +26,8 @@ Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest fee
 - [\[:)\]](user:18226543) Capeling: Putting up with an "RTFM"-worthy question
 ## Notes
 - Since this mod relies on RobTop's official servers, you should not be using this on a private Geometry Dash server.
+- If you see "Load Failed!" when entering a level at any point, that means you'll need to restart the game (hopefully with a stable Internet connection by then).
 - While this mod *can* be interpreted as a fangame mod, this mod intentionally relies on your save data from vanilla GD and RobTop's servers. Any moons/orbs/coins you earn from completing <cy>The Secret Ending</c> are completely intentional and only affect your save file for vanilla GD, since this mod uses levels uploaded to RobTop's servers.
-- If you see "Load Failed!" when entering a level, that means you'll need to restart the game (hopefully with a stable Internet connection by then).
+- Rattledash's chest is not part of this mod.
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances. To report bugs or get help with using my (RayDeeUx) mods, press the Discord button in the lower left corner.
