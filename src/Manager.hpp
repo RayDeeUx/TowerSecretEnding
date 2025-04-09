@@ -88,7 +88,7 @@ public:
 		},
 		{"Alphalaneous", 452, 97, 42, 72, true, UserType::Modder,
 			{"Designed this \"Special thanks!\" list you're reading right now", "Putting up with an \"RTFM\"-worthy question"},
-			"https://bsky.app/profile/alphalaneous.dev"
+			"https://twitter.com/alphalaneous"
 		},
 		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
 			{"Level string size detection", "Crossplatform Geode SDK bindings support"},
