@@ -27,7 +27,7 @@ public:
 	// this is a surprise tool that will be helpful later
 	// sprite names for the DialogLayer::displayDialogObject hook
 	const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE> listOfDialogSprites = {
-		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE THIS.
+		"dialogIcon_001.png"_spr, // THIS IS UNUSED. DO NOT CHANGE OR REMOVE THIS.
 		"dialogIcon_001.png"_spr,
 		"dialogIcon_003.png"_spr,
 		"dialogIcon_006.png"_spr,
@@ -88,7 +88,7 @@ public:
 			{"Designed this \"Special thanks!\" list you're reading right now"}
 		},
 		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
-			{"Crossplatform Geode SDK bindings support"}
+			{"Level string size detection", "Crossplatform Geode SDK bindings support"}
 		},
 		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
 			{"Crossplatform Geode SDK bindings support"}
