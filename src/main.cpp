@@ -2,6 +2,7 @@
 // adapted by raydeeux further because haha yes
 
 #include <Geode/modify/LevelAreaInnerLayer.hpp>
+#include <Geode/modify/AccountHelpLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include "CreditsLayer.hpp"
@@ -47,5 +48,14 @@ class $modify(MenuLayer) {
 		manager->calledAlready = true;
 		manager->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5003) && gsm->hasCompletedMainLevel(5004);
 		return true;
+	}
+};
+
+class $modify(AccountHelpLayer) {
+	virtual void FLAlert_Clicked(FLAlertLayer* alert, bool btnTwo) {
+		AccountHelpLayer::FLAlert_Clicked(alert, btnTwo);
+		if (GameStatsManager* gsm = GameStatsManager::get(); gsm && btnTwo && alert->getTag() == 3) { // to check for unlinking account
+			Manager::getSharedInstance()->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5003) && gsm->hasCompletedMainLevel(5004);
+		}
 	}
 };

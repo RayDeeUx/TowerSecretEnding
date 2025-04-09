@@ -1,14 +1,14 @@
 # TowerSecretEnding
 The Secret Ending of The Tower as a Geode mod!
 ## Usage
-<cy>The following are required to use this mod:</c>\
+<cy>The following are required to fully enjoy this mod:</c>\
 <cy>- Having completed Floor 1 of The Tower beforehand</c>\
 <cy>- A working Internet (preferably Wi-Fi) connection</c>\
 <cy>- RobTop's official servers being alive</c>\
 <cy>- You being connected to RobTop's official servers, and not being blacklisted from said servers</c>\
 <cy>- The Secret Ending levels being available on RobTop's official servers</c>
 ### "But why so many requirements?"
-Each copy of The Tower's Secret Ending is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise.
+Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise.
 ## Special Thanks
 ### Levels
 - [\[:D\]](user:9099846) <c-ffffff>16</c><c-4b00af>lord</c>: Decoration + effects
