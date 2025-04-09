@@ -55,7 +55,7 @@ bool UserCell::init(const UserData& userData, const bool isEven) {
 		default: socialSprite = CCSprite::createWithSpriteFrameName("geode.loader/homepage.png"); break;
 		case UserType::Creator:
 		case UserType::Musician: socialSprite = CCSprite::createWithSpriteFrameName("gj_ytIcon_001.png"); break;
-		case UserType::Modder: socialSprite = CCSprite::createWithSpriteFrameName("geode.loader/github.png"); break;
+		case UserType::Modder: socialSprite = CCSprite::createWithSpriteFrameName(m_userData.username == "Alphalaneous" ? "gj_twIcon_001.png" : "geode.loader/github.png"); break;
 	}
 
 	CCMenuItemSpriteExtra* socialButton = CCMenuItemSpriteExtra::create(socialSprite, this, menu_selector(UserCell::onSocial));
