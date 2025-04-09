@@ -120,6 +120,7 @@ public:
 	// the correctCompletionOrder is to minimize cheating
 	std::vector<int> completedLevels = {};
 	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955}; // in case people want to cheat for some reason
+	const std::vector<int> originalRobtopIDs = {5001, 5002, 5003, 5004}; // in case people want to cheat for some reason
 
 	// store timestamps between level ID 5003 bomb pickup at group 105
 	// and pauselayer creation

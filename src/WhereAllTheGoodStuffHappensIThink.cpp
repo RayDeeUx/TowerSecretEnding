@@ -15,9 +15,10 @@
 using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
-#define ISNT_COLON_LEVEL std::ranges::find(manager->correctCompletionOrder, this->PLAYLAYER_LEVEL_ID) == manager->correctCompletionOrder.end()
+#define IS_OFFICIAL_LEVEL this->m_level->m_levelType == GJLevelType::Local
+#define ISNT_ROB_OR_COLON_TOWER_LEVEL std::ranges::find(manager->correctCompletionOrder, this->PLAYLAYER_LEVEL_ID) == manager->correctCompletionOrder.end() && (std::ranges::find(manager->originalRobtopIDs, this->PLAYLAYER_LEVEL_ID) == manager->originalRobtopIDs.end() || !(IS_OFFICIAL_LEVEL))
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"doorToShow: {}\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", manager->doorToShow, PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\" doorToShow: {}\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", manager->doorToShow, PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
 #define PLAYING_DEEP_SEWERS_FROM_NOT_TOWER !Manager::getSharedInstance()->useCanonSpawn || !Manager::getSharedInstance()->isFromColonsTower || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
@@ -264,8 +265,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
 		Manager* manager = Manager::getSharedInstance();
-		// || ISNT_COLON_LEVEL
-		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode")) return PlayLayer::startGame();
+		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode") || ISNT_ROB_OR_COLON_TOWER_LEVEL) return PlayLayer::startGame();
 
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
@@ -304,7 +304,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 	virtual void spawnGroup(int groupBeingSpawned, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		GJBaseGameLayer::spawnGroup(groupBeingSpawned, p1, p2, p3, p4, p5);
-		if (PlayLayer::get() && groupBeingSpawned == 105 && this->m_level && this->PLAYLAYER_LEVEL_ID == 5003 && this->m_level->m_levelType == GJLevelType::Local) {
+		if (PlayLayer::get() && groupBeingSpawned == 105 && this->m_level && this->PLAYLAYER_LEVEL_ID == 5003 && IS_OFFICIAL_LEVEL) {
 			Manager* manager = Manager::getSharedInstance();
 			manager->bombPickupTimestamp = std::time(nullptr);
 			manager->trackTime = true;
