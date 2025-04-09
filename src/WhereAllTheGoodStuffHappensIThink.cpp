@@ -180,6 +180,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		this->runAction(CCFadeOut::create(.5f));
 		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
+		log::info("setting GLM's download delegate to nullptr (onDoor)");
+		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+	}
+	void onExit() {
+		log::info("setting GLM's download delegate to nullptr (onExit)");
+		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+		LevelAreaInnerLayer::onExit();
 	}
 };
 
