@@ -48,15 +48,16 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		virtual void levelDownloadFailed(int p0) {
 			log::info("p0: {} (some download failed)", p0);
 			Manager* manager = Manager::getSharedInstance();
-			manager->downloadFailed = true;
+			manager->downloadsFailed = true;
 			if (manager->shownDownloadsFailed) return;
 			DialogLayer* downloadFailedPopup = Utils::showFailedDownload();
-			if (!downloadFailedPopup) return;
-			static_cast<LevelAreaInnerLayer*>(this)->addChild(downloadFailedPopup);
+			LevelAreaInnerLayer* lail = CCScene::get()->getChildByType<LevelAreaInnerLayer>(0);
+			if (!downloadFailedPopup || !lail) return;
+			lail->addChild(downloadFailedPopup);
 			downloadFailedPopup->animateInRandomSide();
 			downloadFailedPopup->displayNextObject();
 			manager->shownDownloadsFailed = true;
-			Utils::highlightADoor(static_cast<LevelAreaInnerLayer*>(this), false);
+			Utils::highlightADoor(lail, false);
 			GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
 		}
 	};
