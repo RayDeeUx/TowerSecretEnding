@@ -16,8 +16,9 @@
 using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
+#define ISNT_COLON_LEVEL std::ranges::find(manager->correctCompletionOrder, this->PLAYLAYER_LEVEL_ID) != manager->correctCompletionOrder.end()
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
-#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
+#define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar. { doorToShow }\"\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", manager->doorToShow, PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
 #define PLAYING_DEEP_SEWERS_FROM_NOT_TOWER !Manager::getSharedInstance()->useCanonSpawn || !Manager::getSharedInstance()->isFromColonsTower || !PlayLayer::get() || !PlayLayer::get()->m_level || PlayLayer::get()->PLAYLAYER_LEVEL_ID != THE_DEEP_SEWERS
 #define UPDATE_DEBUG_LABEL(source, originalCallback)\
 	CCLabelBMFont* wicklineLabel = typeinfo_cast<CCLabelBMFont*>(source->getChildByID("jane-wickline-debug-label"_spr));\
@@ -231,9 +232,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 		// this is really just for debug purposes.
 		// the quote is just filler; ADHD go brrr.
 		// --raydeeux
-		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode")) return PlayLayer::startGame();
-
 		Manager* manager = Manager::getSharedInstance();
+		if (!this->m_level || !this->getParent() || !Utils::getSavedBool("debugMode") || ISNT_COLON_LEVEL) return PlayLayer::startGame();
 
 		CCLabelBMFont* wicklineLabel = CCLabelBMFont::create(FORMATTED_DEBUG_LABEL.c_str(), "bigFont.fnt");
 		wicklineLabel->setID("jane-wickline-debug-label"_spr);
@@ -245,14 +245,14 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 	void levelComplete() {
 		Manager* manager = Manager::getSharedInstance();
-		if (!this->m_level || !this->getParent() || !this->m_level->getUserObject("colon-variant"_spr) || !manager->isFromColonsTower) return PlayLayer::levelComplete();
+		if (!this->m_level || !this->getParent() || !manager->isFromColonsTower) return PlayLayer::levelComplete();
 
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
 		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) manager->completedLevels.push_back(levelID);
 
-		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
-
 		manager->doorToShow += 1;
+
+		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
 
 		PlayLayer::levelComplete();
 	}
