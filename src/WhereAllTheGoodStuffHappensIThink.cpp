@@ -166,6 +166,12 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
+		if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
+			CC_SAFE_RETAIN(ad);
+			ad->setDelegate(this->m_fields.self());
+			ad->download();
+		} else log::info("asset downloader initalization may have failed at some point while entering the level.");
+
 		colonsVersion->setUserObject("colon-variant"_spr, CCBool::create(true));
 		manager->useCanonSpawn = colonsID == THE_DEEP_SEWERS;
 
