@@ -248,8 +248,6 @@ namespace Utils {
 
 
 	bool checkForAllIn(const std::string& commaSeparatedListOfIDs, const bool isSong) {
-		log::info("commaSeparatedListOfIDs: {}", commaSeparatedListOfIDs);
-		log::info("isSong: {}", isSong);
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		for (const std::string& assetID : utils::string::split(commaSeparatedListOfIDs, ",")) {
 			const int integerID = utils::numFromString<int>(assetID).unwrapOr(-1585);

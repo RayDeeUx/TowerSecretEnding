@@ -150,7 +150,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		Manager* manager = Manager::getSharedInstance();
 		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
 		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
-		log::info("ok so the sender is in fact a button after all. proceed.");
 
 		const int robtopsID = sender->getTag();
 		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender); // because rob is going to add more tower levels. using tags here is ideal since they're 1:1 to rob's level IDs
