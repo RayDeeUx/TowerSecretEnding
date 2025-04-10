@@ -261,7 +261,7 @@ namespace Utils {
 					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 		return true;
 	}
