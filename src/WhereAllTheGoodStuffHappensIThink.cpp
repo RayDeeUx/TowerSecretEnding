@@ -37,30 +37,27 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
 			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
-				log::info("colonsLevel {} with colonID {} was found, downloading audio assets now", colonsLevel, colonsLevel->m_levelID.value());
-				if (AssetDownloader* ad = AssetDownloader::create(colonsLevel)) {
-					CC_SAFE_RETAIN(ad);
-					ad->setDelegate(this);
-					ad->download();
-				} else log::info("asset downloader initalization may have failed at some point.");
+				log::info("colonsLevel {} with colonID {} was found, updating it now", colonsLevel, colonsLevel->m_levelID.value());
+				GameLevelManager::get()->updateLevel(colonsLevel);
 			}
 		}
+		virtual void levelUpdateFinished(GJGameLevel* colonsLevel, UpdateResponse response) {
+			log::info("level {} of level ID {} finished updating with response {}", colonsLevel, colonsLevel->m_levelID.value(), static_cast<int>(response));
+			if (static_cast<int>(response) != 3) return log::info("response was not equal to 3");
+			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
+				log::info("downloadind audio assets for colonID {} now", colonsLevel->m_levelID.value());
+				CC_SAFE_RETAIN(ad);
+				ad->setDelegate(this);
+				ad->download();
+			} else log::info("asset downloader initalization may have failed at some point.");
+		}
+		virtual void levelUpdateFailed(int p0) {
+			log::info("p0: {} (level update failed)", p0);
+			Utils::levelDownloadFailed();
+		}
 		virtual void levelDownloadFailed(int p0) {
-			log::info("p0: {} (some download failed)", p0);
-			Manager* manager = Manager::getSharedInstance();
-			manager->downloadsFailed = true;
-			if (manager->shownDownloadsFailed) return;
-			DialogLayer* downloadFailedPopup = Utils::showFailedDownload();
-			LevelAreaInnerLayer* lail = CCScene::get()->getChildByType<LevelAreaInnerLayer>(0);
-			if (!downloadFailedPopup || !lail) return;
-			lail->addChild(downloadFailedPopup);
-			downloadFailedPopup->animateInRandomSide();
-			downloadFailedPopup->displayNextObject();
-			manager->shownDownloadsFailed = true;
-			Utils::highlightADoor(lail, false);
-			if (CCNode* toggler = lail->getChildByIDRecursive("secret-ending-toggle"_spr)) toggler->removeMeAndCleanup();
-			if (CCNode* label = lail->getChildByIDRecursive("secret-ending-toggle-label"_spr)) label->removeMeAndCleanup();
-			GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+			log::info("p0: {} (level download failed)", p0);
+			Utils::levelDownloadFailed();
 		}
 	};
 	void onColonToggle(CCObject* sender) {
@@ -166,11 +163,22 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
-			CC_SAFE_RETAIN(ad);
-			ad->setDelegate(this->m_fields.self());
-			ad->download();
-		} else log::info("asset downloader initalization may have failed at some point while entering the level.");
+		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_sfxIDs, false) && Utils::checkForAllIn(colonsVersion->m_songIDs, true);
+
+		if (!hasAllAudioAssets) {
+			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
+				CC_SAFE_RETAIN(ad);
+				ad->setDelegate(this->m_fields.self());
+				ad->download();
+			} else log::info("asset downloader initalization may have failed at some point while entering the level.");
+			if (DialogLayer* missingAudio = Utils::showAudioMissing()) {
+				this->addChild(missingAudio);
+				missingAudio->animateInRandomSide();
+				missingAudio->displayNextObject();
+			}
+			return;
+		}
+		log::info("all audio assets for level ID {} are downloaded! moving on", colonsVersion->m_levelID.value());
 
 		colonsVersion->setUserObject("colon-variant"_spr, CCBool::create(true));
 		manager->useCanonSpawn = colonsID == THE_DEEP_SEWERS;
@@ -377,17 +385,18 @@ class $modify(MyDialogLayer, DialogLayer) {
 		DialogLayer::displayDialogObject(dialogObject);
 		const int tag = dialogObject->getTag();
 		const bool isRattledash = this->getUserObject("rattledash"_spr);
-		if (const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE>& dialogSprites = Manager::getSharedInstance()->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
+		const Manager* manager = Manager::getSharedInstance();
+		if (const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE>& dialogSprites = manager->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
 			this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
 		}
-		if (tag == 14 && isRattledash) {
-			CCLabelBMFont* translationLabel = CCLabelBMFont::create("(Translation: Make sure you're connected to RobTop's servers, then RESTART THE GAME.)", "bigFont.fnt");
+		if (const std::unordered_map<int, std::string>& tagToTranslation = manager->tagToTranslation; tagToTranslation.contains(tag) && isRattledash) {
+			CCLabelBMFont* translationLabel = CCLabelBMFont::create(fmt::format("({})", tagToTranslation.find(tag)->second).c_str(), "bigFont.fnt");
 			translationLabel->limitLabelWidth(420.f, 1.f, 0.001f);
 			translationLabel->setOpacity(0);
 			this->addChild(translationLabel);
 			translationLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
 			translationLabel->setPositionY(translationLabel->getPositionY() + 55.f);
-			translationLabel->runAction(CCFadeIn::create(1.f));
+			translationLabel->runAction(CCFadeIn::create(.5f));
 		}
 	}
 };

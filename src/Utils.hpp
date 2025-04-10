@@ -10,6 +10,10 @@ using namespace geode::prelude;
 	rattledashDummy->setTag(768);\
 	dialougeObjects->addObject(rattledashDummy);\
 
+#define CREATE_RATTLEDASH_WITH(dialougeObjectMemory)\
+	DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjectMemory, 4);\
+	ret->setUserObject("rattledash"_spr, CCBool::create(true));
+
 namespace Utils {
 	template<class T> T getSetting(const std::string_view setting);
 	bool getBool(const std::string_view setting);
@@ -29,6 +33,11 @@ namespace Utils {
 	DialogLayer* showRattledashsFinalWords();
 	DialogLayer* showHeadsUp();
 	DialogLayer* showFailedDownload();
+	DialogLayer* showAudioMissing();
 	void highlightADoor(LevelAreaInnerLayer* scene, const bool isColonMode);
 	void showRattledashChest();
+
+	void levelDownloadFailed();
+
+	bool checkForAllIn(const std::string& commaSeparatedListOfIDs, const bool isSong);
 }

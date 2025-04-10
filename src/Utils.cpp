@@ -81,9 +81,8 @@ namespace Utils {
 		rattledashEight->setTag(9); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashEight);
 
-		DialogLayer* textboxLayer = DialogLayer::createWithObjects(dialougeObjects, 4);
-		textboxLayer->setUserObject("rattledashs-final-words"_spr, CCBool::create(true));
-		textboxLayer->setUserObject("rattledash"_spr, CCBool::create(true));
+		CREATE_RATTLEDASH_WITH(dialougeObjects)
+		ret->setUserObject("rattledashs-final-words"_spr, CCBool::create(true));
 
 		// ok everything from this point on until the next inline comment is colon's code --raydeeux
 		std::function<void()> customCallback = [=]() {
@@ -91,13 +90,13 @@ namespace Utils {
 		};
 
 		auto* del = new CustomDialogCallback();
-		textboxLayer->addChild(del);
+		ret->addChild(del);
 		del->autorelease();
 		del->m_callback = customCallback;
-		textboxLayer->m_delegate = del;
+		ret->m_delegate = del;
 		// ok colon's code segment ends here
 
-		return textboxLayer;
+		return ret;
 	}
 
 	DialogLayer* showHeadsUp() {
@@ -117,8 +116,7 @@ namespace Utils {
 		rattledashExtraThree->setTag(12); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraThree);
 
-		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
-		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+		CREATE_RATTLEDASH_WITH(dialougeObjects)
 
 		return ret;
 	}
@@ -128,7 +126,7 @@ namespace Utils {
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
-		DialogObject* rattledashExtraFour = DialogObject::create(HIS_NAME, "Ah! Welcome!", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraFour = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraFour->setTag(13); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraFour);
 
@@ -136,12 +134,34 @@ namespace Utils {
 		rattledashExtraFive->setTag(14); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraFive);
 
-		DialogObject* rattledashExtraSix = DialogObject::create(HIS_NAME, "Another time, then.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraSix = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraSix->setTag(15); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraSix);
 
-		DialogLayer* ret = DialogLayer::createWithObjects(dialougeObjects, 4);
-		ret->setUserObject("rattledash"_spr, CCBool::create(true));
+		CREATE_RATTLEDASH_WITH(dialougeObjects)
+
+		return ret;
+
+	}
+
+	DialogLayer* showAudioMissing() {
+		CCArray* dialougeObjects = CCArray::create();
+
+		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
+
+		DialogObject* rattledashExtraSeven = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraSeven->setTag(16); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraSeven);
+
+		DialogObject* rattledashExtraEight = DialogObject::create(HIS_NAME, "<cy>The Secret Ending</c> is a little quiet right now.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraEight->setTag(17); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraEight);
+
+		DialogObject* rattledashExtraNine = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		rattledashExtraNine->setTag(18); // see manager->listOfDialogSprites for more info
+		dialougeObjects->addObject(rattledashExtraNine);
+
+		CREATE_RATTLEDASH_WITH(dialougeObjects)
 
 		return ret;
 
@@ -208,4 +228,33 @@ namespace Utils {
 
 		rewardLayer->m_wrongLabel->runAction(CCFadeIn::create(2.f));
 	}
+
+	 void levelDownloadFailed() {
+		Manager* manager = Manager::getSharedInstance();
+		manager->downloadsFailed = true;
+		if (manager->shownDownloadsFailed) return;
+		DialogLayer* downloadFailedPopup = Utils::showFailedDownload();
+		LevelAreaInnerLayer* lail = CCScene::get()->getChildByType<LevelAreaInnerLayer>(0);
+		if (!downloadFailedPopup || !lail) return;
+		lail->addChild(downloadFailedPopup);
+		downloadFailedPopup->animateInRandomSide();
+		downloadFailedPopup->displayNextObject();
+		manager->shownDownloadsFailed = true;
+		Utils::highlightADoor(lail, false);
+		if (CCNode* toggler = lail->getChildByIDRecursive("secret-ending-toggle"_spr)) toggler->removeMeAndCleanup();
+		if (CCNode* label = lail->getChildByIDRecursive("secret-ending-toggle-label"_spr)) label->removeMeAndCleanup();
+		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+	}
+
+
+	bool checkForAllIn(const std::string& commaSeparatedListOfIDs, const bool isSong) {
+		for (const std::string& assetID : utils::string::split(commaSeparatedListOfIDs, ",")) {
+			const int integerID = utils::numFromString<int>(assetID).unwrapOr(-1);
+			if (std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSong(integerID))) continue;
+			log::info("{} ID {} is missing!", (isSong? "song" : "SFX"), integerID);
+			return false;
+		}
+		return true;
+	}
+
 }

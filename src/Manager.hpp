@@ -1,7 +1,7 @@
 #pragma once
 #include "UserCell.hpp"
 
-#define DIALOUGE_SPRITE_ARRAY_SIZE 16
+#define DIALOUGE_SPRITE_ARRAY_SIZE 19
 
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
@@ -40,9 +40,18 @@ public:
 		"dialogIcon_001.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_005.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_003.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
+		"dialogIcon_001.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
 		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
-		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
-		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
+		"dialogIcon_003.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
+		"dialogIcon_001.png"_spr, // extra dialouge sprite for missing audio assets
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for missing audio assets
+		"dialogIcon_003.png"_spr, // extra dialouge sprite for missing audio assets
+	};
+
+	const std::unordered_map<int, std::string> tagToTranslation = {
+		{11, "Complete this floor of The Tower, then RESTART THE GAME."},
+		{14, "Make sure you're connected to RobTop's servers, then RESTART THE GAME."},
+		{17, "Some songs/SFX may be missing. Try again in a minute or two."},
 	};
 
 	// for "special thanks" screen
