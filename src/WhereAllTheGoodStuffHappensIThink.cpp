@@ -163,7 +163,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_sfxIDs, false) && Utils::checkForAllIn(colonsVersion->m_songIDs, true);
+		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_sfxIDs, true) && Utils::checkForAllIn(colonsVersion->m_songIDs, false);
 
 		if (!hasAllAudioAssets) {
 			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
