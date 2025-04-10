@@ -100,6 +100,7 @@ void AssetDownloader::parse(const int songID, const std::string& songStr, const 
 }
 
 void AssetDownloader::finish() {
+	if (!m_delegate) return log::info("no delegate found, m_failed: {}", m_failed);
 	if (m_failed) m_delegate->assetDownloadFailed();
 	else m_delegate->assetDownloadFinished();
 }

@@ -26,7 +26,7 @@ using namespace geode::prelude;
 	wicklineLabel->setString(FORMATTED_DEBUG_LABEL.c_str());\
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
-	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate {
+	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
 		LevelAreaInnerLayer* self;
 		void assetDownloadFailed() {
 			log::info("some assets may have failed downloading.");
@@ -86,6 +86,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			GameLevelManager* glm = GameLevelManager::get();
 			if (!glm) return true;
 			glm->m_levelDownloadDelegate = m_fields.self();
+			glm->m_levelUpdateDelegate = m_fields.self();
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
@@ -163,7 +164,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_sfxIDs, true) && Utils::checkForAllIn(colonsVersion->m_songIDs, false);
+		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_songIDs, true) && Utils::checkForAllIn(colonsVersion->m_sfxIDs, false);
 
 		if (!hasAllAudioAssets) {
 			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
@@ -204,12 +205,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		this->runAction(CCFadeOut::create(.5f));
 		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
-		log::info("setting GLM's download delegate to nullptr (onDoor)");
+		log::info("setting GLM's download/update delegates to nullptr (onDoor)");
 		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+		GameLevelManager::get()->m_levelUpdateDelegate = nullptr;
 	}
 	void onExit() {
-		log::info("setting GLM's download delegate to nullptr (onExit)");
+		log::info("setting GLM's download/update delegates to nullptr (onExit)");
 		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+		GameLevelManager::get()->m_levelUpdateDelegate = nullptr;
 		LevelAreaInnerLayer::onExit();
 	}
 };

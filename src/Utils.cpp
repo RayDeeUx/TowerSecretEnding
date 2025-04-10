@@ -104,15 +104,15 @@ namespace Utils {
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
-		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .5f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .5f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraOne->setTag(10); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraOne);
 
-		DialogObject* rattledashExtraTwo = DialogObject::create(HIS_NAME, "Oh! You've quite startled me there.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraTwo = DialogObject::create(HIS_NAME, "Oh! You've quite startled me there.", 5, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraTwo->setTag(11); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraTwo);
 
-		DialogObject* rattledashExtraThree = DialogObject::create(HIS_NAME, "Well, I'll be out of your way. Have fun exploring.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraThree = DialogObject::create(HIS_NAME, "Well, I'll be out of your way. Have fun exploring.", 3, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraThree->setTag(12); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraThree);
 
@@ -126,15 +126,15 @@ namespace Utils {
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
-		DialogObject* rattledashExtraFour = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraFour = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraFour->setTag(13); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraFour);
 
-		DialogObject* rattledashExtraFive = DialogObject::create(HIS_NAME, "It looks like you're not ready for <cy>The Secret Ending</c> yet.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraFive = DialogObject::create(HIS_NAME, "It looks like you're not ready for <cy>The Secret Ending</c> yet.", 5, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraFive->setTag(14); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraFive);
 
-		DialogObject* rattledashExtraSix = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraSix = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraSix->setTag(15); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraSix);
 
@@ -149,15 +149,15 @@ namespace Utils {
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
-		DialogObject* rattledashExtraSeven = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraSeven = DialogObject::create(HIS_NAME, "Ah! Welcome!", 1, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraSeven->setTag(16); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraSeven);
 
-		DialogObject* rattledashExtraEight = DialogObject::create(HIS_NAME, "<cy>The Secret Ending</c> is a little quiet right now.", 5, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraEight = DialogObject::create(HIS_NAME, "<cy>The Secret Ending</c> is a little quiet right now.", 5, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraEight->setTag(17); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraEight);
 
-		DialogObject* rattledashExtraNine = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, DEFAULT_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraNine = DialogObject::create(HIS_NAME, "Another time, then.", 3, 1.f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraNine->setTag(18); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraNine);
 
@@ -248,16 +248,19 @@ namespace Utils {
 
 
 	bool checkForAllIn(const std::string& commaSeparatedListOfIDs, const bool isSong) {
+		log::info("commaSeparatedListOfIDs: {}", commaSeparatedListOfIDs);
+		log::info("isSong: {}", isSong);
+		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		for (const std::string& assetID : utils::string::split(commaSeparatedListOfIDs, ",")) {
 			const int integerID = utils::numFromString<int>(assetID).unwrapOr(-1585);
 			if (integerID == -1585) continue;
 			if (isSong) {
-				if (!std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSong(integerID))) {
+				if (!mdm->isSongDownloaded(integerID)) {
 					log::info("song ID {} is missing!", integerID);
 					return false;
 				}
 			} else {
-				if (!std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSFX(integerID))) {
+				if (!mdm->isSFXDownloaded(integerID)) {
 					log::info("SFX ID {} is missing!", integerID);
 					return false;
 				}
