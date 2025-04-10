@@ -38,7 +38,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
 			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
 				log::info("colonsLevel {} with colonID {} was found, updating it now", colonsLevel, colonsLevel->m_levelID.value());
+				#if defined(GEODE_IS_MACOS) || defined(GEODE_IS_ANDROID) // remove when binding is found
 				GameLevelManager::get()->updateLevel(colonsLevel);
+				#endif
 			}
 		}
 		virtual void levelUpdateFinished(GJGameLevel* colonsLevel, UpdateResponse response) {
