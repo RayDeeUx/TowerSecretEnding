@@ -395,7 +395,7 @@ class $modify(MyDialogLayer, DialogLayer) {
 			translationLabel->setOpacity(0);
 			this->addChild(translationLabel);
 			translationLabel->setPosition(CCScene::get()->getContentSize() / 2.f);
-			translationLabel->setPositionY(translationLabel->getPositionY() + 55.f);
+			translationLabel->setPositionY(translationLabel->getPositionY() + 65.f);
 			translationLabel->runAction(CCFadeIn::create(.5f));
 		}
 	}

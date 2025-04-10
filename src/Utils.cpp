@@ -250,7 +250,8 @@ namespace Utils {
 	bool checkForAllIn(const std::string& commaSeparatedListOfIDs, const bool isSong) {
 		for (const std::string& assetID : utils::string::split(commaSeparatedListOfIDs, ",")) {
 			const int integerID = utils::numFromString<int>(assetID).unwrapOr(-1);
-			if (std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSong(integerID))) continue;
+			if (isSong && std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSong(integerID))) continue;
+			if (!isSong && std::filesystem::exists(MusicDownloadManager::sharedState()->pathForSFX(integerID))) continue;
 			log::info("{} ID {} is missing!", (isSong? "song" : "SFX"), integerID);
 			return false;
 		}
