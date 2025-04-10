@@ -299,7 +299,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 	void levelComplete() {
 		Manager* manager = Manager::getSharedInstance();
-		if (!this->m_level || !this->getParent() || !manager->isFromColonsTower) return PlayLayer::levelComplete();
+		if (!this->m_level || !this->getParent() || !manager->isFromColonsTower || m_isPracticeMode || m_isTestMode) return PlayLayer::levelComplete();
 
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
 		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) manager->completedLevels.push_back(levelID);
