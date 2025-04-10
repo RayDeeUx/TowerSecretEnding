@@ -43,7 +43,10 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		}
 		virtual void levelUpdateFinished(GJGameLevel* colonsLevel, UpdateResponse response) {
 			log::info("level {} of level ID {} finished updating with response {}", colonsLevel, colonsLevel->m_levelID.value(), static_cast<int>(response));
-			if (static_cast<int>(response) != 3) return log::info("response was not equal to 3");
+			if (static_cast<int>(response) != 3 && static_cast<int>(response) != 1) {
+				log::info("response was not equal to 3 OR 1");
+				Utils::levelDownloadFailed();
+			}
 			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
 				log::info("downloadind audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				CC_SAFE_RETAIN(ad);
