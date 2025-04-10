@@ -186,7 +186,6 @@ namespace Utils {
 			return;
 		}
 		// adapted from colon's JSON file + his code snippets --raydeeux
-		#ifndef GEODE_IS_IOS
 		CCArray* chestRewards = CCArray::create();
 
 		chestRewards->addObject(GJRewardObject::createItemUnlock(UnlockType::Cube, 42)); // yeah sorry
@@ -208,6 +207,5 @@ namespace Utils {
 		rewardLayer->m_wrongLabel->setOpacity(0);
 
 		rewardLayer->m_wrongLabel->runAction(CCFadeIn::create(2.f));
-		#endif
 	}
 }
