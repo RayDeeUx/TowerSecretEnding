@@ -30,11 +30,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		LevelAreaInnerLayer* self;
 		void assetDownloadFailed() {
 			log::info("some assets may have failed downloading.");
-			Manager::getSharedInstance()->isDownloadingStuff = false;
 		}
 		void assetDownloadFinished() {
 			log::info("assets finished downloading.");
-			Manager::getSharedInstance()->isDownloadingStuff = false;
 		}
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
@@ -47,7 +45,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			log::info("level {} of level ID {} finished updating with response {}", colonsLevel, colonsLevel->m_levelID.value(), static_cast<int>(response));
 			if (static_cast<int>(response) != 3 && static_cast<int>(response) != 1) {
 				log::info("response was not equal to 3 OR 1");
-				Manager::getSharedInstance()->isDownloadingStuff = false;
 				Utils::levelDownloadFailed();
 			}
 			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
@@ -55,17 +52,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				CC_SAFE_RETAIN(ad);
 				ad->setDelegate(this);
 				ad->download();
-				Manager::getSharedInstance()->isDownloadingStuff = true;
 			} else log::info("asset downloader initalization may have failed at some point.");
 		}
 		virtual void levelUpdateFailed(int p0) {
 			log::info("p0: {} (level update failed)", p0);
-			Manager::getSharedInstance()->isDownloadingStuff = false;
 			Utils::levelDownloadFailed();
 		}
 		virtual void levelDownloadFailed(int p0) {
 			log::info("p0: {} (level download failed)", p0);
-			Manager::getSharedInstance()->isDownloadingStuff = false;
 			Utils::levelDownloadFailed();
 		}
 	};
@@ -102,7 +96,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				if (!colonsLevel || originalStringSize < 100000 || (colonID == 116926955 && originalStringSize < 245000) || colonsLevel->m_accountID.value() != 106255) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
-					Manager::getSharedInstance()->isDownloadingStuff = true;
 				}
 			}
 		}
@@ -175,12 +168,11 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_songIDs, true) && Utils::checkForAllIn(colonsVersion->m_sfxIDs, false);
 
-		if (!hasAllAudioAssets || Manager::getSharedInstance()->isDownloadingStuff) {
+		if (!hasAllAudioAssets) {
 			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
 				CC_SAFE_RETAIN(ad);
 				ad->setDelegate(this->m_fields.self());
 				ad->download();
-				Manager::getSharedInstance()->isDownloadingStuff = true;
 			} else log::info("asset downloader initalization may have failed at some point while entering the level.");
 			if (DialogLayer* missingAudio = Utils::showAudioMissing()) {
 				this->addChild(missingAudio);

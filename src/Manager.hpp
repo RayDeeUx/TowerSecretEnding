@@ -160,8 +160,6 @@ public:
 	// only show Cut for Time popup once
 	bool shownCutForTime = false;
 
-	bool isDownloadingStuff = false;
-
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;
