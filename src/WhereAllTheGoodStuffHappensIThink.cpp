@@ -218,14 +218,14 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		log::info("pushing scene to level {}", colonsID);
 		log::info("setting GLM's download/update delegates to nullptr (onDoor)");
 		GameLevelManager* glm = GameLevelManager::get();
-		if (LevelDownloadDelegate* del = glm->m_levelDownloadDelegate; del && del == this->m_fields.self()) del = nullptr;
-		if (LevelUpdateDelegate* del = glm->m_levelUpdateDelegate; del && del == this->m_fields.self()) del = nullptr;
+		if (glm->m_levelDownloadDelegate == this->m_fields.self()) glm->m_levelDownloadDelegate = nullptr;
+		if (glm->m_levelUpdateDelegate == this->m_fields.self()) glm->m_levelUpdateDelegate = nullptr;
 	}
 	void onExit() {
 		log::info("setting GLM's download/update delegates to nullptr (onExit)");
 		GameLevelManager* glm = GameLevelManager::get();
-		if (LevelDownloadDelegate* del = glm->m_levelDownloadDelegate; del && del == this->m_fields.self()) del = nullptr;
-		if (LevelUpdateDelegate* del = glm->m_levelUpdateDelegate; del && del == this->m_fields.self()) del = nullptr;
+		if (glm->m_levelDownloadDelegate == this->m_fields.self()) glm->m_levelDownloadDelegate = nullptr;
+		if (glm->m_levelUpdateDelegate == this->m_fields.self()) glm->m_levelUpdateDelegate = nullptr;
 		LevelAreaInnerLayer::onExit();
 	}
 };
