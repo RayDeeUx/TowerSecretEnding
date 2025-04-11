@@ -28,6 +28,9 @@ using namespace geode::prelude;
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
 		LevelAreaInnerLayer* self;
+		~Fields() {
+			log::info("Goodbye fields!");
+		}
 		void assetDownloadFailed() {
 			log::info("some assets may have failed downloading.");
 		}
