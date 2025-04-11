@@ -28,6 +28,7 @@ using namespace geode::prelude;
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
 		LevelAreaInnerLayer* self{};
+		geode::Ref<AssetDownloader> ad;
 		~Fields() {
 			log::info("Goodbye fields!");
 		}
@@ -50,9 +51,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				log::info("response was not equal to 3 OR 1");
 				Utils::levelDownloadFailed();
 			}
-			if (geode::Ref<AssetDownloader> ad = AssetDownloader::create(colonsLevel); ad) {
-				log::info("downloadind audio assets for colonID {} now", colonsLevel->m_levelID.value());
-				CC_SAFE_RETAIN(ad);
+			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
+				log::info("downloading audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				ad->setDelegate(this);
 				ad->download();
 			} else log::info("asset downloader initalization may have failed at some point.");
@@ -172,8 +172,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_songIDs, true) && Utils::checkForAllIn(colonsVersion->m_sfxIDs, false);
 
 		if (!hasAllAudioAssets) {
-			if (geode::Ref<AssetDownloader> ad = AssetDownloader::create(colonsVersion)) {
-				CC_SAFE_RETAIN(ad);
+			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
 				ad->setDelegate(this->m_fields.self());
 				ad->download();
 			} else log::info("asset downloader initalization may have failed at some point while entering the level.");
