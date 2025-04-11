@@ -6,6 +6,7 @@
 using namespace geode::prelude;
 
 AssetDownloader::~AssetDownloader() {
+	log::info("destroying AssetDownloader");
 	m_mgr->removeMusicDownloadDelegate(this);
 }
 
