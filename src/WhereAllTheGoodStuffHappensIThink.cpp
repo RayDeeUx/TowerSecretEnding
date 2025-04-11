@@ -80,7 +80,10 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		if (!manager->completedVanillaTowerFloorOne) {
 			if (manager->shownHeadsUpDialog) return true;
 			DialogLayer* headsUp = Utils::showHeadsUp();
-			if (!headsUp) return true;
+			if (!headsUp || this->getChildByType<DialogLayer>(0)) {
+				CC_SAFE_RELEASE(headsUp);
+				return true;
+			}
 			this->addChild(headsUp);
 			headsUp->animateInRandomSide();
 			headsUp->displayNextObject();
@@ -151,6 +154,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		return true;
 	}
 	void onDoor(CCObject* sender) {
+		if (this->getParent()->getChildByID("CreditsLayer"_spr) || this->getChildByType<DialogLayer>(0)) return;
 		Manager* manager = Manager::getSharedInstance();
 		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
 		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
@@ -178,11 +182,11 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				ad->download();
 				this->m_fields->assetDownloader = ad;
 			} else log::info("asset downloader initalization may have failed at some point while entering the level.");
-			if (DialogLayer* missingAudio = Utils::showAudioMissing()) {
+			if (DialogLayer* missingAudio = Utils::showAudioMissing(); missingAudio) {
 				this->addChild(missingAudio);
 				missingAudio->animateInRandomSide();
 				missingAudio->displayNextObject();
-			}
+			} else CC_SAFE_RELEASE(missingAudio);
 			return;
 		}
 		log::info("all audio assets for level ID {} are downloaded! moving on", colonsVersion->m_levelID.value());

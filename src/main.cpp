@@ -23,6 +23,7 @@ class $modify(TowerButEpic, LevelAreaInnerLayer) {
 	}
 
 	void onInfo(cocos2d::CCObject* sender) {
+		if (this->getParent()->getChildByID("CreditsLayer"_spr)) return;
 		if (const Manager* manager = Manager::getSharedInstance(); manager->colonMode || manager->completedAtLeastOnce) return CreditsLayer::create()->showLayer(false);
 		LevelAreaInnerLayer::onInfo(sender);
 	}
