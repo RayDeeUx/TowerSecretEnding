@@ -2,6 +2,7 @@
 // adapted for the tower by raydeeux with permission
 
 #include "AssetDownloader.hpp"
+#include "Manager.hpp"
 
 using namespace geode::prelude;
 
@@ -101,7 +102,6 @@ void AssetDownloader::parse(const int songID, const std::string& songStr, const 
 }
 
 void AssetDownloader::finish() {
-	if (!m_delegate) return log::info("no delegate found, m_failed: {}", m_failed);
 	if (m_failed) m_delegate->assetDownloadFailed();
 	else m_delegate->assetDownloadFinished();
 }
@@ -117,7 +117,8 @@ void AssetDownloader::downloadNextAsset() {
 	geode::log::debug("Assets remaining: {}", m_assets.size());
 
 	if (m_assets.empty()) {
-		finish();
+		Manager::getSharedInstance()->isDownloadingStuff = false;
+		if (m_delegate) finish();
 		return;
 	}
 
