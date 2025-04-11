@@ -28,7 +28,7 @@ using namespace geode::prelude;
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
 		LevelAreaInnerLayer* self{};
-		geode::Ref<AssetDownloader> ad;
+		geode::Ref<AssetDownloader> assetDownloader;
 		~Fields() {
 			log::info("Goodbye fields!");
 		}
@@ -55,6 +55,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				log::info("downloading audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				ad->setDelegate(this);
 				ad->download();
+				this->assetDownloader = ad;
 			} else log::info("asset downloader initalization may have failed at some point.");
 		}
 		virtual void levelUpdateFailed(int p0) {
@@ -175,6 +176,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
 				ad->setDelegate(this->m_fields.self());
 				ad->download();
+				this->m_fields->assetDownloader = ad;
 			} else log::info("asset downloader initalization may have failed at some point while entering the level.");
 			if (DialogLayer* missingAudio = Utils::showAudioMissing()) {
 				this->addChild(missingAudio);
