@@ -27,7 +27,7 @@ using namespace geode::prelude;
 
 class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
-		LevelAreaInnerLayer* self;
+		LevelAreaInnerLayer* self{};
 		~Fields() {
 			log::info("Goodbye fields!");
 		}
@@ -50,7 +50,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				log::info("response was not equal to 3 OR 1");
 				Utils::levelDownloadFailed();
 			}
-			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
+			if (geode::Ref<AssetDownloader> ad = AssetDownloader::create(colonsLevel); ad) {
 				log::info("downloadind audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				CC_SAFE_RETAIN(ad);
 				ad->setDelegate(this);
@@ -172,7 +172,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_songIDs, true) && Utils::checkForAllIn(colonsVersion->m_sfxIDs, false);
 
 		if (!hasAllAudioAssets) {
-			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
+			if (geode::Ref<AssetDownloader> ad = AssetDownloader::create(colonsVersion)) {
 				CC_SAFE_RETAIN(ad);
 				ad->setDelegate(this->m_fields.self());
 				ad->download();
