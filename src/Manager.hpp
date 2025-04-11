@@ -160,6 +160,9 @@ public:
 	// only show Cut for Time popup once
 	bool shownCutForTime = false;
 
+	// prevent multiple clicks on doors
+	bool alreadyClicked = false;
+
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();
 		return instance;

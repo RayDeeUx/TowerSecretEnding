@@ -154,8 +154,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		return true;
 	}
 	void onDoor(CCObject* sender) {
-		if (this->getParent()->getChildByID("CreditsLayer"_spr) || this->getChildByType<DialogLayer>(0)) return;
 		Manager* manager = Manager::getSharedInstance();
+		if (this->getParent()->getChildByID("CreditsLayer"_spr) || this->getChildByType<DialogLayer>(0) || manager->alreadyClicked) return;
 		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
 		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
 
@@ -200,6 +200,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, mimic vanilla behavior with SFX
 		manager->isFromColonsTower = true; // set to true before creating playlayer
+		manager->alreadyClicked = true;
 		CCScene* playScene = PlayLayer::scene(colonsVersion, false, false);
 		if (!playScene) {
 			Utils::logErrorCustomFormat("CCScene from calling PlayLayer::scene", robtopsID, colonsID);
@@ -325,6 +326,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->bombPickupTimestamp = std::time(nullptr);
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
+		manager->alreadyClicked = false;
 		if (manager->colonToggleUnlocked) manager->lockedIn = true;
 		PlayLayer::onQuit();
 	}
