@@ -212,13 +212,15 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
 		log::info("setting GLM's download/update delegates to nullptr (onDoor)");
-		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
-		GameLevelManager::get()->m_levelUpdateDelegate = nullptr;
+		GameLevelManager* glm = GameLevelManager::get();
+		if (auto del& = glm->m_levelDownloadDelegate; del && del == this->m_fields.self()) del = nullptr;
+		if (auto del& = glm->m_levelUpdateDelegate; del && del == this->m_fields.self()) del = nullptr;
 	}
 	void onExit() {
 		log::info("setting GLM's download/update delegates to nullptr (onExit)");
-		GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
-		GameLevelManager::get()->m_levelUpdateDelegate = nullptr;
+		GameLevelManager* glm = GameLevelManager::get();
+		if (auto del& = glm->m_levelDownloadDelegate; del && del == this->m_fields.self()) del = nullptr;
+		if (auto del& = glm->m_levelUpdateDelegate; del && del == this->m_fields.self()) del = nullptr;
 		LevelAreaInnerLayer::onExit();
 	}
 };
