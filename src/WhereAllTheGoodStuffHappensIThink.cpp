@@ -57,6 +57,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				ad->download();
 				this->assetDownloader = ad;
 			} else log::info("asset downloader initalization may have failed at some point.");
+			log::info("marking colonsLevel {} as favorited (before): {}", colonsLevel, colonsLevel->m_levelFavorited);
+			colonsLevel->m_levelFavorited = true;
+			log::info("marked colonsLevel {} as favorited (after): {}", colonsLevel, colonsLevel->m_levelFavorited);
 		}
 		virtual void levelUpdateFailed(int p0) {
 			log::info("p0: {} (level update failed)", p0);
