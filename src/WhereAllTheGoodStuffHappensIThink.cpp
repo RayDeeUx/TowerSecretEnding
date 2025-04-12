@@ -40,7 +40,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		}
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
-			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == 106255) {
+			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == COLONS_ACCOUNT_ID_ON_BOOMLINGS) {
 				log::info("colonsLevel {} with colonID {} was found, updating it now", colonsLevel, colonsLevel->m_levelID.value());
 				GameLevelManager::get()->updateLevel(colonsLevel);
 			}
@@ -100,7 +100,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
-				if (!colonsLevel || originalStringSize < 100000 || (colonID == THE_SNEAKY_HOLLOW && originalStringSize < 245000) || colonsLevel->m_accountID.value() != 106255) {
+				if (!colonsLevel || originalStringSize < 100000 || (colonID == THE_SNEAKY_HOLLOW && originalStringSize < 245000) || colonsLevel->m_accountID.value() != COLONS_ACCOUNT_ID_ON_BOOMLINGS) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
 				}

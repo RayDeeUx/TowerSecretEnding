@@ -13,6 +13,8 @@
 #define THE_LOST_CELLAR 116926140
 #define THE_SNEAKY_HOLLOW 116926955
 
+#define COLONS_ACCOUNT_ID_ON_BOOMLINGS 106255
+
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
 
