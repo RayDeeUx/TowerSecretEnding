@@ -315,7 +315,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
 		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) {
 			manager->completedLevels.push_back(levelID);
-			manager->doorToShow += 1;
+			if (Utils::getString("explorationMode") != "Free Roam") manager->doorToShow += 1;
 		}
 
 		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
