@@ -177,7 +177,7 @@ namespace Utils {
 
 		const std::string& explorationMode = Utils::getString("explorationMode");
 		/*
-		"Exactly as Colon describes on YT"
+		"As Seen on YT"
 		"Previous Doors Also Unlock"
 		"Free Roam"
 		*/
@@ -200,7 +200,7 @@ namespace Utils {
 			particles->setScale(0.5f);
 			particles->setID("unlocked-door-particles"_spr);
 
-			if (i == doorIndex - 1 && explorationMode == "Exactly as Colon describes on YT") return log::info("user chose \"Exactly as Colon describes on YT\", ending highlightADoor loop early.");
+			if (i == doorIndex - 1 && explorationMode == "As Seen on YT") return log::info("user chose \"As Seen on YT\", ending highlightADoor loop early.");
 		}
 	}
 
