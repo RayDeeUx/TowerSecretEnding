@@ -41,6 +41,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
 			if (colonsLevel && colonsLevel->m_levelString.size() > 2 && colonsLevel->m_accountID.value() == COLONS_ACCOUNT_ID_ON_BOOMLINGS) {
+				log::info("[DOWNLOAD] marking colonsLevel {} as favorited (before): {}", colonsLevel, colonsLevel->m_levelFavorited);
+				colonsLevel->m_levelFavorited = true;
+				log::info("[DOWNLOAD] marked colonsLevel {} as favorited (after): {}", colonsLevel, colonsLevel->m_levelFavorited);
 				log::info("colonsLevel {} with colonID {} was found, updating it now", colonsLevel, colonsLevel->m_levelID.value());
 				GameLevelManager::get()->updateLevel(colonsLevel);
 			}
@@ -51,15 +54,15 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				log::info("response was not equal to 3 OR 1");
 				Utils::levelDownloadFailed();
 			}
+			log::info("[UPDATE] marking colonsLevel {} as favorited (before): {}", colonsLevel, colonsLevel->m_levelFavorited);
+			colonsLevel->m_levelFavorited = true;
+			log::info("[UPDATE] marked colonsLevel {} as favorited (after): {}", colonsLevel, colonsLevel->m_levelFavorited);
 			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
 				log::info("downloading audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				ad->setDelegate(this);
 				ad->download();
 				this->assetDownloader = ad;
 			} else log::info("asset downloader initalization may have failed at some point.");
-			log::info("marking colonsLevel {} as favorited (before): {}", colonsLevel, colonsLevel->m_levelFavorited);
-			colonsLevel->m_levelFavorited = true;
-			log::info("marked colonsLevel {} as favorited (after): {}", colonsLevel, colonsLevel->m_levelFavorited);
 		}
 		virtual void levelUpdateFailed(int p0) {
 			log::info("p0: {} (level update failed)", p0);
@@ -106,6 +109,10 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				if (!colonsLevel || originalStringSize < 100000 || (colonID == THE_SNEAKY_HOLLOW && originalStringSize < 245000) || colonsLevel->m_accountID.value() != COLONS_ACCOUNT_ID_ON_BOOMLINGS) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
+				} else {
+					log::info("[LAIL INIT] marking colonsLevel {} as favorited (before): {}", colonsLevel, colonsLevel->m_levelFavorited);
+					colonsLevel->m_levelFavorited = true;
+					log::info("[LAIL INIT] marked colonsLevel {} as favorited (after): {}", colonsLevel, colonsLevel->m_levelFavorited);
 				}
 			}
 		}
