@@ -1,12 +1,12 @@
 # TowerSecretEnding
 [The Secret Ending of The Tower](https://youtube.com/watch?v=Tjb_b8EmXCM) as a Geode mod!
 ## Usage
-<cy>The following are required to fully enjoy this mod:</c>\
-<cy>- Having completed Floor 1 of The Tower beforehand</c>\
-<cy>- A working Internet (preferably Wi-Fi) connection</c>\
-<cy>- RobTop's official servers being alive</c>\
-<cy>- You being connected to RobTop's official servers, and not being blacklisted from said servers</c>\
-<cy>- The Secret Ending levels being available on RobTop's official servers</c>
+<cy>You'll need to do these to fully enjoy this mod:</c>\
+<cy>- Complete Floor 1 of The Tower</c>\
+<cy>- Be connected to Wi-Fi</c>\
+<cy>- Being connected to RobTop's servers (and not blacklisted)</c>\
+<cy>- Downloading the levels, music, and SFX for The Secret Ending</c>\
+<cy>- Pick up the bomb in The Cellar, then pause the game (as described in [the original video](https://youtube.com/watch?v=Tjb_b8EmXCM))</c>
 ### "But why so many requirements?"
 Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise. TowerSecretEnding will also auto-download missing audio assets before you can play a level.
 ## Special Thanks
