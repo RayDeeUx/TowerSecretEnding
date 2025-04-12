@@ -182,7 +182,7 @@ namespace Utils {
 		"Free Roam"
 		*/
 		const int startingPoint = explorationMode == "Free Roam" ? 4 : doorIndex - 1;
-		for (int i = startingPoint; i > 0; i--) {
+		for (int i = startingPoint; i > -1; i--) {
 			auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(i);
 			if (door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) return; // dont touch nodes that arent doors
 			door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
