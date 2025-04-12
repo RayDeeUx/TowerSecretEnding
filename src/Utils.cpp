@@ -184,13 +184,13 @@ namespace Utils {
 		const int startingPoint = explorationMode == "Free Roam" ? 4 : doorIndex - 1;
 		for (int i = startingPoint; i > -1; i--) {
 			auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(i);
-			if (door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) return; // dont touch nodes that arent doors
+			if (!door || door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) continue; // dont touch nodes that arent doors
 			door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
 			if (isColonMode) door->setUserObject("unlocked-door"_spr, CCBool::create(true));
 
 			if (!isColonMode) {
 				if (CCNode* particle = doorLayer->getChildByID("unlocked-door-particles"_spr)) particle->removeMeAndCleanup();
-				return;
+				continue;
 			}
 			// if colon mode disabled don't add the particle, remove it!
 
