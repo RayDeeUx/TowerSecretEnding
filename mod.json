@@ -29,11 +29,11 @@
 		"explorationMode": {
 			"name": "Secret Ending Exploration Mode",
 			"type": "string",
-			"description": "<cl>\"Exactly as Colon describes on YT\"</c>: Self-explanatory. Only one level from <cy>The Secret Ending</c> is active at a time.\n<cl>\"Previous Remain Unlocked\"</c>: You can return to any previous completions from <cy>The Secret Ending</c> at any time during a game session.\n<cl>\"Free Roam\"</c>: Freely play any level from <cy>The Secret Ending</c>.",
-			"default": "Previous Remain Unlocked",
+			"description": "<cl>\"Exactly as Colon describes on YT\"</c>: Self-explanatory. Only one level from <cy>The Secret Ending</c> is active at a time.\n<cl>\"Previous Doors Also Unlock\"</c>: You can return to any previous completions from <cy>The Secret Ending</c> at any time during a game session.\n<cl>\"Free Roam\"</c>: Freely play any level from <cy>The Secret Ending</c>.",
+			"default": "Previous Doors Also Unlock",
 			"one-of": [
 				"Exactly as Colon describes on YT",
-				"Previous Remain Unlocked",
+				"Previous Doors Also Unlock",
 				"Free Roam"
 			]
 		}

@@ -175,22 +175,33 @@ namespace Utils {
 		CCNode* mainLayer = scene->getChildByID("main-node");
 		CCNode* doorLayer = mainLayer->getChildByID("main-menu");
 
-		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
-		if (door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) return; // dont touch nodes that arent doors
-		door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
-		if (isColonMode) door->setUserObject("unlocked-door"_spr, CCBool::create(true));
+		const std::string& explorationMode = Utils::getString("explorationMode");
+		/*
+		"Exactly as Colon describes on YT"
+		"Previous Doors Also Unlock"
+		"Free Roam"
+		*/
+		const int startingPoint = explorationMode == "Free Roam" ? 4 : doorIndex - 1;
+		for (int i = startingPoint; i > 0; i--) {
+			auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(i);
+			if (door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) return; // dont touch nodes that arent doors
+			door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
+			if (isColonMode) door->setUserObject("unlocked-door"_spr, CCBool::create(true));
 
-		if (!isColonMode) {
-			if (CCNode* particle = doorLayer->getChildByID("unlocked-door-particles"_spr)) particle->removeMeAndCleanup();
-			return;
+			if (!isColonMode) {
+				if (CCNode* particle = doorLayer->getChildByID("unlocked-door-particles"_spr)) particle->removeMeAndCleanup();
+				return;
+			}
+			// if colon mode disabled don't add the particle, remove it!
+
+			CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
+			particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
+			doorLayer->addChild(particles);
+			particles->setScale(0.5f);
+			particles->setID("unlocked-door-particles"_spr);
+
+			if (i == doorIndex - 1 && explorationMode == "Exactly as Colon describes on YT") return log::info("user chose \"Exactly as Colon describes on YT\", ending highlightADoor loop early.");
 		}
-		// if colon mode disabled don't add the particle
-
-		CCParticleSystemQuad* particles = GameToolbox::particleFromString("30a-1a2.2a0.48a8a90a180a29a0a11a0a0a0a0a0a0a0a3a1a0a0a0.607843a0a0.0196078a0a0a0a0.5a0a2a1a0a0a0.839216a0a0.0705882a0a0a0a0.3a0a0.54a0a0.57a0a40a0a6a0a-38a17a1a2a1a0a0a1a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0", nullptr, false);
-		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
-		doorLayer->addChild(particles);
-		particles->setScale(0.5f);
-		particles->setID("unlocked-door-particles"_spr);
 	}
 
 	void showRattledashChest() {
