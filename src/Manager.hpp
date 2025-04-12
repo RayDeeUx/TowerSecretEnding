@@ -112,7 +112,7 @@ public:
 			"https://twitter.com/alphalaneous" // alpha insisted on twitter link
 		},
 		{"hiimjasmine00", 41, 98, 16, 12, true, UserType::Modder,
-			{"Level string size detection", "Crossplatform Geode SDK bindings support"},
+			{"Bug squasher", "Level string size detection", "Crossplatform Geode SDK bindings support"},
 			"https://github.com/hiimjasmine00"
 		},
 		{"Prevter", 457, 41, 63, 12, true, UserType::Modder,
