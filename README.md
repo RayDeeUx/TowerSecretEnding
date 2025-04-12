@@ -8,7 +8,7 @@
 <cy>- You being connected to RobTop's official servers, and not being blacklisted from said servers</c>\
 <cy>- The Secret Ending levels being available on RobTop's official servers</c>
 ### "But why so many requirements?"
-Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise.
+Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise. TowerSecretEnding will also auto-download missing audio assets before you can play a level.
 ## Special Thanks
 ### Levels
 - [\[:D\]](https://gdbrowser.com/u/9099846) <c-ffffff>16</c><c-4b00af>lord</c>: Decoration + effects
