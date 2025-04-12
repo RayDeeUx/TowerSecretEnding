@@ -29,7 +29,7 @@
 		"explorationMode": {
 			"name": "Secret Ending Exploration Mode",
 			"type": "string",
-			"description": "<cl>\"As Seen on YT\"</c>: Self-explanatory. Only one level from <cy>The Secret Ending</c> is active at a time.\n<cl>\"Previous Doors Also Unlock\"</c>: You can return to any previous completions from <cy>The Secret Ending</c> at any time during a game session.\n<cl>\"Free Roam\"</c>: Freely play any level from <cy>The Secret Ending</c>.",
+			"description": "<cl>\"As Seen on YT\"</c>: Only one level from <cy>The Secret Ending</c> can be active.\n<cl>\"Previous Doors Also Unlock\"</c>: Return to any unlocked levels from <cy>The Secret Ending</c>.\n<cl>\"Free Roam\"</c>: Freely play any level from <cy>The Secret Ending</c>.",
 			"default": "Previous Doors Also Unlock",
 			"one-of": [
 				"As Seen on YT",
