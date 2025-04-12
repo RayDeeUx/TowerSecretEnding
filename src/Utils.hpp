@@ -2,7 +2,6 @@
 
 using namespace geode::prelude;
 
-#define THE_DEEP_SEWERS 116926138
 #define DEFAULT_DIALOUGE_OBJECT_SETTINGS false, ccColor3B{255, 255, 255}
 #define ERROR_DIALOUGE_OBJECT_SETTINGS true, ccColor3B{255, 255, 255}
 #define HIS_NAME "Rattledash"

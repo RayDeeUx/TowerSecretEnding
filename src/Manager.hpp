@@ -3,6 +3,16 @@
 
 #define DIALOUGE_SPRITE_ARRAY_SIZE 19
 
+#define THE_TOWER 5001
+#define THE_SEWERS 5002
+#define THE_CELLAR 5003
+#define THE_SECRET_HOLLOW 5004
+
+#define THE_FOOLISH_TOWER 116926133
+#define THE_DEEP_SEWERS 116926138
+#define THE_LOST_CELLAR 116926140
+#define THE_SNEAKY_HOLLOW 116926955
+
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
 
@@ -18,10 +28,10 @@ public:
 
 	// cmon guys do i really need to explain this to you
 	const std::map<int, int> robtopToColon = {
-		{5001, 116926133},
-		{5002, 116926138},
-		{5003, 116926140},
-		{5004, 116926955},
+		{THE_TOWER, THE_FOOLISH_TOWER},
+		{THE_SEWERS, THE_DEEP_SEWERS},
+		{THE_CELLAR, THE_LOST_CELLAR},
+		{THE_SECRET_HOLLOW, THE_SNEAKY_HOLLOW},
 	};
 
 	// this is a surprise tool that will be helpful later
@@ -128,10 +138,10 @@ public:
 	// track completed levels during runtime to know when to show rattledash's final words
 	// the correctCompletionOrder is to minimize cheating
 	std::vector<int> completedLevels = {};
-	const std::vector<int> correctCompletionOrder = {116926133, 116926138, 116926140, 116926955}; // in case people want to cheat for some reason
-	const std::vector<int> originalRobtopIDs = {5001, 5002, 5003, 5004}; // in case people want to cheat for some reason
+	const std::vector<int> correctCompletionOrder = {THE_FOOLISH_TOWER, THE_DEEP_SEWERS, THE_LOST_CELLAR, THE_SNEAKY_HOLLOW}; // colon wants free-roam
+	const std::vector<int> originalRobtopIDs = {THE_TOWER, THE_SEWERS, THE_CELLAR, THE_SECRET_HOLLOW}; // utility vector
 
-	// store timestamps between level ID 5003 bomb pickup at group 105
+	// store timestamps between level ID 5003 (THE_CELLAR) bomb pickup at group 105
 	// and pauselayer creation
 	bool trackTime = false;
 	bool lockedIn = false;

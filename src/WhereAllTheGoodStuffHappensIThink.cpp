@@ -100,7 +100,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			for (const auto&[robtopID, colonID] : manager->robtopToColon) {
 				GJGameLevel* colonsLevel = glm->getSavedLevel(colonID);
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
-				if (!colonsLevel || originalStringSize < 100000 || (colonID == 116926955 && originalStringSize < 245000) || colonsLevel->m_accountID.value() != 106255) {
+				if (!colonsLevel || originalStringSize < 100000 || (colonID == THE_SNEAKY_HOLLOW && originalStringSize < 245000) || colonsLevel->m_accountID.value() != 106255) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
 					glm->downloadLevel(colonID, false);
 				}
@@ -160,9 +160,9 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
 
 		const int robtopsID = sender->getTag();
-		if (robtopsID < 5001 || robtopsID > 5004) return LevelAreaInnerLayer::onDoor(sender); // because rob is going to add more tower levels. using tags here is ideal since they're 1:1 to rob's level IDs
+		if (robtopsID < THE_TOWER || robtopsID > THE_SECRET_HOLLOW) return LevelAreaInnerLayer::onDoor(sender); // because rob is going to add more tower levels. using tags here is ideal since they're 1:1 to rob's level IDs
 
-		if (!senderIsButton->getUserObject("current-door"_spr)) return LevelAreaInnerLayer::onDoor(sender); // colon wants the levels to be played in order. do not report an error on this line; it is intended behavior
+		if (!senderIsButton->getUserObject("unlocked-door"_spr)) return LevelAreaInnerLayer::onDoor(sender); // colon wants the levels to be played in order. do not report an error on this line; it is intended behavior
 
 		const std::map<int, int>& robToColon = manager->robtopToColon;
 		if (!robToColon.contains(robtopsID)) return LevelAreaInnerLayer::onDoor(sender);
@@ -335,7 +335,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 class $modify(MyGJBaseGameLayer, GJBaseGameLayer) {
 	virtual void spawnGroup(int groupBeingSpawned, bool p1, double p2, gd::vector<int> const& p3, int p4, int p5) {
 		GJBaseGameLayer::spawnGroup(groupBeingSpawned, p1, p2, p3, p4, p5);
-		if (PlayLayer::get() && groupBeingSpawned == 105 && this->m_level && this->PLAYLAYER_LEVEL_ID == 5003 && IS_OFFICIAL_LEVEL) {
+		if (PlayLayer::get() && groupBeingSpawned == 105 && this->m_level && this->PLAYLAYER_LEVEL_ID == THE_CELLAR && IS_OFFICIAL_LEVEL) {
 			Manager* manager = Manager::getSharedInstance();
 			manager->bombPickupTimestamp = std::time(nullptr);
 			manager->trackTime = true;

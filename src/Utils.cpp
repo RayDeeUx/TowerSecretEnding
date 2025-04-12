@@ -176,12 +176,12 @@ namespace Utils {
 		CCNode* doorLayer = mainLayer->getChildByID("main-menu");
 
 		auto* door = doorLayer->getChildByType<CCMenuItemSpriteExtra>(doorIndex - 1);
-		if (door->getTag() < 5001 || door->getTag() > 5004) return; // dont touch nodes that arent doors
+		if (door->getTag() < THE_TOWER || door->getTag() > THE_SECRET_HOLLOW) return; // dont touch nodes that arent doors
 		door->setSprite(isColonMode ? CCSprite::create("towerDoorSpecial.png"_spr) : CCSprite::createWithSpriteFrameName("towerDoor_open_001.png"));
-		if (isColonMode) door->setUserObject("current-door"_spr, CCBool::create(true));
+		if (isColonMode) door->setUserObject("unlocked-door"_spr, CCBool::create(true));
 
 		if (!isColonMode) {
-			if (CCNode* particle = doorLayer->getChildByID("current-door-particles"_spr)) particle->removeMeAndCleanup();
+			if (CCNode* particle = doorLayer->getChildByID("unlocked-door-particles"_spr)) particle->removeMeAndCleanup();
 			return;
 		}
 		// if colon mode disabled don't add the particle
@@ -190,7 +190,7 @@ namespace Utils {
 		particles->setPosition(door->getPositionX(), door->getPositionY() - 8);
 		doorLayer->addChild(particles);
 		particles->setScale(0.5f);
-		particles->setID("current-door-particles"_spr);
+		particles->setID("unlocked-door-particles"_spr);
 	}
 
 	void showRattledashChest() {

@@ -47,7 +47,7 @@ class $modify(MenuLayer) {
 		GameStatsManager* gsm = GameStatsManager::get();
 		if (manager->calledAlready || !gsm) return true;
 		manager->calledAlready = true;
-		manager->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5003) && gsm->hasCompletedMainLevel(5004);
+		manager->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(THE_TOWER) && gsm->hasCompletedMainLevel(THE_SEWERS) && gsm->hasCompletedMainLevel(THE_CELLAR) && gsm->hasCompletedMainLevel(THE_SECRET_HOLLOW);
 		return true;
 	}
 };
@@ -56,7 +56,7 @@ class $modify(AccountHelpLayer) {
 	virtual void FLAlert_Clicked(FLAlertLayer* alert, bool btnTwo) {
 		AccountHelpLayer::FLAlert_Clicked(alert, btnTwo);
 		if (GameStatsManager* gsm = GameStatsManager::get(); gsm && btnTwo && alert->getTag() == 3) { // to check for unlinking account
-			Manager::getSharedInstance()->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5001) && gsm->hasCompletedMainLevel(5003) && gsm->hasCompletedMainLevel(5004);
+			Manager::getSharedInstance()->completedVanillaTowerFloorOne = gsm->hasCompletedMainLevel(THE_TOWER) && gsm->hasCompletedMainLevel(THE_SEWERS) && gsm->hasCompletedMainLevel(THE_CELLAR) && gsm->hasCompletedMainLevel(THE_SECRET_HOLLOW);
 		}
 	}
 };
