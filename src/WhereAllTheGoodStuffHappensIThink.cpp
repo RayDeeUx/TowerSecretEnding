@@ -351,7 +351,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		const long secondsPassed = difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp);
 
-		manager->colonToggleUnlocked = secondsPassed < 3; // colon wants it to be lenient, i think 2 seconds is lenient enough tbh (original time window was 1 second) --raydeeux
+		manager->colonToggleUnlocked = secondsPassed < 65535; // colon wants it to be available to, i think 65534 seconds is lenient enough tbh (original time window was 2 seconds) (i am too scared to edit this codebase structure rn) --raydeeux
 		if (manager->colonToggleUnlocked) {
 			manager->doorToShow = 1;
 			manager->colonMode = true; // so the toggle is visually correct when entering LevelAreaInnerLayer
