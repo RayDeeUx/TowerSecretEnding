@@ -246,7 +246,7 @@ class $modify(MyGameManager, GameManager) {
 		DialogLayer* rattledash = Utils::showRattledashsFinalWords();
 		if (sameSize) {
 			for (int i = 0; i < manager->completedLevels.size(); i++) {
-				if (manager->completedLevels.at(i) != manager->correctCompletionOrder.at(i)) {
+				if (std::ranges::find(manager->correctCompletionOrder, manager->completedLevels.at(i)) == manager->correctCompletionOrder.end()) {
 					shouldShowDialog = false;
 					break;
 				}
@@ -313,9 +313,10 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!this->m_level || !this->getParent() || !manager->isFromColonsTower || m_isPracticeMode || m_isTestMode) return PlayLayer::levelComplete();
 
 		const int levelID = this->PLAYLAYER_LEVEL_ID;
-		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) manager->completedLevels.push_back(levelID);
-
-		manager->doorToShow += 1;
+		if (const bool completed = IS_LEVEL_COMPLETE(levelID); !completed) {
+			manager->completedLevels.push_back(levelID);
+			manager->doorToShow += 1;
+		}
 
 		UPDATE_DEBUG_LABEL(this->getParent(), PlayLayer::levelComplete())
 
