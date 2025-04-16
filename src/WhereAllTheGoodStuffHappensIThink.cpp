@@ -29,6 +29,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	struct Fields : AssetDownloaderDelegate, LevelDownloadDelegate, LevelUpdateDelegate {
 		LevelAreaInnerLayer* self{};
 		geode::Ref<AssetDownloader> assetDownloader;
+		std::string levelName;
 		~Fields() {
 			log::info("Goodbye fields!");
 		}
@@ -37,6 +38,8 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		}
 		void assetDownloadFinished() {
 			log::info("assets finished downloading.");
+			if (this->levelName.empty()) return;
+			Notification::create(fmt::format("Audio for {} finished downloading!", this->levelName), NotificationIcon::Success, 2.f)->show();
 		}
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
@@ -53,13 +56,15 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				Utils::levelDownloadFailed();
 			}
 			log::info("favoriting colonID {} again", colonsLevel->m_levelID.value());
+			Notification::create(fmt::format("{} was downloaded! Downloading its audio now...", colonsLevel->m_levelName), NotificationIcon::Success, 2.f)->show();
 			colonsLevel->m_levelFavorited = true;
-			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad) {
+			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad && !Utils::getSavedBool("dontDownloadAudio")) {
+				this->levelName = static_cast<std::string>(colonsLevel->m_levelName);
 				log::info("downloading audio assets for colonID {} now", colonsLevel->m_levelID.value());
 				ad->setDelegate(this);
 				ad->download();
 				this->assetDownloader = ad;
-			} else log::info("asset downloader initalization may have failed at some point.");
+			} else if (!ad) log::info("asset downloader initalization may have failed at some point.");
 		}
 		virtual void levelUpdateFailed(int p0) {
 			log::info("p0: {} (level update failed)", p0);
@@ -171,16 +176,17 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		if (!robToColon.contains(robtopsID)) return LevelAreaInnerLayer::onDoor(sender);
 		const int colonsID = robToColon.find(robtopsID)->second;
 
-		GJGameLevel* colonsVersion = GameLevelManager::get()->getSavedLevel(colonsID);
-		if (!colonsVersion) {
+		GJGameLevel* colonsLevel = GameLevelManager::get()->getSavedLevel(colonsID);
+		if (!colonsLevel) {
 			Utils::logErrorCustomFormat("GJGameLevel", robtopsID, colonsID);
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsVersion->m_songIDs, true) && Utils::checkForAllIn(colonsVersion->m_sfxIDs, false);
+		const bool hasAllAudioAssets = Utils::checkForAllIn(colonsLevel->m_songIDs, true) && Utils::checkForAllIn(colonsLevel->m_sfxIDs, false);
 
 		if (!hasAllAudioAssets) {
-			if (AssetDownloader* ad = AssetDownloader::create(colonsVersion)) {
+			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad && !Utils::getSavedBool("dontDownloadAudio")) {
+				this->m_fields->levelName = static_cast<std::string>(colonsLevel->m_levelName);
 				ad->setDelegate(this->m_fields.self());
 				ad->download();
 				this->m_fields->assetDownloader = ad;
@@ -192,19 +198,19 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			} else CC_SAFE_RELEASE(missingAudio);
 			return;
 		}
-		log::info("all audio assets for level ID {} are downloaded! moving on", colonsVersion->m_levelID.value());
+		log::info("all audio assets for level ID {} are downloaded! moving on", colonsLevel->m_levelID.value());
 
-		colonsVersion->setUserObject("colon-variant"_spr, CCBool::create(true));
+		colonsLevel->setUserObject("colon-variant"_spr, CCBool::create(true));
 		manager->useCanonSpawn = colonsID == THE_DEEP_SEWERS;
 
 		CCInteger* robtopsIDAsCCObject = CCInteger::create(robtopsID);
 		robtopsIDAsCCObject->setTag(robtopsID);
-		colonsVersion->setUserObject("original-robtop-ID"_spr, robtopsIDAsCCObject);
+		colonsLevel->setUserObject("original-robtop-ID"_spr, robtopsIDAsCCObject);
 
 		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, mimic vanilla behavior with SFX
 		manager->isFromColonsTower = true; // set to true before creating playlayer
 		manager->alreadyClicked = true;
-		CCScene* playScene = PlayLayer::scene(colonsVersion, false, false);
+		CCScene* playScene = PlayLayer::scene(colonsLevel, false, false);
 		if (!playScene) {
 			Utils::logErrorCustomFormat("CCScene from calling PlayLayer::scene", robtopsID, colonsID);
 			return LevelAreaInnerLayer::onDoor(sender);
