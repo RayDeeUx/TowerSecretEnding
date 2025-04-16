@@ -1,5 +1,6 @@
 # TowerSecretEnding
 [The Secret Ending of The Tower](https://youtube.com/watch?v=Tjb_b8EmXCM) as a Geode mod!
+## <c-ff0000>Bug reports for this mod go [here](https://discord.gg/WqZBYdBWZW) ONLY.</c>
 ## Usage
 <cy>You'll need to do these to fully enjoy this mod:</c>\
 <cy>- Complete Floor 1 of The Tower</c>\
