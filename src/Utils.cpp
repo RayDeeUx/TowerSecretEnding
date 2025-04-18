@@ -104,7 +104,7 @@ namespace Utils {
 
 		ADD_DUMMY_OBJECT_TO_TRICK_GD_INTO_REPLACING_SPRITES
 
-		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .5f, ERROR_DIALOUGE_OBJECT_SETTINGS);
+		DialogObject* rattledashExtraOne = DialogObject::create(HIS_NAME, "\"Well met!\" \"Another time, then.\" \"Ah! Welcome!\"", 1, .75f, ERROR_DIALOUGE_OBJECT_SETTINGS);
 		rattledashExtraOne->setTag(10); // see manager->listOfDialogSprites for more info
 		dialougeObjects->addObject(rattledashExtraOne);
 

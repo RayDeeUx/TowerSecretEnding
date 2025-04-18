@@ -2,11 +2,10 @@
 [The Secret Ending of The Tower](https://youtube.com/watch?v=Tjb_b8EmXCM) as a Geode mod!
 ## <c-ff0000>Bug reports for this mod go [here](https://discord.gg/WqZBYdBWZW) ONLY.</c>
 ## Usage
-<cy>You'll need to do these to fully enjoy this mod:</c>\
-<cy>- Complete Floor 1 of The Tower</c>\
-<cy>- Be connected to Wi-Fi</c>\
-<cy>- Being connected to RobTop's servers (and not blacklisted)</c>\
-<cy>- Downloading the levels, music, and SFX for The Secret Ending</c>\
+<cy>To fully enjoy this mod:</c>\
+<c-ff0000>***__- Complete Floor 1 of The Tower__***</c>\
+<c-ff0000>***__- Connect to Wi-Fi, then to RobTop's servers__***</c>\
+<cy>- Download the levels, music, and SFX for The Secret Ending</c>\
 <cy>- Pick up the bomb in The Cellar, then pause the game (as described in [the original video](https://youtube.com/watch?v=Tjb_b8EmXCM))</c>
 ### "But why so many requirements?"
 Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise. TowerSecretEnding will also auto-download missing audio assets before you can play a level.
@@ -27,9 +26,9 @@ Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest fee
 - [\[:)\]](user:7696536) <c-7d7dff>Prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
 - [\[:)\]](user:18226543) Capeling: Putting up with an "RTFM"-worthy question
 ## Notes
-- Rattledash's chest is not part of this mod.
-- Since this mod relies on RobTop's official servers, you should not be using this on a private Geometry Dash server.
-- If you see "Load Failed!" when entering any level at any point, you should fully restart the game (hopefully with a stable Internet connection by then).
+<c-ff0000>- Rattledash's chest is not (and won't ever be) part of this mod.</c>
+- You should <c-ff0000>not</c> be using this on a private Geometry Dash server.
+- If you see "Load Failed!" when entering any level at any point, you should fully restart the game <cy>with a stable Internet connection</c>.
 - While this mod *can* be interpreted as a fangame mod, any moons, orbs, or coins you earn from completing a level in <cy>The Secret Ending</c> affects your save file for vanilla GD, since those rewards come from completing rated levels uploaded to RobTop's servers.
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances. To report bugs or get help with using my (RayDeeUx) mods, press the Discord button in the lower left corner.
