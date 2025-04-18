@@ -9,6 +9,11 @@
 <cy>- Pick up the bomb in The Cellar, then pause the game (as described in [the original video](https://youtube.com/watch?v=Tjb_b8EmXCM))</c>
 ### "But why so many requirements?"
 Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest feedback in gameplay balancing demands. A stable Internet connection prevents silly mistakes that would've happened otherwise. TowerSecretEnding will also auto-download missing audio assets before you can play a level.
+## Notes
+- Rattledash's chest is not part of this mod.
+- Since this mod relies on RobTop's official servers, you should not be using this on a private Geometry Dash server.
+- If you see "Load Failed!" when entering any level at any point, you should fully restart the game (hopefully with a stable Internet connection by then).
+- While this mod *can* be interpreted as a fangame mod, any moons, orbs, or coins you earn from completing a level in <cy>The Secret Ending</c> affects your save file for vanilla GD, since those rewards come from completing rated levels uploaded to RobTop's servers.
 ## Special Thanks
 ### Levels
 - [\[:D\]](https://gdbrowser.com/u/9099846) <c-ffffff>16</c><c-4b00af>lord</c>: Decoration + effects
@@ -25,10 +30,13 @@ Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest fee
 - [\[:)\]](https://gdbrowser.com/u/7466002) <c-fcb5ff>hiim</c><c-00c8ff>jasmine</c><c-fcb5ff>00</c>: Bug squasher + Level string size detection + cross-platform Geode bindings support
 - [\[:)\]](https://gdbrowser.com/u/7696536) <c-7d7dff>Prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
 - [\[:)\]](https://gdbrowser.com/u/18226543) Capeling: Putting up with an "RTFM"-worthy question
-## Notes
-- Rattledash's chest is not part of this mod.
-- Since this mod relies on RobTop's official servers, you should not be using this on a private Geometry Dash server.
-- If you see "Load Failed!" when entering any level at any point, you should fully restart the game (hopefully with a stable Internet connection by then).
-- While this mod *can* be interpreted as a fangame mod, any moons, orbs, or coins you earn from completing a level in <cy>The Secret Ending</c> affects your save file for vanilla GD, since those rewards come from completing rated levels uploaded to RobTop's servers.
+### Testers
+- [\[^_^\]](https://gdbrowser.com/u/6253758) <c-7d00ff>Firee</c>
+- [\[^_^\]](https://gdbrowser.com/u/9115450) <c-ff0000>Harri</c>son
+- [\[^_^\]](https://gdbrowser.com/u/7236822) <c-7dff00>km7</c><c-00ffff>dev</c>
+- [\[^_^\]](https://gdbrowser.com/u/13351341) <c-5a5a5a>un</c><c-afafaf>defined</c><c-5a5a5a>0</c>
+- [\[^_^\]](https://gdbrowser.com/u/5327860) <c-ff007d>z</c><c-ffb972>m</c><c-00ffff>x</c>
+- [\[^_^\]](https://gdbrowser.com/u/7479054) <c-00ff00>nin</c><c-0000ff>X</c><c-00ff00>out</c>
+- [\[^_^\]](https://gdbrowser.com/u/10300913) <c-afafaf>Zilko</c>
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances.
