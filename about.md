@@ -26,9 +26,9 @@ Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest fee
 - [\[:)\]](user:7696536) <c-7d7dff>Prev</c><c-ffa040>ter</c>: Cross-platform Geode bindings support
 - [\[:)\]](user:18226543) Capeling: Putting up with an "RTFM"-worthy question
 ## Notes
-<c-ff0000>\-</c> <c-ff0000>Rattledash's chest is not (and won't ever be) part of this mod.</c>\
-- You should <c-ff0000>not</c> be using this on a private Geometry Dash server.\
-- If you see "Load Failed!" when entering any level at any point, you should fully restart the game <cy>with an Internet connection</c>.\
-- While this mod *can* be interpreted as a fangame mod, any moons, orbs, or coins you earn from completing a level in <cy>The Secret Ending</c> ***__intentionally__*** affects your save file for vanilla GD, since those rewards come from completing rated levels uploaded to RobTop's servers.
+<c-ff0000>\-</c> <c-ff0000>Rattledash's chest is not (and won't ever be) part of this mod.</c>
+\- You should <c-ff0000>not</c> be using this on a private Geometry Dash server.
+\- If you see "Load Failed!" when entering any level at any point, you should fully restart the game <cy>with an Internet connection</c>.
+\- While this mod *can* be interpreted as a fangame mod, any moons, orbs, or coins you earn from completing a level in <cy>The Secret Ending</c> ***__intentionally__*** affects your save file for vanilla GD, since those rewards come from completing rated levels uploaded to RobTop's servers.
 
 This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances. To report bugs or get help with using my (RayDeeUx) mods, press the Discord button in the lower left corner.
