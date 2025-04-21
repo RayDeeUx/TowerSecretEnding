@@ -235,6 +235,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		GameLevelManager* glm = GameLevelManager::get();
 		if (glm->m_levelDownloadDelegate == this->m_fields.self()) glm->m_levelDownloadDelegate = nullptr;
 		if (glm->m_levelUpdateDelegate == this->m_fields.self()) glm->m_levelUpdateDelegate = nullptr;
+		this->m_enteringLevel = true;
 	}
 	void onExit() {
 		log::info("setting GLM's download/update delegates to nullptr (onExit)");
