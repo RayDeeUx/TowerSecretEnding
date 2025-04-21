@@ -38,4 +38,4 @@ Each copy of <cy>The Secret Ending</c> is personalized to reflect the latest fee
 - [\[^_^\]](https://gdbrowser.com/u/7479054) <c-00ff00>nin</c><c-0000ff>X</c><c-00ff00>out</c>
 - [\[^_^\]](https://gdbrowser.com/u/10300913) <c-afafaf>Zilko</c>
 
-This [Geode mod](https://geode-sdk.org) is *source-available* indefinitely. Changes or forks to the source code are highly inadvisable unless under extreme circumstances.
+This [Geode mod](https://geode-sdk.org) is licensed under [PolyForm Strict License 1.0.0](https://polyformproject.org/licenses/strict/1.0.0/).
