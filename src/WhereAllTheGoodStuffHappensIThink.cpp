@@ -361,6 +361,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
 		manager->alreadyClicked = false;
+		manager->hidCloseButton = false;
 		if (manager->colonToggleUnlocked) manager->lockedIn = true;
 		PlayLayer::onQuit();
 	}
