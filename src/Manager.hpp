@@ -15,6 +15,8 @@
 
 #define COLONS_ACCOUNT_ID_ON_BOOMLINGS 106255
 
+#define SWEARWORDFORMER_SAVES "sabe.platformersaves"
+
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
 
@@ -174,6 +176,9 @@ public:
 
 	// prevent multiple clicks on doors
 	bool alreadyClicked = false;
+
+	// platformersaves is a fucking pain in the ass sometimes
+	bool hidCloseButton = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();

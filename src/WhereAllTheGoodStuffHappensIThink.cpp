@@ -222,7 +222,13 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 			return LevelAreaInnerLayer::onDoor(sender);
 		}
 
-		this->runAction(CCFadeOut::create(.5f));
+		CCLayerColor* dummyLayerColor = CCLayerColor::create({0, 0, 0, 0});
+		this->addChild(dummyLayerColor);
+		dummyLayerColor->setZOrder(90);
+		dummyLayerColor->setPosition({0.f, 0.f});
+		dummyLayerColor->setContentSize(this->getContentSize());
+		dummyLayerColor->runAction(CCFadeIn::create(.5f));
+
 		CCDirector::sharedDirector()->replaceScene(transition);
 		log::info("pushing scene to level {}", colonsID);
 		log::info("setting GLM's download/update delegates to nullptr (onDoor)");
@@ -294,7 +300,25 @@ class $modify(MyGameManager, GameManager) {
 };
 
 class $modify(MyPlayLayer, PlayLayer) {
+	static void onModify(auto& self) {
+		(void) self.setHookPriorityAfterPost("PlayLayer::setupHasCompleted", SWEARWORDFORMER_SAVES);
+	}
 	void setupHasCompleted() {
+		Manager* manager = Manager::getSharedInstance();
+		if (Loader::get()->isModLoaded(SWEARWORDFORMER_SAVES) && manager->isFromColonsTower && !manager->hidCloseButton) {
+			Loader::get()->queueInMainThread([manager] {
+				const auto scene = CCScene::get();
+				if (!scene) return;
+				const auto pfsPopup = scene->getChildByID(SWEARWORDFORMER_SAVES"/play-level-menu-popup");
+				if (!pfsPopup) return;
+				const auto pfsPopupMainLayer = pfsPopup->getChildByType<CCLayer>(0);
+				if (!pfsPopupMainLayer) return;
+				const auto pfsPopupMenu = pfsPopupMainLayer->getChildByType<CCMenu>(0);
+				if (!pfsPopupMenu) return;
+				if (const auto newGameButton = typeinfo_cast<CCMenuItemSpriteExtra*>(pfsPopupMenu->getChildByID(SWEARWORDFORMER_SAVES"/close-button")); newGameButton) newGameButton->setVisible(false);
+				manager->hidCloseButton = true;
+			});
+		}
 		if (PLAYING_DEEP_SEWERS_FROM_NOT_TOWER) return PlayLayer::setupHasCompleted();
 		this->m_levelSettings->m_spawnGroup = 81;
 		PlayLayer::setupHasCompleted();
