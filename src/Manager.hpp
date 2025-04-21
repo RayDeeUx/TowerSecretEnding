@@ -15,8 +15,6 @@
 
 #define COLONS_ACCOUNT_ID_ON_BOOMLINGS 106255
 
-#define SWEARWORDFORMER_SAVES "sabe.platformersaves"
-
 // Manager.hpp structure by acaruso
 // reused with explicit permission and strong encouragement
 
@@ -54,9 +52,9 @@ public:
 		"dialogIcon_001.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_005.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
 		"dialogIcon_003.png"_spr, // extra dialouge sprite for anyone who hasnt finished the tower yet
-		"dialogIcon_001.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
-		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
-		"dialogIcon_003.png"_spr, // extra dialouge sprite for people who arnet downloading the levels properly
+		"dialogIcon_001.png"_spr, // extra dialouge sprite for people who arent downloading the levels properly
+		"dialogIcon_005.png"_spr, // extra dialouge sprite for people who arent downloading the levels properly
+		"dialogIcon_003.png"_spr, // extra dialouge sprite for people who arent downloading the levels properly
 		"dialogIcon_001.png"_spr, // extra dialouge sprite for missing audio assets
 		"dialogIcon_005.png"_spr, // extra dialouge sprite for missing audio assets
 		"dialogIcon_003.png"_spr, // extra dialouge sprite for missing audio assets
@@ -173,12 +171,6 @@ public:
 
 	// only show Cut for Time popup once
 	bool shownCutForTime = false;
-
-	// prevent multiple clicks on doors
-	bool alreadyClicked = false;
-
-	// platformersaves is a fucking pain in the ass sometimes
-	bool hidCloseButton = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) instance = new Manager();

@@ -39,7 +39,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		void assetDownloadFinished() {
 			log::info("assets finished downloading.");
 			if (this->levelName.empty()) return;
-			Notification::create(fmt::format("Audio for {} finished downloading!", this->levelName), NotificationIcon::Success, 2.f)->show();
+			Notification::create(fmt::format("Audio for {} finished downloading!", this->levelName), NotificationIcon::Success, .125f)->show();
 		}
 		virtual void levelDownloadFinished(GJGameLevel* colonsLevel) {
 			log::info("level {} of level ID {} finished downloading", colonsLevel, colonsLevel->m_levelID.value());
@@ -56,7 +56,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				Utils::levelDownloadFailed();
 			}
 			log::info("favoriting colonID {} again", colonsLevel->m_levelID.value());
-			Notification::create(fmt::format("{} was downloaded! Downloading its audio now...", colonsLevel->m_levelName), NotificationIcon::Success, 2.f)->show();
+			Notification::create(fmt::format("{} was downloaded! Downloading its audio now...", colonsLevel->m_levelName), NotificationIcon::Success, .125f)->show();
 			colonsLevel->m_levelFavorited = true;
 			if (AssetDownloader* ad = AssetDownloader::create(colonsLevel); ad && !Utils::getSavedBool("dontDownloadAudio")) {
 				this->levelName = static_cast<std::string>(colonsLevel->m_levelName);
@@ -163,7 +163,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 	}
 	void onDoor(CCObject* sender) {
 		Manager* manager = Manager::getSharedInstance();
-		if (this->getParent()->getChildByID("CreditsLayer"_spr) || this->getChildByType<DialogLayer>(0) || manager->alreadyClicked) return;
+		if (this->getParent()->getChildByID("CreditsLayer"_spr) || this->getChildByType<DialogLayer>(0) || this->m_enteringLevel) return;
 		const auto senderIsButton = typeinfo_cast<CCMenuItemSpriteExtra*>(sender);
 		if (!sender || !manager->colonMode || !manager->completedVanillaTowerFloorOne || !senderIsButton) return LevelAreaInnerLayer::onDoor(sender);
 
@@ -209,7 +209,6 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 
 		FMODAudioEngine::get()->playEffect("playSound_01.ogg"); // since we're not calling the original function, mimic vanilla behavior with SFX
 		manager->isFromColonsTower = true; // set to true before creating playlayer
-		manager->alreadyClicked = true;
 		CCScene* playScene = PlayLayer::scene(colonsLevel, false, false);
 		if (!playScene) {
 			Utils::logErrorCustomFormat("CCScene from calling PlayLayer::scene", robtopsID, colonsID);
@@ -225,6 +224,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		CCLayerColor* dummyLayerColor = CCLayerColor::create({0, 0, 0, 0});
 		this->addChild(dummyLayerColor);
 		dummyLayerColor->setZOrder(90);
+		dummyLayerColor->setID("fake-fade"_spr);
 		dummyLayerColor->setPosition({0.f, 0.f});
 		dummyLayerColor->setContentSize(this->getContentSize());
 		dummyLayerColor->runAction(CCFadeIn::create(.5f));
@@ -300,25 +300,7 @@ class $modify(MyGameManager, GameManager) {
 };
 
 class $modify(MyPlayLayer, PlayLayer) {
-	static void onModify(auto& self) {
-		(void) self.setHookPriorityAfterPost("PlayLayer::setupHasCompleted", SWEARWORDFORMER_SAVES);
-	}
 	void setupHasCompleted() {
-		Manager* manager = Manager::getSharedInstance();
-		if (Loader::get()->isModLoaded(SWEARWORDFORMER_SAVES) && manager->isFromColonsTower && !manager->hidCloseButton) {
-			Loader::get()->queueInMainThread([manager] {
-				const auto scene = CCScene::get();
-				if (!scene) return;
-				const auto pfsPopup = scene->getChildByID(SWEARWORDFORMER_SAVES"/play-level-menu-popup");
-				if (!pfsPopup) return;
-				const auto pfsPopupMainLayer = pfsPopup->getChildByType<CCLayer>(0);
-				if (!pfsPopupMainLayer) return;
-				const auto pfsPopupMenu = pfsPopupMainLayer->getChildByType<CCMenu>(0);
-				if (!pfsPopupMenu) return;
-				if (const auto newGameButton = typeinfo_cast<CCMenuItemSpriteExtra*>(pfsPopupMenu->getChildByID(SWEARWORDFORMER_SAVES"/close-button")); newGameButton) newGameButton->setVisible(false);
-				manager->hidCloseButton = true;
-			});
-		}
 		if (PLAYING_DEEP_SEWERS_FROM_NOT_TOWER) return PlayLayer::setupHasCompleted();
 		this->m_levelSettings->m_spawnGroup = 81;
 		PlayLayer::setupHasCompleted();
@@ -360,8 +342,6 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->bombPickupTimestamp = std::time(nullptr);
 		manager->pauseLayerTimestamp = std::time(nullptr);
 		manager->trackTime = false;
-		manager->alreadyClicked = false;
-		manager->hidCloseButton = false;
 		if (manager->colonToggleUnlocked) manager->lockedIn = true;
 		PlayLayer::onQuit();
 	}
