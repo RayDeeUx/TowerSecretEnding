@@ -88,14 +88,12 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 		if (!manager->completedVanillaTowerFloorOne) {
 			if (manager->shownHeadsUpDialog) return true;
 			DialogLayer* headsUp = Utils::showHeadsUp();
-			if (!headsUp || this->getChildByType<DialogLayer>(0)) {
-				CC_SAFE_RELEASE(headsUp);
-				return true;
+			if (headsUp && !this->getChildByType<DialogLayer>(0)) {
+				this->addChild(headsUp);
+				headsUp->animateInRandomSide();
+				headsUp->displayNextObject();
+				manager->shownHeadsUpDialog = true;
 			}
-			this->addChild(headsUp);
-			headsUp->animateInRandomSide();
-			headsUp->displayNextObject();
-			manager->shownHeadsUpDialog = true;
 			return true;
 		}
 
@@ -416,13 +414,17 @@ class $modify(MyCameraTriggerGameObject, CameraTriggerGameObject) {
 class $modify(MyDialogLayer, DialogLayer) {
 	void displayDialogObject(DialogObject* dialogObject) {
 		DialogLayer::displayDialogObject(dialogObject);
-		const int tag = dialogObject->getTag();
+		if (!dialogObject || !this->m_characterSprite) return;
+
 		const bool isRattledash = this->getUserObject("rattledash"_spr);
+		if (!isRattledash) return;
+
+		const int tag = dialogObject->getTag();
 		const Manager* manager = Manager::getSharedInstance();
-		if (const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE>& dialogSprites = manager->listOfDialogSprites; isRattledash && tag < dialogSprites.size()) {
+		if (const std::array<std::string, DIALOUGE_SPRITE_ARRAY_SIZE>& dialogSprites = manager->listOfDialogSprites; tag < dialogSprites.size()) {
 			this->m_characterSprite->initWithFile(dialogSprites.at(tag).c_str());
 		}
-		if (const std::unordered_map<int, std::string>& tagToTranslation = manager->tagToTranslation; tagToTranslation.contains(tag) && isRattledash) {
+		if (const std::unordered_map<int, std::string>& tagToTranslation = manager->tagToTranslation; tagToTranslation.contains(tag)) {
 			CCLabelBMFont* translationLabel = CCLabelBMFont::create(fmt::format("({})", tagToTranslation.find(tag)->second).c_str(), "bigFont.fnt");
 			translationLabel->limitLabelWidth(420.f, 1.f, 0.001f);
 			translationLabel->setOpacity(0);
