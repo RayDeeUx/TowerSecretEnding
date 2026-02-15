@@ -1,4 +1,6 @@
 # TowerSecretEnding Changelog
+## v1.0.2
+- Port to Geode 5.0.0-beta.1 and GD 2.2081.
 ## v1.0.1
 - Re-created RobTop's "fade out" effect that was missing when entering a level from <cy>The Secret Ending</c>.
 - Fix a nasty bug that happens when closing the popup menu from Platformer Saves.

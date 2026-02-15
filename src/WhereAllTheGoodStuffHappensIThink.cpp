@@ -15,7 +15,7 @@
 using namespace geode::prelude;
 
 #define PLAYLAYER_LEVEL_ID m_level->m_levelID.value()
-#define IS_OFFICIAL_LEVEL this->m_level->m_levelType == GJLevelType::Local
+#define IS_OFFICIAL_LEVEL this->m_level->m_levelType == GJLevelType::Main
 #define ISNT_ROB_OR_COLON_TOWER_LEVEL std::ranges::find(manager->correctCompletionOrder, this->PLAYLAYER_LEVEL_ID) == manager->correctCompletionOrder.end() && (std::ranges::find(manager->originalRobtopIDs, this->PLAYLAYER_LEVEL_ID) == manager->originalRobtopIDs.end() || !(IS_OFFICIAL_LEVEL))
 #define IS_LEVEL_COMPLETE(levelID) std::ranges::find(manager->completedLevels, levelID) != manager->completedLevels.end()
 #define FORMATTED_DEBUG_LABEL fmt::format("\"If any of you ever come for my man, I'll break a ***** off like a KitKat bar.\" doorToShow: {}\n- Jane Wickline, 2025 [levelID: {}, pauseTimestamp - bombTimestamp: {}, lockedIn: {}, isFromColonsTower: {}]\n(canonPosition: {}, !colonVariant: {}, completed: {}, trackTime: {}, colonToggleUnlocked: {})", manager->doorToShow, PlayLayer::get()->PLAYLAYER_LEVEL_ID, difftime(manager->pauseLayerTimestamp, manager->bombPickupTimestamp), manager->lockedIn, manager->isFromColonsTower, manager->useCanonSpawn, !PlayLayer::get()->m_level->getUserObject("colon-variant"_spr), IS_LEVEL_COMPLETE(PlayLayer::get()->PLAYLAYER_LEVEL_ID), manager->trackTime, manager->colonToggleUnlocked)
@@ -108,7 +108,7 @@ class $modify(MyLevelAreaInnerLayer, LevelAreaInnerLayer) {
 				const size_t originalStringSize = colonsLevel ? colonsLevel->m_levelString.size() : 0;
 				if (!colonsLevel || originalStringSize < 100000 || (colonID == THE_SNEAKY_HOLLOW && originalStringSize < 245000) || colonsLevel->m_accountID.value() != COLONS_ACCOUNT_ID_ON_BOOMLINGS) {
 					log::info("downloading colon's {} to replace robtop's {}", colonID, robtopID);
-					glm->downloadLevel(colonID, false);
+					glm->downloadLevel(colonID, false, 0); // TODO: CHECK IF IT SHOULD BE -1 INSTEAD
 				} else if (colonsLevel && !colonsLevel->m_levelFavorited) colonsLevel->m_levelFavorited = true;
 			}
 		}
