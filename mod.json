@@ -1,14 +1,14 @@
 {
-	"geode": "4.4.0",
+	"geode": "5.0.0-beta.1",
 	"gd": {
-		"win": "2.2074",
-		"mac": "2.2074",
-		"ios": "2.2074",
-		"android": "2.2074"
+		"win": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081",
+		"android": "2.2081"
 	},
 	"id": "raydeeux_colon.towersecretending",
 	"name": "TowerSecretEnding",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developers": ["Colon", "RayDeeUx"],
 	"description": "The Secret Ending to Floor 1 of The Tower!",
 	"repository": "https://github.com/RayDeeUx/TowerSecretEnding",
@@ -23,7 +23,7 @@
 		]
 	},
 	"dependencies": {
-		"geode.node-ids": ">=1.20.1"
+		"geode.node-ids": ">=1.22.0"
 	},
 	"settings": {
 		"explorationMode": {
